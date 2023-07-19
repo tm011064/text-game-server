@@ -7,7 +7,6 @@
 
     public readonly record struct Chapter(
         string Key,
-        bool IsRoot,
         IReadOnlyCollection<ChapterCommand> Commands,
         IReadOnlyCollection<MessageGroup> MessageGroups,
         MessageGroupConfig MessageGroupConfig);

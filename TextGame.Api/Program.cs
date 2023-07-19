@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using TextGame.Core.Rooms;
+using TextGame.Data.Contracts;
+using TextGame.Data.Sources;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,12 +15,19 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<IChapterProvider, ChapterProvider>();
+builder.Services.AddSingleton<IGameContextProvider, GameContextProvider>();
+builder.Services.AddSingleton<IGameContextItemJsonSource<TerminalCommand[]>, TerminalCommandsSource>();
+builder.Services.AddSingleton<IGameContextItemJsonSource<Emotion[]>, EmotionsSource>();
+builder.Services.AddSingleton<IGameContextItemJsonSource<Chapter[]>, ChaptersSource>();
+builder.Services.AddSingleton<IGameContextSource, GameContextSource>();
 
 builder.Services.AddApiVersioning(config =>
 {
     config.DefaultApiVersion = new ApiVersion(20220718, 0);
     config.AssumeDefaultVersionWhenUnspecified = true;
 });
+
+builder.Services.AddLazyCache();
 
 var app = builder.Build();
 

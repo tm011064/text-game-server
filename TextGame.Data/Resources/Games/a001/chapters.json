@@ -1,7 +1,6 @@
 ﻿[
   {
-    "key": "start",
-    "isRoot": true,
+    "key": "root",
 
     "messageGroupConfig": {
       "type": "Sequential"

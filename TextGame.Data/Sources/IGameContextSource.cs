@@ -6,6 +6,5 @@ namespace TextGame.Data.Sources
     {
         GameContext Get(string gameKey, string locale);
     }
-
 }
 

@@ -3,11 +3,10 @@
 namespace TextGame.Data.Sources
 {
     public class ChaptersSource :
-        AbstractJsonSource<Chapter[]>,
+        AbstractGameContextItemJsonSource<Chapter[]>,
         IGameContextItemJsonSource<Chapter[]>
     {
         public override string FileName { get; } = "chapters.json";
     }
-
 }
 

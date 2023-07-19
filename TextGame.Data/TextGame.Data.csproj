@@ -10,19 +10,19 @@
     <None Remove="Contracts\" />
     <None Remove="Resources\" />
     <None Remove="Resources\Games\" />
-    <None Remove="Resources\Games\Tutorials\" />
     <None Remove="Resources\Games\Tutorials\rooms.json" />
     <None Remove="Resources\Games\Tutorials\emotions %28copy%29.json" />
     <None Remove="Queries\" />
-    <None Remove="Resources\Games\Tutorials\chapters.json" />
-    <None Remove="Resources\Games\Tutorials\emotions.json" />
-    <None Remove="Resources\Games\Tutorials\commands.json" />
+    <None Remove="Resources\Games\a001\" />
+    <None Remove="Resources\Games\a001\chapters.json" />
+    <None Remove="Resources\Games\a001\commands.json" />
+    <None Remove="Resources\Games\a001\emotions.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Contracts\" />
     <Folder Include="Resources\" />
     <Folder Include="Resources\Games\" />
-    <Folder Include="Resources\Games\Tutorials\" />
+    <Folder Include="Resources\Games\a001\" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Resources\Games\Tutorials\commands.json">
@@ -36,14 +36,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\Games\Tutorials\chapters.json">
+    <EmbeddedResource Include="Resources\Games\a001\chapters.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Games\Tutorials\emotions.json">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Games\a001\commands.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Games\Tutorials\commands.json">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Games\a001\emotions.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

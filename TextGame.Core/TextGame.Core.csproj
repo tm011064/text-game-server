@@ -7,13 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Rooms\" />
+    <None Remove="Chapters\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Rooms\" />
+    <Folder Include="Chapters\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MediatR" Version="12.1.1" />
+    <PackageReference Include="LazyCache" Version="2.4.0" />
+    <PackageReference Include="LazyCache.AspNetCore" Version="2.4.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TextGame.Data\TextGame.Data.csproj" />

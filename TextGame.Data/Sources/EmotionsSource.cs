@@ -3,11 +3,10 @@
 namespace TextGame.Data.Sources
 {
     public class EmotionsSource :
-        AbstractJsonSource<Emotion[]>,
+        AbstractGameContextItemJsonSource<Emotion[]>,
         IGameContextItemJsonSource<Emotion[]>
     {
         public override string FileName { get; } = "emotions.json";
     }
-
 }
 
