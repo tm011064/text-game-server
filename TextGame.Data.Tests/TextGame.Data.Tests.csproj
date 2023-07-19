@@ -26,9 +26,6 @@
     <None Remove="Queries\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Queries\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\TextGame.Data\TextGame.Data.csproj" />
   </ItemGroup>
 </Project>

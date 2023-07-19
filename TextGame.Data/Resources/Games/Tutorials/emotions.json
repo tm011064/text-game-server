@@ -1,127 +1,125 @@
-﻿{
-  "emotions": [
-    {
-      "key": "happy",
-      "emoticons": [
-        "^_^",
-        "^-^",
-        "*~*",
-        "^.^",
-        "＾▽＾",
-        "n_n"
-      ]
-    },
-    {
-      "key": "annoyed",
-      "emoticons": [
-        "@_@",
-        "?_?"
-      ]
-    },
-    {
-      "key": "love",
-      "emoticons": [
-        "♥‿♥"
-      ]
-    },
-    {
-      "key": "shy",
-      "emoticons": [
-        "*^_^*"
-      ]
-    },
-    {
-      "key": "sad",
-      "emoticons": [
-        "T_T",
-        "._."
-      ]
-    },
-    {
-      "key": "pain",
-      "emoticons": [
-        ">_<"
-      ]
-    },
-    {
-      "key": "sour",
-      "emoticons": [
-        ">.<"
-      ]
-    },
-    {
-      "key": "stressed",
-      "emoticons": [
-        "-.-"
-      ]
-    },
-    {
-      "key": "guilty",
-      "emoticons": [
-        "^_^;"
-      ]
-    },
-    {
-      "key": "sleepy",
-      "emoticons": [
-        "u_u",
-        "=_="
-      ]
-    },
-    {
-      "key": "whatever",
-      "emoticons": [
-        "-_-",
-        "¬.¬"
-      ]
-    },
-    {
-      "key": "confused",
-      "emoticons": [
-        "O.o"
-      ]
-    },
-    {
-      "key": "dazed",
-      "emoticons": [
-        "*-*"
-      ]
-    },
-    {
-      "key": "greedy",
-      "emoticons": [
-        "$_$"
-      ]
-    },
-    {
-      "key": "shocked",
-      "emoticons": [
-        "O_0'",
-        "o_o",
-        "(@.@)",
-        "⊙▂⊙"
-      ]
-    },
-    {
-      "key": "confused",
-      "emoticons": [
-        "O.o?",
-        "o.o?"
-      ]
-    },
-    {
-      "key": "angry",
-      "emoticons": [
-        "0_o",
-        "!_!",
-        "ㆆ_ㆆ"
-      ]
-    },
-    {
-      "key": "surprised",
-      "emoticons": [
-        "*.*"
-      ]
-    }
-  ]
-}
+﻿[
+  {
+    "key": "happy",
+    "emoticons": [
+      "^_^",
+      "^-^",
+      "*~*",
+      "^.^",
+      "＾▽＾",
+      "n_n"
+    ]
+  },
+  {
+    "key": "annoyed",
+    "emoticons": [
+      "@_@",
+      "?_?"
+    ]
+  },
+  {
+    "key": "love",
+    "emoticons": [
+      "♥‿♥"
+    ]
+  },
+  {
+    "key": "shy",
+    "emoticons": [
+      "*^_^*"
+    ]
+  },
+  {
+    "key": "sad",
+    "emoticons": [
+      "T_T",
+      "._."
+    ]
+  },
+  {
+    "key": "pain",
+    "emoticons": [
+      ">_<"
+    ]
+  },
+  {
+    "key": "sour",
+    "emoticons": [
+      ">.<"
+    ]
+  },
+  {
+    "key": "stressed",
+    "emoticons": [
+      "-.-"
+    ]
+  },
+  {
+    "key": "guilty",
+    "emoticons": [
+      "^_^;"
+    ]
+  },
+  {
+    "key": "sleepy",
+    "emoticons": [
+      "u_u",
+      "=_="
+    ]
+  },
+  {
+    "key": "whatever",
+    "emoticons": [
+      "-_-",
+      "¬.¬"
+    ]
+  },
+  {
+    "key": "confused",
+    "emoticons": [
+      "O.o"
+    ]
+  },
+  {
+    "key": "dazed",
+    "emoticons": [
+      "*-*"
+    ]
+  },
+  {
+    "key": "greedy",
+    "emoticons": [
+      "$_$"
+    ]
+  },
+  {
+    "key": "shocked",
+    "emoticons": [
+      "O_0'",
+      "o_o",
+      "(@.@)",
+      "⊙▂⊙"
+    ]
+  },
+  {
+    "key": "confused",
+    "emoticons": [
+      "O.o?",
+      "o.o?"
+    ]
+  },
+  {
+    "key": "angry",
+    "emoticons": [
+      "0_o",
+      "!_!",
+      "ㆆ_ㆆ"
+    ]
+  },
+  {
+    "key": "surprised",
+    "emoticons": [
+      "*.*"
+    ]
+  }
+]
