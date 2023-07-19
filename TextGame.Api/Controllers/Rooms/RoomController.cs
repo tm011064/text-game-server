@@ -1,22 +1,46 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TextGame.Core.Rooms;
 
 namespace TextGame.Api.Controllers.Rooms
 {
     [ApiController]
-    [Route("rooms")]
-    public class RoomController : ControllerBase
+    [ApiVersion("20220718")]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route("[controller]")]
+    public class RoomsController : ControllerBase
     {
-        private readonly ILogger<RoomController> logger;
+        private readonly ILogger<RoomsController> logger;
 
-        public RoomController(ILogger<RoomController> logger)
+
+        public RoomsController(ILogger<RoomsController> logger)
         {
             this.logger = logger;
         }
 
         [HttpGet]
-        public string Get()
+        public object Get()
         {
-            return "WOHOO";
+            return new { id = 1 };
         }
+
+        //private static object ToWire(Room room)
+        //{
+        //    return new
+        //    {
+        //        id = room.id.ToString(),
+        //        gameId = room.gameId.ToString(),
+        //        emotionType = room.emotionType.ToString(),
+        //        messages = room.messages.Select(ToWire).ToArray()
+        //    };
+        //}
+
+        //private static object ToWire(RoomMessage x)
+        //{
+        //    return new
+        //    {
+        //        x.index,
+        //        x.text
+        //    };
+        //}
     }
 }

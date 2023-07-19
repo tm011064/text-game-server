@@ -1,0 +1,35 @@
+﻿{
+  "commands": [
+    {
+      "key": "move",
+      "terms": [
+        "go",
+        "go to",
+        "move",
+        "move to",
+        "enter",
+        "exit"
+      ]
+    },
+    {
+      "key": "confirm",
+      "terms": [
+        "yes",
+        "ok",
+        "sure",
+        "alright"
+      ]
+    },
+    {
+      "key": "decline",
+      "terms": [
+        "no",
+        "never",
+        "nah",
+        "nope",
+        "nae",
+        "no way"
+      ]
+    }
+  ]
+}

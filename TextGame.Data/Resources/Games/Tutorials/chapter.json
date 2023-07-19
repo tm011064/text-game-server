@@ -1,0 +1,68 @@
+﻿{
+  "key": "start",
+  "isRoot": true,
+
+  "messageGroupConfig": {
+    "type": "Sequential"
+  },
+  "messageGroups": [
+    {
+      "emotionKey": "happy",
+      "messages": [
+        {
+          "text": "Hey"
+        },
+        {
+          "text": "You!"
+        },
+        {
+          "text": "I'm Lori, I'm lost"
+        },
+        {
+          "text": "Can you help me?"
+        }
+      ]
+    },
+    {
+      "emotionKey": "happy",
+      "messages": [
+        {
+          "text": "That's too bad. You see, I lost my mum and don't know where to go."
+        },
+        {
+          "text": "Can you please help me?"
+        },
+        {
+          "text": "Pleaaaaase?"
+        }
+      ]
+    },
+    {
+      "emotionKey": "happy",
+      "messages": [
+        {
+          "text": "Well, maybe I should tell you more about myself"
+        },
+        {
+          "text": "I went to this place, they call it the vault. My mum told me not to go there, but Yokay would not listen"
+        }
+      ]
+    }
+  ],
+
+  "commands": [
+    {
+      "type": "Confirm",
+      "action": {
+        "type": "ChangeChapter",
+        "chapterKey": "type-challenge-1"
+      }
+    },
+    {
+      "type": "Decline",
+      "action": {
+        "type": "ShowNextMessage"
+      }
+    }
+  ]
+}
