@@ -20,13 +20,6 @@
     <None Remove="Resources\Global\emotions.json" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Contracts\" />
-    <Folder Include="Resources\" />
-    <Folder Include="Resources\Games\" />
-    <Folder Include="Resources\Games\a001\" />
-    <Folder Include="Resources\Global\" />
-  </ItemGroup>
-  <ItemGroup>
     <None Update="Resources\Games\Tutorials\commands.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -47,5 +40,13 @@
     <EmbeddedResource Include="Resources\Global\emotions.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.143" />
+    <PackageReference Include="FluentMigrator" Version="3.3.2" />
+    <PackageReference Include="FluentMigrator.Runner" Version="3.3.2" />
+    <PackageReference Include="FluentMigrator.Runner.SQLite" Version="3.3.2" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
   </ItemGroup>
 </Project>
