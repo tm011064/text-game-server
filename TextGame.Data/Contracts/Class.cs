@@ -7,9 +7,14 @@
 
     public readonly record struct Chapter(
         string Key,
+        string GameKey,
         IReadOnlyCollection<ChapterCommand> Commands,
-        IReadOnlyCollection<MessageGroup> MessageGroups,
-        MessageGroupConfig MessageGroupConfig);
+        IReadOnlyCollection<ParagraphGroup> ParagraphGroups,
+        ParagraphGroupConfig ParagraphGroupConfig);
+
+    public readonly record struct ParagraphGroup(
+        string EmotionKey,
+        IReadOnlyCollection<Paragraph> Paragraphs);
 
     public readonly record struct ChapterCommand(
         ChapterCommandType Type,
@@ -19,14 +24,10 @@
         ChapterCommandActionType Type,
         string? ChapterKey);
 
-    public readonly record struct MessageGroupConfig(
-        MessageGroupType Type);
+    public readonly record struct ParagraphGroupConfig(
+        ParagraphGroupType Type);
 
-    public readonly record struct MessageGroup(
-        string EmotionKey,
-        IReadOnlyCollection<MessageGroupMessage> Messages);
-
-    public readonly record struct MessageGroupMessage(
+    public readonly record struct Paragraph(
         string Text);
 
     public readonly record struct TerminalCommand(
@@ -44,7 +45,7 @@
         Confirm,
         Decline
     }
-    public enum MessageGroupType
+    public enum ParagraphGroupType
     {
         Sequential
     }

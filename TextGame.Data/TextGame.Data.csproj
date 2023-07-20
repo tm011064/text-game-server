@@ -15,14 +15,16 @@
     <None Remove="Queries\" />
     <None Remove="Resources\Games\a001\" />
     <None Remove="Resources\Games\a001\chapters.json" />
-    <None Remove="Resources\Games\a001\commands.json" />
-    <None Remove="Resources\Games\a001\emotions.json" />
+    <None Remove="Resources\Global\" />
+    <None Remove="Resources\Global\commands.json" />
+    <None Remove="Resources\Global\emotions.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Contracts\" />
     <Folder Include="Resources\" />
     <Folder Include="Resources\Games\" />
     <Folder Include="Resources\Games\a001\" />
+    <Folder Include="Resources\Global\" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Resources\Games\Tutorials\commands.json">
@@ -39,10 +41,10 @@
     <EmbeddedResource Include="Resources\Games\a001\chapters.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Games\a001\commands.json">
+    <EmbeddedResource Include="Resources\Global\commands.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Games\a001\emotions.json">
+    <EmbeddedResource Include="Resources\Global\emotions.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

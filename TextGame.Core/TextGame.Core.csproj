@@ -8,9 +8,13 @@
 
   <ItemGroup>
     <None Remove="Chapters\" />
+    <None Remove="TerminalCommands\" />
+    <None Remove="Emotions\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Chapters\" />
+    <Folder Include="TerminalCommands\" />
+    <Folder Include="Emotions\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MediatR" Version="12.1.1" />

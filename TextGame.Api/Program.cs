@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using TextGame.Core.Rooms;
+using TextGame.Core.Chapters;
+using TextGame.Core.Emotions;
+using TextGame.Core.TerminalCommands;
 using TextGame.Data.Contracts;
 using TextGame.Data.Sources;
 
@@ -15,11 +16,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<IChapterProvider, ChapterProvider>();
-builder.Services.AddSingleton<IGameContextProvider, GameContextProvider>();
-builder.Services.AddSingleton<IGameContextItemJsonSource<TerminalCommand[]>, TerminalCommandsSource>();
-builder.Services.AddSingleton<IGameContextItemJsonSource<Emotion[]>, EmotionsSource>();
-builder.Services.AddSingleton<IGameContextItemJsonSource<Chapter[]>, ChaptersSource>();
-builder.Services.AddSingleton<IGameContextSource, GameContextSource>();
+builder.Services.AddSingleton<ITerminalCommandProvider, TerminalCommandProvider>();
+builder.Services.AddSingleton<IEmotionProvider, EmotionProvider>();
+
+builder.Services.AddSingleton<IGlobalResourceJsonSource<TerminalCommand[]>, TerminalCommandsSource>();
+builder.Services.AddSingleton<IGlobalResourceJsonSource<Emotion[]>, EmotionsSource>();
+builder.Services.AddSingleton<IGameResourceJsonSource<Chapter[]>, ChaptersSource>();
+builder.Services.AddSingleton<IGameSource, GameSource>();
 
 builder.Services.AddApiVersioning(config =>
 {

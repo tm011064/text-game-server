@@ -17,7 +17,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "dotnetRunMessages": true
+      "dotnetRunMessages": true,
+      "dotnetRunParagraphs": true
     },
     "https": {
       "commandName": "Project",
@@ -27,7 +28,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "dotnetRunMessages": true
+      "dotnetRunMessages": true,
+      "dotnetRunParagraphs": true
     },
     "IIS Express": {
       "commandName": "IISExpress",

@@ -3,8 +3,8 @@
 namespace TextGame.Data.Sources
 {
     public class TerminalCommandsSource :
-        AbstractGameContextItemJsonSource<TerminalCommand[]>,
-        IGameContextItemJsonSource<TerminalCommand[]>
+        AbstractGlobalResourceJsonSource<TerminalCommand[]>,
+        IGlobalResourceJsonSource<TerminalCommand[]>
     {
         public override string FileName { get; } = "commands.json";
     }

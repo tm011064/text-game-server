@@ -1,14 +1,15 @@
 ﻿[
   {
     "key": "root",
+    "gameKey": "a001",
 
-    "messageGroupConfig": {
+    "paragraphGroupConfig": {
       "type": "Sequential"
     },
-    "messageGroups": [
+    "paragraphGroups": [
       {
         "emotionKey": "happy",
-        "messages": [
+        "paragraphs": [
           {
             "text": "Hey"
           },
@@ -25,7 +26,7 @@
       },
       {
         "emotionKey": "happy",
-        "messages": [
+        "paragraphs": [
           {
             "text": "That's too bad. You see, I lost my mum and don't know where to go."
           },
@@ -39,7 +40,7 @@
       },
       {
         "emotionKey": "happy",
-        "messages": [
+        "paragraphs": [
           {
             "text": "Well, maybe I should tell you more about myself"
           },
@@ -68,12 +69,13 @@
   },
   {
     "key": "type-challenge-1",
+    "gameKey": "a001",
     "chapterType": "typeChallenge",
 
-    "messageGroups": [
+    "paragraphGroups": [
       {
         "emotionKey": "happy",
-        "messages": [
+        "paragraphs": [
           {
             "text": "Ok, let's start with some training"
           },

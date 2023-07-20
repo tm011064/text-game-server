@@ -25,8 +25,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Controllers\Chapters\" />
+    <None Remove="Controllers\Commands\" />
+    <None Remove="Controllers\Emoticons\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\Chapters\" />
+    <Folder Include="Controllers\Commands\" />
+    <Folder Include="Controllers\Emoticons\" />
   </ItemGroup>
 </Project>
