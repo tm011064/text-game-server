@@ -1,9 +1,8 @@
-﻿using TextGame.Data.Contracts;
+﻿namespace TextGame.Core.TerminalCommands;
 
-namespace TextGame.Core.TerminalCommands
+using TextGame.Data.Contracts;
+
+public interface ITerminalCommandProvider
 {
-    public interface ITerminalCommandProvider
-    {
-        Task<IReadOnlyCollection<TerminalCommand>> Get(string locale = "en-US");
-    }
+    Task<IReadOnlyCollection<TerminalCommand>> Get(string locale = "en-US");
 }

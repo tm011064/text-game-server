@@ -1,9 +1,9 @@
-﻿using LazyCache;
+﻿namespace TextGame.Core.Chapters;
+
+using LazyCache;
 using TextGame.Data;
 using TextGame.Data.Contracts;
 using TextGame.Data.Sources;
-
-namespace TextGame.Core.Chapters;
 
 public class ChapterProvider : IChapterProvider
 {

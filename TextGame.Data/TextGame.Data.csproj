@@ -1,52 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Contracts\" />
-    <None Remove="Resources\" />
-    <None Remove="Resources\Games\" />
-    <None Remove="Resources\Games\Tutorials\rooms.json" />
-    <None Remove="Resources\Games\Tutorials\emotions %28copy%29.json" />
-    <None Remove="Queries\" />
-    <None Remove="Resources\Games\a001\" />
-    <None Remove="Resources\Games\a001\chapters.json" />
-    <None Remove="Resources\Global\" />
-    <None Remove="Resources\Global\commands.json" />
-    <None Remove="Resources\Global\emotions.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="Resources\Games\Tutorials\commands.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Resources\Games\Tutorials\chapters.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Resources\Games\Tutorials\emotions.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Games\a001\chapters.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Global\commands.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Global\emotions.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.0.143" />
-    <PackageReference Include="FluentMigrator" Version="3.3.2" />
-    <PackageReference Include="FluentMigrator.Runner" Version="3.3.2" />
-    <PackageReference Include="FluentMigrator.Runner.SQLite" Version="3.3.2" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.9" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="Resources\Games\*\*.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Resources\Global\*.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</EmbeddedResource>
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Dapper" Version="2.0.143" />
+		<PackageReference Include="FluentMigrator" Version="3.3.2" />
+		<PackageReference Include="FluentMigrator.Runner" Version="3.3.2" />
+		<PackageReference Include="FluentMigrator.Runner.SQLite" Version="3.3.2" />
+		<PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.9" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
+	</ItemGroup>
 </Project>

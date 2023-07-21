@@ -109,28 +109,22 @@ namespace TextGame.Api
             return _users.FirstOrDefault(x => x.Id == id);
         }
     }
-    public class AppSettings
-    {
-        public string? Secret { get; set; }
-    }
 
     public class JwtUtils : IJwtUtils
     {
-        private readonly AppSettings _appSettings;
+        private readonly string secretKey;
 
-        public JwtUtils(IOptions<AppSettings> appSettings)
+        public JwtUtils(IConfiguration configuration)
         {
-            _appSettings = appSettings.Value;
-
-            if (string.IsNullOrEmpty(_appSettings.Secret))
-                throw new Exception("JWT secret not configured");
+            secretKey = configuration.GetValue<string>("TokenAuthentication:SecretKey")
+                ?? throw new Exception("JWT secret not configured");
         }
 
         public string GenerateJwtToken(User user)
         {
             // generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.Secret!);
+            var key = Encoding.ASCII.GetBytes(secretKey);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),
@@ -147,7 +141,7 @@ namespace TextGame.Api
                 return null;
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.Secret!);
+            var key = Encoding.ASCII.GetBytes(secretKey);
             try
             {
                 tokenHandler.ValidateToken(token, new TokenValidationParameters
@@ -166,7 +160,7 @@ namespace TextGame.Api
                 // return user id from JWT token if validation successful
                 return userId;
             }
-            catch
+            catch (Exception exception)
             {
                 // return null if validation fails
                 return null;

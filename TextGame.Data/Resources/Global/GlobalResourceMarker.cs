@@ -1,7 +1,6 @@
-﻿namespace TextGame.Data.Resources.Global
+﻿namespace TextGame.Data.Resources.Global;
+
+public class GlobalResourceMarker
 {
-    public class GlobalResourceMarker
-    {
-    }
 }
 

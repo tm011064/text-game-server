@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿namespace TextGame.Api.Controllers.Emoticons;
+
+using Microsoft.AspNetCore.Mvc;
 using TextGame.Core.Emotions;
 using TextGame.Data.Contracts;
-
-namespace TextGame.Api.Controllers.Emoticons;
 
 [ApiController]
 [ApiVersion("20220718")]

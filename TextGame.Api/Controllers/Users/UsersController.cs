@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿namespace TextGame.Api.Controllers.Users;
 
-namespace TextGame.Api.Controllers.Users;
+using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Authorize]
@@ -29,6 +29,8 @@ public class UsersController : ControllerBase
     [HttpGet]
     public IActionResult GetAll()
     {
+        var identity = User.Identity;
+
         var users = _userService.GetAll();
         return Ok(users);
     }

@@ -1,6 +1,6 @@
-﻿using TextGame.Data.Contracts;
+﻿namespace TextGame.Core.Chapters;
 
-namespace TextGame.Core.Chapters;
+using TextGame.Data.Contracts;
 
 public static class ChapterExtensions
 {

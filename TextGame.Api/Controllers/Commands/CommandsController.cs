@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿namespace TextGame.Api.Controllers.Commands;
+
+using Microsoft.AspNetCore.Mvc;
 using TextGame.Core.TerminalCommands;
 using TextGame.Data.Contracts;
-
-namespace TextGame.Api.Controllers.Commands;
 
 [ApiController]
 [ApiVersion("20220718")]

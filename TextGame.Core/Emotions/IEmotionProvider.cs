@@ -1,9 +1,8 @@
-﻿using TextGame.Data.Contracts;
+﻿namespace TextGame.Core.Emotions;
 
-namespace TextGame.Core.Emotions
+using TextGame.Data.Contracts;
+
+public interface IEmotionProvider
 {
-    public interface IEmotionProvider
-    {
-        Task<IReadOnlyCollection<Emotion>> Get(string locale = "en-US");
-    }
+    Task<IReadOnlyCollection<Emotion>> Get(string locale = "en-US");
 }

@@ -10,11 +10,13 @@
     <None Remove="Chapters\" />
     <None Remove="TerminalCommands\" />
     <None Remove="Emotions\" />
+    <None Remove="Cryptography\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Chapters\" />
     <Folder Include="TerminalCommands\" />
     <Folder Include="Emotions\" />
+    <Folder Include="Cryptography\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MediatR" Version="12.1.1" />

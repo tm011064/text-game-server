@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿namespace TextGame.Api.Controllers.Chapters;
+
+using Microsoft.AspNetCore.Mvc;
 using TextGame.Core.Chapters;
 using TextGame.Data.Contracts;
-
-namespace TextGame.Api.Controllers.Chapters;
 
 [ApiController]
 [ApiVersion("20220718")]

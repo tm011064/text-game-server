@@ -1,6 +1,8 @@
 using FluentMigrator.Runner;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
+using TextGame.Api;
 using TextGame.Core.Chapters;
 using TextGame.Core.Emotions;
 using TextGame.Core.TerminalCommands;
@@ -20,7 +22,38 @@ builder.Services.AddControllers().AddJsonOptions(x =>
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
+                      Enter 'Bearer' [space] and then your token in the text input below.
+                      \r\n\r\nExample: 'Bearer 12345abcdef'",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+      {
+        {
+          new OpenApiSecurityScheme
+          {
+            Reference = new OpenApiReference
+              {
+                Type = ReferenceType.SecurityScheme,
+                Id = "Bearer"
+              },
+              Scheme = "oauth2",
+              Name = "Bearer",
+              In = ParameterLocation.Header,
+
+            },
+            new List<string>()
+          }
+        });
+});
 
 builder.Services.AddSingleton<IChapterProvider, ChapterProvider>();
 builder.Services.AddSingleton<ITerminalCommandProvider, TerminalCommandProvider>();
@@ -32,6 +65,10 @@ builder.Services.AddSingleton<IGameResourceJsonSource<Chapter[]>, ChaptersSource
 builder.Services.AddSingleton<IGameSource, GameSource>();
 
 builder.Services.AddSingleton<IQueryService, QueryService>();
+
+builder.Services.AddSingleton<IUserService, UserService>();
+builder.Services.AddSingleton<IJwtUtils, JwtUtils>();
+
 
 builder.Services.AddApiVersioning(config =>
 {
@@ -70,5 +107,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.UseMiddleware<JwtMiddleware>();
 
 app.Run();
