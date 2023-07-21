@@ -1,14 +1,12 @@
-﻿using System;
-using TextGame.Data.Contracts;
+﻿using TextGame.Data.Contracts;
 
-namespace TextGame.Core.Chapters
+namespace TextGame.Core.Chapters;
+
+public static class ChapterExtensions
 {
-    public static class ChapterExtensions
+    public static string GetCompositeKey(this Chapter self)
     {
-        public static string GetCompositeKey(this Chapter self)
-        {
-            return $"{self.GameKey}-{self.Key}";
-        }
+        return $"{self.GameKey}-{self.Key}";
     }
 }
 
