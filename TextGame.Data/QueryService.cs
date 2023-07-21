@@ -36,12 +36,3 @@ public interface IQuery<TRecord>
 {
     Task<TRecord> Execute(IDbConnection connection);
 }
-
-public class GetUser : IQuery<int>
-{
-    public Task<int> Execute(IDbConnection connection)
-    {
-        return connection.QuerySingleAsync<int>(""
-            );
-    }
-}

@@ -4,12 +4,13 @@ using System;
 using System.IO;
 using System.Text;
 using System.Security.Cryptography;
+using TextGame.Data.Contracts;
 
 public class Rfc2898PasswordEncryptor
 {
     private readonly UTF8Encoding encoding = new(false);
 
-    public Rfc2898EncryptionResult Encrypt(string password)
+    public UserPassword Encrypt(string password)
     {
         var data = Guid.NewGuid().ToString();
         var salt = CreateRandomBytes();
@@ -35,7 +36,7 @@ public class Rfc2898PasswordEncryptor
 
         keyGenerator.Reset();
 
-        return new Rfc2898EncryptionResult(
+        return new UserPassword(
             InitializationVector: algorithm.IV,
             Salt: salt,
             Iterations: iterations,

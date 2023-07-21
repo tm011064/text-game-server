@@ -3,18 +3,19 @@
 using System.IO;
 using System.Text;
 using System.Security.Cryptography;
+using TextGame.Data.Contracts;
 
 public class Rfc2898PasswordValidator
 {
     private readonly UTF8Encoding encoding = new(false);
 
-    public bool IsValid(string password, Rfc2898EncryptionResult result)
+    public bool IsValid(string password, UserPassword userPassword)
     {
         try
         {
-            var data = Decrypt(password, result);
+            var data = Decrypt(password, userPassword);
 
-            return string.Equals(data, result.Data);
+            return string.Equals(data, userPassword.Data);
         }
         catch
         {
@@ -22,19 +23,19 @@ public class Rfc2898PasswordValidator
         }
     }
 
-    private string Decrypt(string password, Rfc2898EncryptionResult encryptionResult)
+    private string Decrypt(string password, UserPassword userPassword)
     {
-        var keyGenerator = new Rfc2898DeriveBytes(password, encryptionResult.Salt, encryptionResult.Iterations, HashAlgorithmName.SHA256);
+        var keyGenerator = new Rfc2898DeriveBytes(password, userPassword.Salt, userPassword.Iterations, HashAlgorithmName.SHA256);
 
         var algorithm = Aes.Create();
 
         algorithm.Key = keyGenerator.GetBytes(16);
-        algorithm.IV = encryptionResult.InitializationVector;
+        algorithm.IV = userPassword.InitializationVector;
 
         using var decryptionStreamBacking = new MemoryStream();
         using var decrypt = new CryptoStream(decryptionStreamBacking, algorithm.CreateDecryptor(), CryptoStreamMode.Write);
 
-        decrypt.Write(encryptionResult.CipherBytes, 0, encryptionResult.CipherBytes.Length);
+        decrypt.Write(userPassword.CipherBytes, 0, userPassword.CipherBytes.Length);
 
         decrypt.Flush();
         decrypt.Close();
