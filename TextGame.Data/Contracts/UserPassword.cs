@@ -6,7 +6,12 @@ public class UserPassword
     {
     }
 
-    public UserPassword(byte[] initializationVector, byte[] salt, int iterations, string data, byte[] cipherBytes)
+    public UserPassword(
+        byte[] initializationVector,
+        byte[] salt,
+        int iterations,
+        string data,
+        byte[] cipherBytes)
     {
         InitializationVector = initializationVector;
         Salt = salt;
@@ -24,4 +29,19 @@ public class UserPassword
     public string Data { get; internal set; }
 
     public byte[] CipherBytes { get; internal set; }
+
+    public UserPassword Copy(
+        byte[]? initializationVector = null,
+        byte[]? salt = null,
+        int? iterations = null,
+        string? data = null,
+        byte[]? cipherBytes = null)
+    {
+        return new UserPassword(
+             initializationVector ?? InitializationVector,
+             salt ?? Salt,
+             iterations ?? Iterations,
+             data ?? Data,
+             cipherBytes ?? CipherBytes);
+    }
 }

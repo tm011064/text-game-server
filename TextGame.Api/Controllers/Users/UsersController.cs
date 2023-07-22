@@ -2,6 +2,7 @@
 
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using TextGame.Api.Auth;
 using TextGame.Core.Cryptography;
 using TextGame.Data;
 using TextGame.Data.Contracts;
@@ -12,13 +13,13 @@ using TextGame.Data.Queries.Users;
 [Route("[controller]")]
 public class UsersController : ControllerBase
 {
-    private IUserService _userService;
+    private readonly IAuthenticator authenticator;
 
     private readonly IQueryService queryService;
 
-    public UsersController(IUserService userService, IQueryService queryService)
+    public UsersController(IAuthenticator authenticator, IQueryService queryService)
     {
-        _userService = userService;
+        this.authenticator = authenticator;
         this.queryService = queryService;
     }
 
@@ -26,7 +27,7 @@ public class UsersController : ControllerBase
     [HttpPost("authenticate")]
     public IActionResult Authenticate(AuthenticateRequest model)
     {
-        var response = _userService.Authenticate(model);
+        var response = authenticator.Authenticate(model);
 
         if (response == null)
             return BadRequest(new { message = "Username or password is incorrect" });
@@ -42,8 +43,9 @@ public class UsersController : ControllerBase
 
         var password = encryptor.Encrypt(request.Password!);
 
-        var key = Guid.NewGuid();
-        var ticket = new AuthTicket(DateTimeOffset.UtcNow, key.ToString());
+        var key = Guid.NewGuid().ToString();
+
+        var ticket = new AuthTicket(DateTimeOffset.UtcNow, key);
 
         var id = await queryService.Run(new InsertUser(key, request.Email!, password, ticket));
 
@@ -56,14 +58,35 @@ public class UsersController : ControllerBase
     [HttpGet("/{id}")]
     public async Task<IActionResult> Get(string id)
     {
-        var identity = User.Identity;
-        var key = new Guid(id);
-        var user = await queryService.Run(new GetUserByKey(key));
+        var user = await queryService.Run(new GetUserByKey(id));
+
         return Ok(user);
     }
 }
 
 public class CreateUserRequest
+{
+    [Required]
+    public string? Email { get; set; }
+
+    [Required]
+    public string? Password { get; set; }
+}
+
+public class AuthenticateResponse
+{
+    public int Id { get; set; }
+
+    public string Token { get; set; }
+
+    public AuthenticateResponse(IUser user, string token)
+    {
+        Id = user.Id;
+        Token = token;
+    }
+}
+
+public class AuthenticateRequest
 {
     [Required]
     public string? Email { get; set; }

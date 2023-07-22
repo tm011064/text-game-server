@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 using TextGame.Api;
+using TextGame.Api.Auth;
+using TextGame.Api.Controllers.Users;
 using TextGame.Core.Chapters;
 using TextGame.Core.Emotions;
 using TextGame.Core.TerminalCommands;
@@ -66,8 +68,9 @@ builder.Services.AddSingleton<IGameSource, GameSource>();
 
 builder.Services.AddSingleton<IQueryService, QueryService>();
 
-builder.Services.AddSingleton<IUserService, UserService>();
-builder.Services.AddSingleton<IJwtUtils, JwtUtils>();
+builder.Services.AddSingleton<IJwtTokenValidator, JwtTokenValidator>();
+builder.Services.AddSingleton<IJwtTokenFactory, JwtTokenFactory>();
+builder.Services.AddSingleton<IAuthenticator, Authenticator>();
 
 
 builder.Services.AddApiVersioning(config =>

@@ -37,9 +37,9 @@ public class GetUserByKey : IQuery<IUser>
 {
     private readonly string key;
 
-    public GetUserByKey(Guid key)
+    public GetUserByKey(string key)
     {
-        this.key = key.ToString().ToLowerInvariant();
+        this.key = key;
     }
 
     public async Task<IUser> Execute(IDbConnection connection)
@@ -118,7 +118,7 @@ public class GetUserPassword : IQuery<UserPassword>
 
 public class InsertUser : IQuery<int>
 {
-    private readonly Guid key;
+    private readonly string key;
 
     private readonly string email;
 
@@ -127,7 +127,7 @@ public class InsertUser : IQuery<int>
     private readonly AuthTicket ticket;
 
     public InsertUser(
-        Guid key,
+        string key,
         string email,
         UserPassword password,
         AuthTicket ticket)
@@ -167,7 +167,7 @@ public class InsertUser : IQuery<int>
             select last_insert_rowid()",
             new
             {
-                key = key.ToString().ToLowerInvariant(),
+                key,
                 email,
                 password.InitializationVector,
                 password.Salt,
