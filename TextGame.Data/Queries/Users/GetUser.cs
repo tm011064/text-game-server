@@ -5,26 +5,54 @@ using System.Data;
 using System.Threading.Tasks;
 using TextGame.Data.Contracts;
 
-public class GetUserByKey : IQuery<User?>
+public class GetUserByEmail : IQuery<IUser>
 {
-    private readonly Guid key;
+    private readonly string email;
 
-    public GetUserByKey(Guid key)
+    public GetUserByEmail(string email)
     {
-        this.key = key;
+        this.email = email;
     }
 
-    public Task<User?> Execute(IDbConnection connection)
+    public async Task<IUser> Execute(IDbConnection connection)
     {
-        return connection.QuerySingleAsync<User?>($@"
+        return await connection.QuerySingleAsync<UserModel>($@"
             select
-                id as {nameof(User.Id)},
-                user_key as {nameof(User.Key)},
-                email as {nameof(User.Email)}
+                id as {nameof(UserModel.Id)},
+                resource_key as {nameof(UserModel.Key)},
+                email as {nameof(UserModel.Email)}
             from
                 users
             where
-                user_key = @{nameof(key)}
+                email = @{nameof(email)}
+                and deleted_at is null",
+            new
+            {
+                email
+            });
+    }
+}
+
+public class GetUserByKey : IQuery<IUser>
+{
+    private readonly string key;
+
+    public GetUserByKey(Guid key)
+    {
+        this.key = key.ToString().ToLowerInvariant();
+    }
+
+    public async Task<IUser> Execute(IDbConnection connection)
+    {
+        return await connection.QuerySingleAsync<UserModel>($@"
+            select
+                id as {nameof(UserModel.Id)},
+                resource_key as {nameof(UserModel.Key)},
+                email as {nameof(UserModel.Email)}
+            from
+                users
+            where
+                resource_key = @{nameof(key)}
                 and deleted_at is null",
             new
             {
@@ -32,7 +60,8 @@ public class GetUserByKey : IQuery<User?>
             });
     }
 }
-public class GetUserById : IQuery<User?>
+
+public class GetUserById : IQuery<IUser>
 {
     private readonly int id;
 
@@ -41,13 +70,13 @@ public class GetUserById : IQuery<User?>
         this.id = id;
     }
 
-    public Task<User?> Execute(IDbConnection connection)
+    public async Task<IUser> Execute(IDbConnection connection)
     {
-        return connection.QuerySingleAsync<User?>($@"
+        return await connection.QuerySingleAsync<UserModel>($@"
             select
-                id as {nameof(User.Id)},
-                user_key as {nameof(User.Key)},
-                email as {nameof(User.Email)}
+                id as {nameof(UserModel.Id)},
+                resource_key as {nameof(UserModel.Key)},
+                email as {nameof(UserModel.Email)}
             from
                 users
             where
@@ -60,7 +89,7 @@ public class GetUserById : IQuery<User?>
     }
 }
 
-public class GetUserPassword : IQuery<User?>
+public class GetUserPassword : IQuery<UserPassword>
 {
     private readonly int userId;
 
@@ -69,15 +98,15 @@ public class GetUserPassword : IQuery<User?>
         this.userId = userId;
     }
 
-    public Task<User?> Execute(IDbConnection connection)
+    public Task<UserPassword> Execute(IDbConnection connection)
     {
-        return connection.QuerySingleAsync<User?>($@"
+        return connection.QuerySingleAsync<UserPassword>($@"
             select
                 password_initialization_vector as {nameof(UserPassword.InitializationVector)},
                 password_salt as {nameof(UserPassword.Salt)},
                 password_iterations as {nameof(UserPassword.Iterations)},
                 password_data as {nameof(UserPassword.Data)},
-                password_cipher_bytes as {nameof(UserPassword.CipherBytes)},
+                password_cipher_bytes as {nameof(UserPassword.CipherBytes)}
             from
                 users
             where
@@ -113,7 +142,7 @@ public class InsertUser : IQuery<int>
     {
         return connection.QuerySingleAsync<int>($@"
             insert into users (
-                user_key,
+                resource_key,
                 email,
                 password_initialization_vector,
                 password_salt,
@@ -138,14 +167,14 @@ public class InsertUser : IQuery<int>
             select last_insert_rowid()",
             new
             {
-                key,
+                key = key.ToString().ToLowerInvariant(),
                 email,
                 password.InitializationVector,
                 password.Salt,
                 password.Iterations,
                 password.Data,
                 password.CipherBytes,
-                ticket.CreatedAt,
+                CreatedAt = ticket.CreatedAt.ToUnixTimeSeconds(),
                 ticket.Identity
             });
     }

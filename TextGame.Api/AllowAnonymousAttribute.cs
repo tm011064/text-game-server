@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -7,6 +8,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
+using TextGame.Core.Cryptography;
+using TextGame.Data;
+using TextGame.Data.Contracts;
+using TextGame.Data.Queries.Users;
 
 namespace TextGame.Api
 {
@@ -21,16 +26,14 @@ namespace TextGame.Api
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            // skip authorization if action is decorated with [AllowAnonymous] attribute
             var allowAnonymous = context.ActionDescriptor.EndpointMetadata.OfType<AllowAnonymousAttribute>().Any();
             if (allowAnonymous)
-                return;
-
-            // authorization
-            var user = (User?)context.HttpContext.Items["User"];
-            if (user == null)
             {
-                // not logged in or role not authorized
+                return;
+            }
+
+            if (context.HttpContext.Items["User"] is not IUser)
+            {
                 context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
             }
         }
@@ -52,7 +55,8 @@ namespace TextGame.Api
             if (userId != null)
             {
                 // attach user to context on successful jwt validation
-                context.Items["User"] = userService.GetById(userId.Value);
+                // TODO (Roman): do this!!  
+                //context.Items["User"] = userService.GetById(userId.Value);
             }
 
             await _next(context);
@@ -61,52 +65,48 @@ namespace TextGame.Api
 
     public interface IJwtUtils
     {
-        public string GenerateJwtToken(User user);
+        public string GenerateJwtToken(IUser user);
         public int? ValidateJwtToken(string? token);
     }
     public interface IUserService
     {
-        AuthenticateResponse? Authenticate(AuthenticateRequest model);
-        IEnumerable<User> GetAll();
-        User? GetById(int id);
+        Task<AuthenticateResponse?> Authenticate(AuthenticateRequest model);
     }
 
     public class UserService : IUserService
     {
-        // users hardcoded for simplicity, store in a db with hashed passwords in production applications
-        private List<User> _users = new List<User>
-    {
-        new User { Id = 1, FirstName = "Test", LastName = "User", Username = "test", Password = "test" }
-    };
+        private readonly IQueryService queryService;
 
-        private readonly IJwtUtils _jwtUtils;
+        private readonly Rfc2898PasswordValidator validator = new();
 
-        public UserService(IJwtUtils jwtUtils)
+        private readonly IJwtUtils jwtUtils;
+
+        public UserService(IQueryService queryService, IJwtUtils jwtUtils)
         {
-            _jwtUtils = jwtUtils;
+            this.queryService = queryService;
+            this.jwtUtils = jwtUtils;
         }
 
-        public AuthenticateResponse? Authenticate(AuthenticateRequest model)
+        public async Task<AuthenticateResponse?> Authenticate(AuthenticateRequest request)
         {
-            var user = _users.SingleOrDefault(x => x.Username == model.Username && x.Password == model.Password);
+            var user = await queryService.Run(new GetUserByEmail(request.Email!));
 
             // return null if user not found
-            if (user == null) return null;
+            if (user == null)
+            {
+                return null; // throw exception?
+            }
 
-            // authentication successful so generate jwt token
-            var token = _jwtUtils.GenerateJwtToken(user);
+            var password = await queryService.Run(new GetUserPassword(user.Id));
+
+            if (!validator.IsValid(request.Password!, password))
+            {
+                return null; // throw exception?
+            }
+
+            var token = jwtUtils.GenerateJwtToken(user);
 
             return new AuthenticateResponse(user, token);
-        }
-
-        public IEnumerable<User> GetAll()
-        {
-            return _users;
-        }
-
-        public User? GetById(int id)
-        {
-            return _users.FirstOrDefault(x => x.Id == id);
         }
     }
 
@@ -120,7 +120,7 @@ namespace TextGame.Api
                 ?? throw new Exception("JWT secret not configured");
         }
 
-        public string GenerateJwtToken(User user)
+        public string GenerateJwtToken(IUser user)
         {
             // generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -168,39 +168,23 @@ namespace TextGame.Api
         }
     }
 
-    public class User
-    {
-        public int Id { get; set; }
-        public string? FirstName { get; set; }
-        public string? LastName { get; set; }
-        public string? Username { get; set; }
-
-        [JsonIgnore]
-        public string? Password { get; set; }
-    }
-
     public class AuthenticateResponse
     {
         public int Id { get; set; }
-        public string? FirstName { get; set; }
-        public string? LastName { get; set; }
-        public string? Username { get; set; }
+
         public string Token { get; set; }
 
-
-        public AuthenticateResponse(User user, string token)
+        public AuthenticateResponse(IUser user, string token)
         {
             Id = user.Id;
-            FirstName = user.FirstName;
-            LastName = user.LastName;
-            Username = user.Username;
             Token = token;
         }
     }
+
     public class AuthenticateRequest
     {
         [Required]
-        public string? Username { get; set; }
+        public string? Email { get; set; }
 
         [Required]
         public string? Password { get; set; }

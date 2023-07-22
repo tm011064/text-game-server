@@ -52,13 +52,14 @@ public class UsersController : ControllerBase
         return Ok(record); // towire
     }
 
-    [HttpGet]
-    public IActionResult GetAll()
+    [AllowAnonymous]
+    [HttpGet("/{id}")]
+    public async Task<IActionResult> Get(string id)
     {
         var identity = User.Identity;
-
-        var users = _userService.GetAll();
-        return Ok(users);
+        var key = new Guid(id);
+        var user = await queryService.Run(new GetUserByKey(key));
+        return Ok(user);
     }
 }
 

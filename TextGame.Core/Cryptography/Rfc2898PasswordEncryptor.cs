@@ -37,11 +37,11 @@ public class Rfc2898PasswordEncryptor
         keyGenerator.Reset();
 
         return new UserPassword(
-            InitializationVector: algorithm.IV,
-            Salt: salt,
-            Iterations: iterations,
-            Data: data,
-            CipherBytes: cipherBytes);
+            initializationVector: algorithm.IV,
+            salt: salt,
+            iterations: iterations,
+            data: data,
+            cipherBytes: cipherBytes);
     }
 
     private byte[] CreateRandomBytes()

@@ -9,10 +9,10 @@ namespace TextGame.Data.Migrations
         {
             Create.Table("users")
                 .WithColumn("id").AsInt64().PrimaryKey().Identity()
-                .WithColumn("user_key").AsGuid()
-                .WithColumn("created_at").AsDateTimeOffset().NotNullable() // unixtimestamp
+                .WithColumn("resource_key").AsString(36).NotNullable()
+                .WithColumn("created_at").AsInt32().NotNullable()
                 .WithColumn("created_by").AsString(256).NotNullable()
-                .WithColumn("deleted_at").AsDateTimeOffset().Nullable()
+                .WithColumn("deleted_at").AsInt32().Nullable()
                 .WithColumn("deleted_by").AsString(256).Nullable()
                 .WithColumn("email").AsString(256).NotNullable().Unique()
                 .WithColumn("password_initialization_vector").AsBinary().NotNullable()
@@ -26,7 +26,7 @@ namespace TextGame.Data.Migrations
                 .Columns("email", "deleted_at");
 
             Create.Index().OnTable("users")
-                .OnColumn("user_key").Ascending()
+                .OnColumn("resource_key").Ascending()
                 .OnColumn("deleted_at").Ascending();
         }
 
