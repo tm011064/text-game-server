@@ -1,7 +1,7 @@
 ﻿using FluentResults;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace TextGame.Api.Controllers.Users;
+namespace TextGame.Api.Auth;
 
 public interface IJwtTokenValidator
 {

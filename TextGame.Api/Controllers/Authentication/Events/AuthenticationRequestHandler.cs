@@ -1,6 +1,6 @@
 ﻿using FluentResults;
 using MediatR;
-using TextGame.Api.Controllers.Users;
+using TextGame.Api.Auth;
 using TextGame.Core.Cryptography;
 using TextGame.Data;
 using TextGame.Data.Queries.Users;

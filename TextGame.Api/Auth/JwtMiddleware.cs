@@ -1,7 +1,6 @@
 ﻿namespace TextGame.Api.Auth;
 
 using System;
-using TextGame.Api.Controllers.Users;
 using TextGame.Data;
 using TextGame.Data.Contracts;
 using TextGame.Data.Queries.Users;

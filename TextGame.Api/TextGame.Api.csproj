@@ -28,7 +28,4 @@
   <ItemGroup>
     <None Remove="Auth\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Auth\" />
-  </ItemGroup>
 </Project>

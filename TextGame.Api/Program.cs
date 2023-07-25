@@ -4,7 +4,6 @@ using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 using TextGame.Api.Auth;
 using TextGame.Api.Controllers.Authentication.Events;
-using TextGame.Api.Controllers.Users;
 using TextGame.Core.Chapters;
 using TextGame.Core.Emotions;
 using TextGame.Core.Events.Users;
