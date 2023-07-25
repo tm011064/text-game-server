@@ -1,9 +1,10 @@
 ﻿namespace TextGame.Api.Controllers.Users;
 
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 using TextGame.Api.Auth;
-using TextGame.Core.Cryptography;
+using TextGame.Api.Controllers.Users.Models;
+using TextGame.Core.Events.Users;
 using TextGame.Data;
 using TextGame.Data.Contracts;
 using TextGame.Data.Queries.Users;
@@ -13,84 +14,37 @@ using TextGame.Data.Queries.Users;
 [Route("[controller]")]
 public class UsersController : ControllerBase
 {
-    private readonly IAuthenticator authenticator;
-
     private readonly IQueryService queryService;
+    private readonly IMediator mediator;
 
-    public UsersController(IAuthenticator authenticator, IQueryService queryService)
+    public UsersController(IQueryService queryService, IMediator mediator)
     {
-        this.authenticator = authenticator;
         this.queryService = queryService;
-    }
-
-    [AllowAnonymous]
-    [HttpPost("authenticate")]
-    public IActionResult Authenticate(AuthenticateRequest model)
-    {
-        var response = authenticator.Authenticate(model);
-
-        if (response == null)
-            return BadRequest(new { message = "Username or password is incorrect" });
-
-        return Ok(response);
+        this.mediator = mediator;
     }
 
     [AllowAnonymous]
     [HttpPost()]
-    public async Task<IActionResult> Post(CreateUserRequest request)
+    public async Task<IActionResult> Post(PostUserRequest request)
     {
-        var encryptor = new Rfc2898PasswordEncryptor();
+        var ticket = new AuthTicket(DateTimeOffset.UtcNow, string.Empty);
 
-        var password = encryptor.Encrypt(request.Password!);
+        var record = await mediator.Send(new CreateUserRequest(request.Email!, request.Password!, ticket));
 
-        var key = Guid.NewGuid().ToString();
-
-        var ticket = new AuthTicket(DateTimeOffset.UtcNow, key);
-
-        var id = await queryService.Run(new InsertUser(key, request.Email!, password, ticket));
-
-        var record = await queryService.Run(new GetUserById(id));
-
-        return Ok(record); // towire
+        return Ok(ToWire(record));
     }
 
-    [AllowAnonymous]
     [HttpGet("/{id}")]
     public async Task<IActionResult> Get(string id)
     {
-        var user = await queryService.Run(new GetUserByKey(id));
+        var user = await queryService.Run(GetUser.ByKey(id));
 
-        return Ok(user);
+        return Ok(ToWire(user));
     }
-}
 
-public class CreateUserRequest
-{
-    [Required]
-    public string? Email { get; set; }
-
-    [Required]
-    public string? Password { get; set; }
-}
-
-public class AuthenticateResponse
-{
-    public int Id { get; set; }
-
-    public string Token { get; set; }
-
-    public AuthenticateResponse(IUser user, string token)
+    private static object ToWire(IUser record) => new
     {
-        Id = user.Id;
-        Token = token;
-    }
-}
-
-public class AuthenticateRequest
-{
-    [Required]
-    public string? Email { get; set; }
-
-    [Required]
-    public string? Password { get; set; }
+        Id = record.Key,
+        record.Email
+    };
 }

@@ -1,14 +1,8 @@
-﻿using Dapper;
-using Microsoft.Data.Sqlite;
+﻿using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 
 namespace TextGame.Data;
-
-public interface IQueryService
-{
-    Task<TRecord> Run<TRecord>(IQuery<TRecord> query);
-}
 
 public class QueryService : IQueryService
 {
@@ -30,9 +24,4 @@ public class QueryService : IQueryService
 
         return query.Execute(connection);
     }
-}
-
-public interface IQuery<TRecord>
-{
-    Task<TRecord> Execute(IDbConnection connection);
 }

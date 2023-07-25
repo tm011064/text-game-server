@@ -2,11 +2,12 @@ using FluentMigrator.Runner;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
-using TextGame.Api;
 using TextGame.Api.Auth;
+using TextGame.Api.Controllers.Authentication.Events;
 using TextGame.Api.Controllers.Users;
 using TextGame.Core.Chapters;
 using TextGame.Core.Emotions;
+using TextGame.Core.Events.Users;
 using TextGame.Core.TerminalCommands;
 using TextGame.Data;
 using TextGame.Data.Contracts;
@@ -70,8 +71,10 @@ builder.Services.AddSingleton<IQueryService, QueryService>();
 
 builder.Services.AddSingleton<IJwtTokenValidator, JwtTokenValidator>();
 builder.Services.AddSingleton<IJwtTokenFactory, JwtTokenFactory>();
-builder.Services.AddSingleton<IAuthenticator, Authenticator>();
 
+builder.Services.AddMediatR(x => x
+    .RegisterServicesFromAssemblyContaining<AuthenticationRequest>()
+    .RegisterServicesFromAssemblyContaining<CreateUserRequest>());
 
 builder.Services.AddApiVersioning(config =>
 {

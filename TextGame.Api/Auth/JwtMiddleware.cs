@@ -19,12 +19,21 @@ public class JwtMiddleware
     {
         var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
-        var userId = validator.Validate(token);
-
-        if (userId != null)
+        if (token == null)
         {
-            var user = await queryService.Run(new GetUserById(userId.Value));
+            await next(context);
+            return;
+        }
+
+        var result = validator.Validate(token!);
+
+        if (result.IsSuccess)
+        {
+            var userId = int.Parse(result.Value.Claims.First(x => x.Type == "id").Value);
+
+            var user = await queryService.Run(GetUser.ById(userId)); // TODO (Roman): this doesn't need to be done at each request
             context.Items["User"] = user;
+
             context.Items["AuthTicket"] = new AuthTicket(DateTimeOffset.UtcNow, user.Key);
         }
 

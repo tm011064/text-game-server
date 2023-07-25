@@ -25,8 +25,4 @@
 	  <None Remove="Queries\" />
 	  <None Remove="Queries\Users\" />
 	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Queries\" />
-	  <Folder Include="Queries\Users\" />
-	</ItemGroup>
 </Project>

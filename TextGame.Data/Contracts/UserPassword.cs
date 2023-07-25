@@ -20,15 +20,15 @@ public class UserPassword
         CipherBytes = cipherBytes;
     }
 
-    public byte[] InitializationVector { get; internal set; }
+    public byte[] InitializationVector { get; internal set; } = null!;
 
-    public byte[] Salt { get; internal set; }
+    public byte[] Salt { get; internal set; } = null!;
 
     public int Iterations { get; internal set; }
 
-    public string Data { get; internal set; }
+    public string Data { get; internal set; } = null!;
 
-    public byte[] CipherBytes { get; internal set; }
+    public byte[] CipherBytes { get; internal set; } = null!;
 
     public UserPassword Copy(
         byte[]? initializationVector = null,
