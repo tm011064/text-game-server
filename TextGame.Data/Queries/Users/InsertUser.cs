@@ -2,6 +2,7 @@
 
 using Dapper;
 using System.Data;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using TextGame.Data.Contracts;
 
@@ -53,7 +54,7 @@ public class InsertUser : IQuery<int>
                 @{nameof(ticket.Identity)}
             );
 
-            select last_insert_rowid()",
+            select last_insert_rowid();",
             new
             {
                 key,
@@ -63,7 +64,8 @@ public class InsertUser : IQuery<int>
                 password.Iterations,
                 password.Data,
                 password.CipherBytes,
-                CreatedAt = ticket.CreatedAt.ToUnixTimeSeconds(),
+                ticket.CreatedAt,
+                //CreatedAt = ticket.CreatedAt.ToUnixTimeSeconds(),
                 Identity = string.IsNullOrWhiteSpace(ticket.Identity) ? key : ticket.Identity
             });
     }

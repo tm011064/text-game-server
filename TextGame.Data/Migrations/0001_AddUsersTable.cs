@@ -19,7 +19,9 @@ namespace TextGame.Data.Migrations
                 .WithColumn("password_salt").AsBinary().NotNullable()
                 .WithColumn("password_iterations").AsInt32().NotNullable()
                 .WithColumn("password_data").AsString(256).NotNullable()
-                .WithColumn("password_cipher_text").AsBinary().NotNullable();
+                .WithColumn("password_cipher_text").AsBinary().NotNullable()
+                .WithColumn("refresh_token").AsString(int.MaxValue).Nullable()
+                .WithColumn("refresh_token_expires_at").AsInt32().Nullable();
 
             Create.UniqueConstraint()
                 .OnTable("users")

@@ -1,6 +1,10 @@
+using Dapper;
 using FluentMigrator.Runner;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text.Json.Serialization;
 using TextGame.Api.Auth;
 using TextGame.Api.Controllers.Authentication.Events;
@@ -68,11 +72,14 @@ builder.Services.AddSingleton<IGameSource, GameSource>();
 
 builder.Services.AddSingleton<IQueryService, QueryService>();
 
+SqlMapper.AddTypeHandler(new DateTimeOffsetTypeHandler());
+
 builder.Services.AddSingleton<IJwtTokenValidator, JwtTokenValidator>();
 builder.Services.AddSingleton<IJwtTokenFactory, JwtTokenFactory>();
+builder.Services.AddSingleton<IRefreshTokenFactory, RefreshTokenFactory>();
 
 builder.Services.AddMediatR(x => x
-    .RegisterServicesFromAssemblyContaining<AuthenticationRequest>()
+    .RegisterServicesFromAssemblyContaining<AuthenticateUserRequest>()
     .RegisterServicesFromAssemblyContaining<CreateUserRequest>());
 
 builder.Services.AddApiVersioning(config =>
@@ -90,6 +97,8 @@ builder.Services.AddFluentMigratorCore()
 
 var app = builder.Build();
 
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
 using var scope = app.Services.CreateScope();
 scope.ServiceProvider.GetRequiredService<IMigrationRunner>().MigrateUp();
 
@@ -102,12 +111,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors(x => x
-    .AllowAnyOrigin()
+    .WithOrigins("http://localhost:3000")
     .AllowAnyMethod()
-    .AllowAnyHeader());
+    .WithHeaders("Content-Type", "Authorization", "Access-Control-Allow-Credentials")
+    .AllowCredentials());
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
 app.MapControllers();

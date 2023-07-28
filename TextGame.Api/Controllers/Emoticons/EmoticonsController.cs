@@ -1,6 +1,7 @@
 ﻿namespace TextGame.Api.Controllers.Emoticons;
 
 using Microsoft.AspNetCore.Mvc;
+using TextGame.Api.Auth;
 using TextGame.Core.Emotions;
 using TextGame.Data.Contracts;
 
@@ -20,6 +21,7 @@ public class EmoticonsController : ControllerBase
         this.provider = provider;
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {

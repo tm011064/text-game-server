@@ -1,6 +1,7 @@
 ﻿namespace TextGame.Api.Auth;
 
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using TextGame.Data;
 using TextGame.Data.Contracts;
 using TextGame.Data.Queries.Users;
@@ -18,22 +19,16 @@ public class JwtMiddleware
     {
         var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
-        if (token == null)
+        if (token != null)
         {
-            await next(context);
-            return;
-        }
+            var result = validator.Validate(token!);
 
-        var result = validator.Validate(token!);
+            if (result.IsSuccess)
+            {
+                var userKey = result.Value.Claims.GetClaimOrThrow(JwtRegisteredClaimNames.Sub);
 
-        if (result.IsSuccess)
-        {
-            var userId = int.Parse(result.Value.Claims.First(x => x.Type == "id").Value);
-
-            var user = await queryService.Run(GetUser.ById(userId)); // TODO (Roman): this doesn't need to be done at each request
-            context.Items["User"] = user;
-
-            context.Items["AuthTicket"] = new AuthTicket(DateTimeOffset.UtcNow, user.Key);
+                context.Items["AuthTicket"] = new AuthTicket(DateTimeOffset.UtcNow, userKey);
+            }
         }
 
         await next(context);

@@ -7,11 +7,11 @@ using TextGame.Data.Contracts;
 
 public class GetUser : IQuery<IUser>
 {
-    public static GetUser ByEmail(string email) => new GetUser(email: email);
+    public static GetUser ByEmail(string email) => new(email: email);
 
-    public static GetUser ById(long id) => new GetUser(id: id);
+    public static GetUser ById(long id) => new(id: id);
 
-    public static GetUser ByKey(string key) => new GetUser(key: key);
+    public static GetUser ByKey(string key) => new(key: key);
 
     private readonly string? email;
 

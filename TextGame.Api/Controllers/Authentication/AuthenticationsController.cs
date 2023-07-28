@@ -8,7 +8,6 @@ using TextGame.Api.Controllers.Authentication.Events;
 using TextGame.Api.Controllers.Authentication.Models;
 
 [ApiController]
-[Authorize]
 [ApiVersion("20220718")]
 [Route("api/v{version:apiVersion}/[controller]")]
 [Route("[controller]")]
@@ -23,10 +22,10 @@ public class AuthenticationsController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost]
-    public async Task<IActionResult> Authenticate(AuthenticateRequest model)
+    public async Task<IActionResult> Authenticate(AuthenticateRequest request)
     {
         var response = await mediator.Send(
-            new AuthenticationRequest(model.Email!, model.Password!));
+            new AuthenticateUserRequest(request.Email!, request.Password!));
 
         return response switch
         {
@@ -36,9 +35,24 @@ public class AuthenticationsController : ControllerBase
         };
     }
 
-    private static object ToWire(Result<AuthenticationRequest.Response> response) => new
+    [HttpPost("refresh")]
+    public async Task<IActionResult> Refresh(RefreshTokenRequest request)
     {
-        response.Value.Token
+        var response = await mediator.Send(
+            new CreateRefreshTokenRequest(request.Token!, request.RefreshToken!));
+
+        return response switch
+        {
+            { IsSuccess: true } => Ok(ToWire(response)),
+
+            _ => BadRequest(new { message = "Token invalid" })
+        };
+    }
+
+    private static object ToWire(Result<UserTokenResponse> response) => new
+    {
+        response.Value.Token,
+        response.Value.RefreshToken
     };
 }
 

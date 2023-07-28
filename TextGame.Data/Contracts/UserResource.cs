@@ -8,4 +8,3 @@ internal class UserResource : IUser
 
     public string Email { get; set; } = null!;
 }
-

@@ -10,7 +10,8 @@ using TextGame.Data.Contracts;
 using TextGame.Data.Queries.Users;
 
 [ApiController]
-[Authorize]
+[ApiVersion("20220718")]
+[Route("api/v{version:apiVersion}/[controller]")]
 [Route("[controller]")]
 public class UsersController : ControllerBase
 {

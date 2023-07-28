@@ -1,6 +1,7 @@
 ﻿namespace TextGame.Api.Controllers.Chapters;
 
 using Microsoft.AspNetCore.Mvc;
+using TextGame.Api.Auth;
 using TextGame.Core.Chapters;
 using TextGame.Data.Contracts;
 
@@ -20,6 +21,7 @@ public class ChaptersController : ControllerBase
         this.provider = provider;
     }
 
+    [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetChapter(
         [FromRoute] string id)

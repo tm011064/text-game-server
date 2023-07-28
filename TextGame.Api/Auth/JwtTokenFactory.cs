@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -10,27 +11,33 @@ public class JwtTokenFactory : IJwtTokenFactory
 {
     private readonly string secretKey;
 
+    private readonly TimeSpan tokenExpiry;
+
+    private readonly JwtSecurityTokenHandler tokenHandler = new();
+
     public JwtTokenFactory(IConfiguration configuration)
     {
         secretKey = configuration.GetValue<string>("TokenAuthentication:SecretKey")
             ?? throw new Exception("JWT secret not configured");
+
+        tokenExpiry = configuration.GetValue<TimeSpan?>("TokenAuthentication:TokenExpiry")
+            ?? TimeSpan.FromMinutes(1);
     }
 
     public string Create(IUser user)
     {
-        var tokenHandler = new JwtSecurityTokenHandler();
-
-        var key = Encoding.ASCII.GetBytes(secretKey);
+        var claims = new[]
+        {
+            new Claim(JwtRegisteredClaimNames.Sub, user.Key),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        };
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(
-                new[] {
-                    new Claim("id", user.Id.ToString())
-                }),
-            Expires = DateTime.UtcNow.AddDays(7),
+            Subject = new ClaimsIdentity(claims),
+            Expires = DateTime.UtcNow.Add(tokenExpiry),
             SigningCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(key),
+                new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey)),
                 SecurityAlgorithms.HmacSha256Signature)
         };
 
