@@ -4,7 +4,6 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using TextGame.Data;
 using TextGame.Data.Contracts;
-using TextGame.Data.Queries.Users;
 
 public class JwtMiddleware
 {
@@ -15,11 +14,11 @@ public class JwtMiddleware
         this.next = next;
     }
 
-    public async Task Invoke(HttpContext context, IJwtTokenValidator validator, IQueryService queryService)
+    public async Task Invoke(HttpContext context, IJwtTokenValidator validator)
     {
         var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
-        if (token != null)
+        if (!token.IsNullOrWhitespace())
         {
             var result = validator.Validate(token!);
 
