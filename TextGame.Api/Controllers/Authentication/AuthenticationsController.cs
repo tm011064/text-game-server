@@ -35,6 +35,7 @@ public class AuthenticationsController : ControllerBase
         };
     }
 
+    [AllowAnonymous]
     [HttpPost("refresh")]
     public async Task<IActionResult> Refresh(RefreshTokenRequest request)
     {
