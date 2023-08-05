@@ -4,5 +4,8 @@ using System;
 
 public readonly record struct AuthTicket(
     DateTimeOffset CreatedAt,
-    string Identity);
+    IUserIdentity User)
+{
+    public string CreatedBy { get; } = User.Key;
+}
 

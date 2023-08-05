@@ -51,7 +51,7 @@ public class InsertUser : IQuery<int>
                 @{nameof(password.Data)},
                 @{nameof(password.CipherBytes)},
                 @{nameof(ticket.CreatedAt)},
-                @{nameof(ticket.Identity)}
+                @{nameof(ticket.CreatedBy)}
             );
 
             select last_insert_rowid();",
@@ -65,8 +65,7 @@ public class InsertUser : IQuery<int>
                 password.Data,
                 password.CipherBytes,
                 ticket.CreatedAt,
-                //CreatedAt = ticket.CreatedAt.ToUnixTimeSeconds(),
-                Identity = string.IsNullOrWhiteSpace(ticket.Identity) ? key : ticket.Identity
+                ticket.CreatedBy
             });
     }
 }

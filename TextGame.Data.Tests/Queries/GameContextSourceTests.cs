@@ -10,7 +10,7 @@ public class GameContextSourceTests
         //    new EmotionsSource(),
         //    new ChaptersSource());
 
-        //var candidate = subject.Get("Tutorials", "en-US");
+        //var candidate = subject.Get("Tutorials", GameSettings.DefaultLocale);
 
         //Assert.NotEmpty(candidate.Commands);
         //Assert.NotEmpty(candidate.Emotions);

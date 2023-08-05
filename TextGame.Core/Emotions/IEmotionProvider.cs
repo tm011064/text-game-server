@@ -4,5 +4,5 @@ using TextGame.Data.Contracts;
 
 public interface IEmotionProvider
 {
-    Task<IReadOnlyCollection<Emotion>> Get(string locale = "en-US");
+    Task<IReadOnlyCollection<Emotion>> Get(string locale = GameSettings.DefaultLocale);
 }

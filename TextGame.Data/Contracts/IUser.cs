@@ -1,10 +1,13 @@
 ﻿namespace TextGame.Data.Contracts;
 
-public interface IUser
+public interface IUserIdentity
+{
+    string Key { get; }
+}
+
+public interface IUser : IUserIdentity
 {
     int Id { get; }
-
-    string Key { get; }
 
     string Email { get; }
 }

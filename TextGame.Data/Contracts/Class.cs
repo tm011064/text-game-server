@@ -43,7 +43,8 @@
     public enum ChapterCommandType
     {
         Confirm,
-        Decline
+        Decline,
+        Move
     }
     public enum ParagraphGroupType
     {

@@ -98,8 +98,7 @@ namespace TextGame.Data.Migrations
                 .WithCreatedAtAndDeletedAt()
                 .WithColumn("command_type").AsString(64).NotNullable()
                 .WithColumn("action_type").AsString(64).NotNullable()
-                .WithColumn("chapter_id").AsInt64().Nullable()
-                ;
+                .WithColumn("chapter_id").AsInt64().Nullable();
 
             Create.Table("chapters")
                 .WithPrimaryIdAndResourceKey()

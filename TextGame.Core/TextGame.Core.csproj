@@ -11,12 +11,14 @@
     <None Remove="TerminalCommands\" />
     <None Remove="Emotions\" />
     <None Remove="Cryptography\" />
+    <None Remove="TerminalCommands\Events\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Chapters\" />
     <Folder Include="TerminalCommands\" />
     <Folder Include="Emotions\" />
     <Folder Include="Cryptography\" />
+    <Folder Include="TerminalCommands\Events\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentResults" Version="3.15.2" />

@@ -2,6 +2,7 @@
 
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using TextGame.Data;
 using TextGame.Data.Contracts;
 
@@ -24,9 +25,7 @@ public class JwtMiddleware
 
             if (result.IsSuccess)
             {
-                var userKey = result.Value.Claims.GetClaimOrThrow(JwtRegisteredClaimNames.Sub);
-
-                context.Items["AuthTicket"] = new AuthTicket(DateTimeOffset.UtcNow, userKey);
+                context.User.AddIdentity(new ClaimsIdentity(result.Value.Claims));
             }
         }
 

@@ -28,7 +28,7 @@ public class UsersController : ControllerBase
     [HttpPost()]
     public async Task<IActionResult> Post(PostUserRequest request)
     {
-        var ticket = new AuthTicket(DateTimeOffset.UtcNow, string.Empty);
+        var ticket = new AuthTicket(DateTimeOffset.UtcNow, AnonymousUserIdentity.Instance);
 
         var record = await mediator.Send(new CreateUserRequest(request.Email!, request.Password!, ticket));
 

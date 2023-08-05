@@ -4,5 +4,5 @@ using TextGame.Data.Contracts;
 
 public interface ITerminalCommandProvider
 {
-    Task<IReadOnlyCollection<TerminalCommand>> Get(string locale = "en-US");
+    Task<IReadOnlyCollection<TerminalCommand>> Get(string locale = GameSettings.DefaultLocale);
 }
