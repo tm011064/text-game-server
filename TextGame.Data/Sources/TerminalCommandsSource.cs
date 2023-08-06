@@ -1,4 +1,4 @@
-﻿using TextGame.Data.Contracts;
+﻿using TextGame.Data.Contracts.TerminalCommands;
 
 namespace TextGame.Data.Sources
 {

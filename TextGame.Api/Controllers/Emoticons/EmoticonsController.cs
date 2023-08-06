@@ -3,7 +3,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TextGame.Api.Auth;
 using TextGame.Core.Emotions;
-using TextGame.Data.Contracts;
+using TextGame.Data.Contracts.Emotions;
 
 [ApiController]
 [ApiVersion("20220718")]

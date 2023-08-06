@@ -100,11 +100,6 @@ namespace TextGame.Data.Migrations
                 .WithColumn("action_type").AsString(64).NotNullable()
                 .WithColumn("chapter_id").AsInt64().Nullable();
 
-            Create.Table("chapters")
-                .WithPrimaryIdAndResourceKey()
-                .WithCreatedAtAndDeletedAt()
-                .WithColumn("game_id").AsInt64().NotNullable().ForeignKey("games", "id");
-
             Create.Table("game_accounts")
                 .WithPrimaryIdAndResourceKey()
                 .WithCreatedAtAndDeletedAt()
@@ -114,6 +109,12 @@ namespace TextGame.Data.Migrations
             Create.UniqueConstraint()
                 .OnTable("game_accounts")
                 .Columns("account_id", "game_id", "deleted_at");
+
+            //Create.Table("chapters")
+            //    .WithPrimaryIdAndResourceKey()
+            //    .WithCreatedAtAndDeletedAt()
+            //    .WithColumn("game_id").AsInt64().NotNullable().ForeignKey("games", "id")
+            //    .WithColumn("json").AsString(int.MaxValue).Nullable();
         }
 
         public override void Down()

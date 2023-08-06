@@ -1,7 +1,5 @@
 using Dapper;
 using FluentMigrator.Runner;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using System.IdentityModel.Tokens.Jwt;
@@ -13,8 +11,11 @@ using TextGame.Core.Emotions;
 using TextGame.Core.Events.Users;
 using TextGame.Core.TerminalCommands;
 using TextGame.Data;
-using TextGame.Data.Contracts;
+using TextGame.Data.Contracts.Chapters;
+using TextGame.Data.Contracts.Emotions;
+using TextGame.Data.Contracts.TerminalCommands;
 using TextGame.Data.Sources;
+using TextGame.Data.Sources.ResourceFiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -67,7 +68,7 @@ builder.Services.AddSingleton<IEmotionProvider, EmotionProvider>();
 
 builder.Services.AddSingleton<IGlobalResourceJsonSource<TerminalCommand[]>, TerminalCommandsSource>();
 builder.Services.AddSingleton<IGlobalResourceJsonSource<Emotion[]>, EmotionsSource>();
-builder.Services.AddSingleton<IGameResourceJsonSource<Chapter[]>, ChaptersSource>();
+builder.Services.AddSingleton<IGameResourceJsonSource<IChapter[]>, ChaptersSource>();
 builder.Services.AddSingleton<IGameSource, GameSource>();
 
 builder.Services.AddSingleton<IQueryService, QueryService>();

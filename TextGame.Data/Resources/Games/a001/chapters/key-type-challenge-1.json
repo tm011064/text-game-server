@@ -1,0 +1,28 @@
+{
+  "paragraphs": [
+    {
+      "text": "my name is Zip, I'm a computer program. I'm trapped in this area and I need you to get me out of here so I can go back to Mum"
+    },
+    {
+      "text": "let's first do some typing practice, try typing the following letters and press the 'Enter' button:"
+    }
+  ],
+
+  "challenge": {
+    "type": "Spelling",
+    "configuration": {
+      "words": [
+        "b",
+        "a",
+        "n",
+        "a",
+        "n",
+        "a",
+        "ban",
+        "ana",
+        "banana"
+      ]
+    },
+    "chapterKey": "learn-key-space"
+  }
+}

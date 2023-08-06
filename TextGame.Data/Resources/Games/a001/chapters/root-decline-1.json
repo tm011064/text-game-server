@@ -1,0 +1,18 @@
+{
+  "paragraphs": [
+    {
+      "text": "That's too bad, I can really do with some help. See, I'm trapped and I don't know how to get out, can you at least try?"
+    }
+  ],
+
+  "navigationCommands": [
+    {
+      "type": "Confirm",
+      "chapterKey": "key-type-challenge-1"
+    },
+    {
+      "type": "Decline",
+      "chapterKey": "root-decline-2"
+    }
+  ]
+}

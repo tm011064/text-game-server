@@ -2,7 +2,7 @@
 
 using LazyCache;
 using TextGame.Data;
-using TextGame.Data.Contracts;
+using TextGame.Data.Contracts.Chapters;
 using TextGame.Data.Sources;
 
 public class ChapterProvider : IChapterProvider
@@ -11,12 +11,12 @@ public class ChapterProvider : IChapterProvider
 
     private readonly IAppCache cache;
 
-    private readonly IGameResourceJsonSource<Chapter[]> source;
+    private readonly IGameResourceJsonSource<IChapter[]> source;
 
     private readonly IGameSource gameSource;
 
     public ChapterProvider(
-        IGameResourceJsonSource<Chapter[]> source,
+        IGameResourceJsonSource<IChapter[]> source,
         IGameSource gameSource,
         IAppCache cache)
     {
@@ -25,14 +25,14 @@ public class ChapterProvider : IChapterProvider
         this.gameSource = gameSource;
     }
 
-    private IReadOnlyDictionary<string, Chapter> GetChaptersByKey(string locale) => cache.GetOrAdd(
+    private IReadOnlyDictionary<string, IChapter> GetChaptersByKey(string locale) => cache.GetOrAdd(
         $"{CachePrefix}-{locale}",
         () => gameSource.GetKeys()
             .SelectMany(x => source.Get(x, locale))
             .ToDictionary(x => x.GetCompositeKey()),
         TimeSpan.FromDays(1));
 
-    public Task<Chapter> GetChapter(string chapterKey, string locale) => Task.FromResult(
+    public Task<IChapter> GetChapter(string chapterKey, string locale) => Task.FromResult(
         GetChaptersByKey(locale).TryGetValue(chapterKey, out var chapter)
             ? chapter
             : throw new ResourceNotFoundException());

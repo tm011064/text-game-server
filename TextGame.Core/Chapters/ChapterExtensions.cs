@@ -1,10 +1,10 @@
-﻿namespace TextGame.Core.Chapters;
+﻿using TextGame.Data.Contracts.Chapters;
 
-using TextGame.Data.Contracts;
+namespace TextGame.Core.Chapters;
 
 public static class ChapterExtensions
 {
-    public static string GetCompositeKey(this Chapter self)
+    public static string GetCompositeKey(this IChapter self)
     {
         return $"{self.GameKey}-{self.Key}";
     }

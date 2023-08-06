@@ -1,6 +1,6 @@
 ﻿namespace TextGame.Core.TerminalCommands;
 
-using TextGame.Data.Contracts;
+using TextGame.Data.Contracts.TerminalCommands;
 
 public interface ITerminalCommandProvider
 {

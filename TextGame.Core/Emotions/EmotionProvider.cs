@@ -1,7 +1,7 @@
 ﻿namespace TextGame.Core.Emotions;
 
 using LazyCache;
-using TextGame.Data.Contracts;
+using TextGame.Data.Contracts.Emotions;
 using TextGame.Data.Sources;
 
 public class EmotionProvider : IEmotionProvider

@@ -3,7 +3,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TextGame.Api.Auth;
 using TextGame.Core.Chapters;
-using TextGame.Data.Contracts;
+using TextGame.Data.Contracts.Chapters;
 
 [ApiController]
 [ApiVersion("20220718")]
@@ -31,36 +31,25 @@ public class ChaptersController : ControllerBase
         return Ok(ToWire(chapter));
     }
 
-    private object ToWire(Chapter record) => new
+    private object ToWire(IChapter record) => new
     {
         Id = record.GetCompositeKey(),
 
-        EmoticonId = record.ParagraphGroups.First().EmotionKey,
-        Paragraphs = record.ParagraphGroups.First().Paragraphs.Select(ToWire).ToArray()
+        Paragraphs = record.Paragraphs.Select(ToWire).ToArray(),
+        Challenge = ToWire(record.Challenge)
     };
+
+    private static object? ToWire(Challenge? challenge) => challenge == null
+        ? null
+        : new
+        {
+            challenge!.Type,
+            challenge!.Configuration
+        };
 
     private object ToWire(Paragraph record, int index) => new
     {
         Index = index,
         record.Text
     };
-
-    //private object ToWire(ParagraphGroup record) => new
-    //{
-    //    EmotionId = record.EmotionKey,
-
-    //    Paragraphs = record.Paragraphs.Select(ToWire).ToArray()
-    //};
-
-    //private object ToWire(ChapterCommand record) => new
-    //{
-    //    Type = record.Type.ToString(),
-    //    Action = ToWire(record.Action)
-    //};
-
-    //private object ToWire(ChapterCommandAction record) => new
-    //{
-    //    Type = record.Type.ToString(),
-    //    ChapterId = record.ChapterKey
-    //};
 }

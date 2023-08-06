@@ -1,10 +1,8 @@
 ﻿using MediatR;
-using System;
 using TextGame.Core.Cryptography;
-using TextGame.Core.Events.Users;
 using TextGame.Data;
 using TextGame.Data.Contracts;
-using TextGame.Data.Queries.Users;
+using TextGame.Data.Contracts.Chapters;
 
 namespace TextGame.Core.TerminalCommands.Events;
 
@@ -25,14 +23,9 @@ public class PerformCommandRequestHandler : IRequestHandler<PerformCommandReques
 
     public async Task<PerformCommandResult> Handle(PerformCommandRequest request, CancellationToken cancellationToken)
     {
-        if (!Enum.TryParse<ChapterCommandType>(request.Tokens.First(), out var chapterCommand))
+        if (!Enum.TryParse<NavigationCommandType>(request.Tokens.First(), out var chapterCommand))
         {
             throw new InvalidOperationException("Command not found");
-        }
-
-        if (chapterCommand == ChapterCommandType.Move)
-        {
-            //var chapterKey =
         }
 
         throw new Exception();

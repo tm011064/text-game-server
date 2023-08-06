@@ -3,11 +3,10 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using TextGame.Core;
 using TextGame.Core.TerminalCommands;
 using TextGame.Core.TerminalCommands.Events;
 using TextGame.Data;
-using TextGame.Data.Contracts;
+using TextGame.Data.Contracts.TerminalCommands;
 
 [ApiController]
 [ApiVersion("20220718")]

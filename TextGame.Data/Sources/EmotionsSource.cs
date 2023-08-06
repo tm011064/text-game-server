@@ -1,4 +1,4 @@
-﻿using TextGame.Data.Contracts;
+﻿using TextGame.Data.Contracts.Emotions;
 
 namespace TextGame.Data.Sources
 {

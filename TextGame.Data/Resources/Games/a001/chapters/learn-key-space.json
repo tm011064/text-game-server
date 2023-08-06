@@ -1,0 +1,14 @@
+{
+  "paragraphs": [
+    {
+      "text": "TODO"
+    }
+  ],
+
+  "navigationCommands": [
+    {
+      "type": "Forward",
+      "chapterKey": "root"
+    }
+  ]
+}

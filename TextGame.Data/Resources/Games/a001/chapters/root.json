@@ -1,0 +1,21 @@
+{
+  "paragraphs": [
+    {
+      "text": "Hey"
+    },
+    {
+      "text": "Can you help me"
+    }
+  ],
+
+  "navigationCommands": [
+    {
+      "type": "Confirm",
+      "chapterKey": "key-type-challenge-1"
+    },
+    {
+      "type": "Decline",
+      "chapterKey": "root-decline-1"
+    }
+  ]
+}

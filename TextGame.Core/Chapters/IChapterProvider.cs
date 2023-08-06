@@ -1,9 +1,9 @@
 ﻿namespace TextGame.Core.Chapters;
 
-using TextGame.Data.Contracts;
+using TextGame.Data.Contracts.Chapters;
 
 public interface IChapterProvider
 {
-    Task<Chapter> GetChapter(string chapterKey, string locale = GameSettings.DefaultLocale);
+    Task<IChapter> GetChapter(string chapterKey, string locale = GameSettings.DefaultLocale);
 }
 
