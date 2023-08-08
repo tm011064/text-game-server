@@ -28,28 +28,6 @@ public class ChaptersController : ControllerBase
     {
         var chapter = await provider.GetChapter(chapterKey: id);
 
-        return Ok(ToWire(chapter));
+        return Ok(chapter.ToWire());
     }
-
-    private object ToWire(IChapter record) => new
-    {
-        Id = record.GetCompositeKey(),
-
-        Paragraphs = record.Paragraphs.Select(ToWire).ToArray(),
-        Challenge = ToWire(record.Challenge)
-    };
-
-    private static object? ToWire(Challenge? challenge) => challenge == null
-        ? null
-        : new
-        {
-            challenge!.Type,
-            challenge!.Configuration
-        };
-
-    private object ToWire(Paragraph record, int index) => new
-    {
-        Index = index,
-        record.Text
-    };
 }

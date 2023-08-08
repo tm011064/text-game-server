@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using FluentMigrator.Builders.Create;
 using FluentMigrator.Builders.Create.Table;
 
 namespace TextGame.Data.Migrations
@@ -20,6 +21,34 @@ namespace TextGame.Data.Migrations
                 .WithColumn("deleted_at").AsInt32().Nullable()
                 .WithColumn("deleted_by").AsString(256).Nullable();
         }
+
+        public static ICreateTableWithColumnSyntax WithAuditColumns(this ICreateTableWithColumnSyntax self)
+        {
+            return self
+                .WithColumn("created_at").AsInt32().NotNullable()
+                .WithColumn("created_by").AsString(256).NotNullable()
+                .WithColumn("updated_at").AsInt32().NotNullable()
+                .WithColumn("updated_by").AsString(256).NotNullable()
+                .WithColumn("deleted_at").AsInt32().Nullable()
+                .WithColumn("deleted_by").AsString(256).Nullable();
+        }
+
+        public static void CreateUniqueIndexWithNullable(
+            this Migration self,
+            string table,
+            string indexColumns,
+            string whereNullColumns)
+        {
+            var columnArray = indexColumns.SplitAndTrim().ToArray();
+            var whereNullColumnArray = whereNullColumns.SplitAndTrim().ToArray();
+
+            var sql =
+                $"create unique index if not exists IX_{table}_{string.Join("_", columnArray)} " +
+                $"on {table}({string.Join(", ", columnArray)}) " +
+                $"where {string.Join(" and ", whereNullColumns.SplitAndTrim().Select(x => $"{x} is null"))};";
+
+            self.Execute.Sql(sql);
+        }
     }
 
     [Migration(1)]
@@ -29,7 +58,7 @@ namespace TextGame.Data.Migrations
         {
             Create.Table("users")
                 .WithPrimaryIdAndResourceKey()
-                .WithCreatedAtAndDeletedAt()
+                .WithAuditColumns()
                 .WithColumn("email").AsString(256).NotNullable()
                 .WithColumn("password_initialization_vector").AsBinary().NotNullable()
                 .WithColumn("password_salt").AsBinary().NotNullable()
@@ -39,13 +68,15 @@ namespace TextGame.Data.Migrations
                 .WithColumn("refresh_token").AsString(int.MaxValue).Nullable()
                 .WithColumn("refresh_token_expires_at").AsInt32().Nullable();
 
-            Create.UniqueConstraint()
-                .OnTable("users")
-                .Columns("email", "deleted_at");
+            this.CreateUniqueIndexWithNullable(
+                table: "users",
+                indexColumns: "email",
+                whereNullColumns: "deleted_at");
 
-            Create.UniqueConstraint()
-                .OnTable("users")
-                .Columns("resource_key", "deleted_at");
+            this.CreateUniqueIndexWithNullable(
+                table: "users",
+                indexColumns: "resource_key",
+                whereNullColumns: "deleted_at");
         }
 
         public override void Down()
@@ -65,13 +96,15 @@ namespace TextGame.Data.Migrations
                 .WithColumn("user_id").AsInt64().NotNullable().ForeignKey("users", "id")
                 .WithColumn("name").AsString(16).NotNullable();
 
-            Create.UniqueConstraint()
-                .OnTable("accounts")
-                .Columns("name", "user_id", "deleted_at");
+            this.CreateUniqueIndexWithNullable(
+                table: "accounts",
+                indexColumns: "name, user_id",
+                whereNullColumns: "deleted_at");
 
-            Create.UniqueConstraint()
-                .OnTable("accounts")
-                .Columns("resource_key", "deleted_at");
+            this.CreateUniqueIndexWithNullable(
+                table: "accounts",
+                indexColumns: "resource_key",
+                whereNullColumns: "deleted_at");
         }
 
         public override void Down()
@@ -89,16 +122,10 @@ namespace TextGame.Data.Migrations
                 .WithPrimaryIdAndResourceKey()
                 .WithCreatedAtAndDeletedAt();
 
-            Create.UniqueConstraint()
-                .OnTable("games")
-                .Columns("resource_key", "deleted_at");
-
-            Create.Table("commands")
-                .WithPrimaryIdAndResourceKey()
-                .WithCreatedAtAndDeletedAt()
-                .WithColumn("command_type").AsString(64).NotNullable()
-                .WithColumn("action_type").AsString(64).NotNullable()
-                .WithColumn("chapter_id").AsInt64().Nullable();
+            this.CreateUniqueIndexWithNullable(
+                table: "games",
+                indexColumns: "resource_key",
+                whereNullColumns: "deleted_at");
 
             Create.Table("game_accounts")
                 .WithPrimaryIdAndResourceKey()
@@ -106,19 +133,15 @@ namespace TextGame.Data.Migrations
                 .WithColumn("game_id").AsInt64().NotNullable().ForeignKey("games", "id")
                 .WithColumn("account_id").AsInt64().NotNullable().ForeignKey("accounts", "id");
 
-            Create.UniqueConstraint()
-                .OnTable("game_accounts")
-                .Columns("account_id", "game_id", "deleted_at");
-
-            //Create.Table("chapters")
-            //    .WithPrimaryIdAndResourceKey()
-            //    .WithCreatedAtAndDeletedAt()
-            //    .WithColumn("game_id").AsInt64().NotNullable().ForeignKey("games", "id")
-            //    .WithColumn("json").AsString(int.MaxValue).Nullable();
+            this.CreateUniqueIndexWithNullable(
+                table: "game_accounts",
+                indexColumns: "account_id, game_id",
+                whereNullColumns: "deleted_at");
         }
 
         public override void Down()
         {
+            Delete.Table("game_accounts");
             Delete.Table("games");
         }
     }

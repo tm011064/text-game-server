@@ -27,5 +27,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Auth\" />
+    <None Remove="Controllers\TerminalCommands\" />
+    <None Remove="Transformers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controllers\TerminalCommands\" />
+    <Folder Include="Transformers\" />
   </ItemGroup>
 </Project>

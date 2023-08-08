@@ -8,7 +8,7 @@ using TextGame.Api.Auth;
 using TextGame.Api.Controllers.Authentication.Events;
 using TextGame.Core.Chapters;
 using TextGame.Core.Emotions;
-using TextGame.Core.Events.Users;
+using TextGame.Core.Users.Events;
 using TextGame.Core.TerminalCommands;
 using TextGame.Data;
 using TextGame.Data.Contracts.Chapters;
@@ -16,16 +16,26 @@ using TextGame.Data.Contracts.Emotions;
 using TextGame.Data.Contracts.TerminalCommands;
 using TextGame.Data.Sources;
 using TextGame.Data.Sources.ResourceFiles;
+using TextGame.Core.Setup;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using TextGame.Api.Transformers;
+using TextGame.Core.Games;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers().AddJsonOptions(x =>
-{
-    x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-});
+builder.Services
+    .AddControllers(options =>
+    {
+        options.Conventions.Add(
+            new RouteTokenTransformerConvention(new KebabCaseTransformer()));
+    })
+    .AddJsonOptions(x =>
+    {
+        x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -65,6 +75,8 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddSingleton<IChapterProvider, ChapterProvider>();
 builder.Services.AddSingleton<ITerminalCommandProvider, TerminalCommandProvider>();
 builder.Services.AddSingleton<IEmotionProvider, EmotionProvider>();
+builder.Services.AddSingleton<IGameProvider, GameProvider>();
+builder.Services.AddSingleton<SeedDataService>();
 
 builder.Services.AddSingleton<IGlobalResourceJsonSource<TerminalCommand[]>, TerminalCommandsSource>();
 builder.Services.AddSingleton<IGlobalResourceJsonSource<Emotion[]>, EmotionsSource>();
@@ -103,12 +115,18 @@ JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 using var scope = app.Services.CreateScope();
 scope.ServiceProvider.GetRequiredService<IMigrationRunner>().MigrateUp();
 
+var seedDataService = scope.ServiceProvider.GetRequiredService<SeedDataService>();
+
+await seedDataService.InsertResourceFileGamesIfNotExist();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    await seedDataService.CreateTestUserIfNotExists("test", "test");
+    await seedDataService.CreateTestUserIfNotExists("admin", "admin");
 }
 
 app.UseCors(x => x

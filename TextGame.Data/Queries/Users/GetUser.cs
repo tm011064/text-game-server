@@ -5,7 +5,7 @@ using System.Data;
 using System.Threading.Tasks;
 using TextGame.Data.Contracts;
 
-public class GetUser : IQuery<IUser>
+public class GetUser : IQuery<IUser?>
 {
     public static GetUser ByEmail(string email) => new(email: email);
 
@@ -26,9 +26,9 @@ public class GetUser : IQuery<IUser>
         this.key = key;
     }
 
-    public async Task<IUser> Execute(IDbConnection connection)
+    public async Task<IUser?> Execute(IDbConnection connection)
     {
-        return await connection.QuerySingleAsync<UserResource>($@"
+        return await connection.QuerySingleOrDefaultAsync<UserResource>($@"
             select
                 {UsersSql.SelectColumns}
             from

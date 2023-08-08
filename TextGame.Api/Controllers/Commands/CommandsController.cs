@@ -3,6 +3,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.ComponentModel.DataAnnotations;
+using TextGame.Core;
+using TextGame.Core.Games;
 using TextGame.Core.TerminalCommands;
 using TextGame.Core.TerminalCommands.Events;
 using TextGame.Data;
@@ -14,17 +17,14 @@ using TextGame.Data.Contracts.TerminalCommands;
 [Route("[controller]")]
 public class CommandsController : ControllerBase
 {
-    private readonly ILogger<CommandsController> logger;
-
-    private readonly ITerminalCommandProvider provider;
+    private readonly IGameProvider gameProvider;
 
     private readonly IMediator mediator;
 
-    public CommandsController(ILogger<CommandsController> logger, ITerminalCommandProvider provider, IMediator mediator)
+    public CommandsController(IMediator mediator, IGameProvider gameProvider)
     {
-        this.logger = logger;
-        this.provider = provider;
         this.mediator = mediator;
+        this.gameProvider = gameProvider;
     }
 
     [HttpPost]
@@ -34,34 +34,39 @@ public class CommandsController : ControllerBase
 
         if (request.GameId.IsNullOrWhitespace())
         {
-            return BadRequest("GameId must not be empty");
+            return BadRequest($"{nameof(request.GameId)} must not be empty");
         }
         if (request.ChapterId.IsNullOrWhitespace())
         {
-            return BadRequest("GameId must not be empty");
+            return BadRequest($"{nameof(request.ChapterId)} must not be empty");
+        }
+        if (request.CommandType == null)
+        {
+            return BadRequest($"{nameof(request.CommandType)} must not be empty");
         }
         if ((request.Tokens?.Length ?? 0) == 0)
         {
-            return BadRequest("No tokens provided");
+            return BadRequest($"{nameof(request.Tokens)} must not be empty");
         }
 
-        await mediator.Send(new PerformCommandRequest(request.GameId!, request.ChapterId!, request.Tokens!, ticket));
+        var game = await gameProvider.Get(request.GameId!);
+
+        await mediator.Send(new PerformCommandRequest(
+            new GameContext(game, GameSettings.DefaultLocale),
+            request.ChapterId!,
+            request.Tokens!,
+            request.CommandType ?? throw new Exception(),
+            ticket));
+
         throw new NotImplementedException();
     }
-
-    [HttpPost("search")]
-    public Task<IActionResult> Search([FromBody] PostSearchRequest request)
-    {
-        throw new NotImplementedException();
-    }
-
-    private object ToWire(TerminalCommand record) => new
-    {
-        Id = record.Key,
-        record.Terms
-    };
 }
 
 public record PostSearchRequest(string? GameId, string? Locale = null);
 
-public record PostCommandRequest(string? GameId, string? ChapterId, string[]? Tokens, string? Locale);
+public record PostCommandRequest(
+    [Required] string? GameId,
+    [Required] string? ChapterId,
+    [Required] TerminalCommandType? CommandType,
+    [Required] string[]? Tokens,
+    [Required] string? Locale);

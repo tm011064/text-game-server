@@ -12,6 +12,10 @@
     <None Remove="Emotions\" />
     <None Remove="Cryptography\" />
     <None Remove="TerminalCommands\Events\" />
+    <None Remove="Games\" />
+    <None Remove="Setup\" />
+    <None Remove="Users\" />
+    <None Remove="Users\Events\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Chapters\" />
@@ -19,6 +23,10 @@
     <Folder Include="Emotions\" />
     <Folder Include="Cryptography\" />
     <Folder Include="TerminalCommands\Events\" />
+    <Folder Include="Games\" />
+    <Folder Include="Setup\" />
+    <Folder Include="Users\" />
+    <Folder Include="Users\Events\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentResults" Version="3.15.2" />

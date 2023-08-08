@@ -1,6 +1,6 @@
 ﻿[
   {
-    "key": "move",
+    "key": "Move",
     "terms": [
       "go",
       "go to",
@@ -11,7 +11,7 @@
     ]
   },
   {
-    "key": "confirm",
+    "key": "Confirm",
     "terms": [
       "yes",
       "ok",
@@ -20,14 +20,18 @@
     ]
   },
   {
-    "key": "decline",
+    "key": "Decline",
     "terms": [
       "no",
+      "no way",
       "never",
       "nah",
       "nope",
-      "nae",
-      "no way"
+      "nae"
     ]
+  },
+  {
+    "key": "Forward",
+    "terms": []
   }
 ]

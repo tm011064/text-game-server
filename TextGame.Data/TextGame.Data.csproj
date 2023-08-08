@@ -27,5 +27,11 @@
 	<ItemGroup>
 	  <None Remove="Queries\" />
 	  <None Remove="Queries\Users\" />
+	  <None Remove="Contracts\Games\" />
+	  <None Remove="Queries\Games\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Contracts\Games\" />
+	  <Folder Include="Queries\Games\" />
 	</ItemGroup>
 </Project>

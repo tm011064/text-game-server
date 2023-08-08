@@ -8,6 +8,5 @@ namespace TextGame.Data.Sources
     {
         public override string FileName { get; } = "commands.json";
     }
-
 }
 

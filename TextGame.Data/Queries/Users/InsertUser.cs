@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using TextGame.Data.Contracts;
 
-public class InsertUser : IQuery<int>
+public class InsertUser : IQuery<long>
 {
     private readonly string key;
 
@@ -28,9 +28,9 @@ public class InsertUser : IQuery<int>
         this.ticket = ticket;
     }
 
-    public Task<int> Execute(IDbConnection connection)
+    public Task<long> Execute(IDbConnection connection)
     {
-        return connection.QuerySingleAsync<int>($@"
+        return connection.QuerySingleAsync<long>($@"
             insert into users (
                 resource_key,
                 email,
@@ -40,7 +40,9 @@ public class InsertUser : IQuery<int>
                 password_data,
                 password_cipher_text,
                 created_at,
-                created_by
+                created_by,
+                updated_at,
+                updated_by
             )
             values (
                 @{nameof(key)},
@@ -50,6 +52,8 @@ public class InsertUser : IQuery<int>
                 @{nameof(password.Iterations)},
                 @{nameof(password.Data)},
                 @{nameof(password.CipherBytes)},
+                @{nameof(ticket.CreatedAt)},
+                @{nameof(ticket.CreatedBy)},
                 @{nameof(ticket.CreatedAt)},
                 @{nameof(ticket.CreatedBy)}
             );

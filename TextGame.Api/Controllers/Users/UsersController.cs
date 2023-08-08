@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using TextGame.Api.Auth;
 using TextGame.Api.Controllers.Users.Models;
-using TextGame.Core.Events.Users;
+using TextGame.Core.Users.Events;
 using TextGame.Data;
 using TextGame.Data.Contracts;
 using TextGame.Data.Queries.Users;

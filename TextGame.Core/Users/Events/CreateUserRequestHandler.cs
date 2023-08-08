@@ -4,7 +4,7 @@ using TextGame.Data;
 using TextGame.Data.Contracts;
 using TextGame.Data.Queries.Users;
 
-namespace TextGame.Core.Events.Users;
+namespace TextGame.Core.Users.Events;
 
 public class CreateUserRequestHandler : IRequestHandler<CreateUserRequest, IUser>
 {

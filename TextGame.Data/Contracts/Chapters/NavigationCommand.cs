@@ -1,5 +1,7 @@
-﻿namespace TextGame.Data.Contracts.Chapters;
+﻿using TextGame.Data.Contracts.TerminalCommands;
+
+namespace TextGame.Data.Contracts.Chapters;
 
 public record NavigationCommand(
-    NavigationCommandType Type,
+    TerminalCommandType Type,
     string ChapterKey);

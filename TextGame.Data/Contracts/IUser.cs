@@ -11,4 +11,3 @@ public interface IUser : IUserIdentity
 
     string Email { get; }
 }
-

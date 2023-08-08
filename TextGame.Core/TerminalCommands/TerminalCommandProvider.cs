@@ -20,11 +20,11 @@ public class TerminalCommandProvider : ITerminalCommandProvider
         this.source = source;
     }
 
-    private IReadOnlyCollection<TerminalCommand> GetCached(string locale) => cache.GetOrAdd(
+    private IReadOnlyDictionary<TerminalCommandType, TerminalCommand> GetCached(string locale) => cache.GetOrAdd(
         $"{CachePrefix}-{locale}",
-        () => source.Get(locale),
+        () => source.Get(locale).ToDictionary(x => x.Key),
         TimeSpan.FromDays(1));
 
-    public Task<IReadOnlyCollection<TerminalCommand>> Get(string locale) => Task.FromResult(GetCached(locale));
+    public Task<IReadOnlyDictionary<TerminalCommandType, TerminalCommand>> Get(string locale) => Task.FromResult(GetCached(locale));
 }
 
