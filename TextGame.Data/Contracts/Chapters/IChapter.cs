@@ -4,7 +4,7 @@ public interface IChapter
 {
     string Key { get; }
 
-    string GameKey { get; }
+    string GameKey { get; } // TODO (Roman): proper domain model with objects
 
     IReadOnlyCollection<Paragraph> Paragraphs { get; }
 

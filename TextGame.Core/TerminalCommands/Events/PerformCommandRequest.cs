@@ -2,6 +2,7 @@
 using MediatR;
 using TextGame.Core.Chapters;
 using TextGame.Core.Cryptography;
+using TextGame.Core.Games;
 using TextGame.Data;
 using TextGame.Data.Contracts;
 using TextGame.Data.Contracts.Chapters;
@@ -17,15 +18,29 @@ public record PerformCommandRequest(
     AuthTicket Ticket) : IRequest<Result<PerformCommandResult>>;
 
 public record PerformCommandResult(
-    CommandResultNavigationType NavigationType,
-    IChapter NavigationChapter);
-
-public enum CommandResultNavigationType
+    CommandResultActionType ActionType,
+    IChapter? NextChapter = null,
+    string? Message = null,
+    CommandResultMessageType? MessageType = null)
 {
-    Stay,
-    Navigate
+    public static PerformCommandResult ChangeChapter(IChapter chapter) => new(CommandResultActionType.ChangeChapter, chapter);
+
+    public static PerformCommandResult Error(string message) => new(CommandResultActionType.ShowMessage, Message: message, MessageType: CommandResultMessageType.Error);
+
+    public static PerformCommandResult Info(string message) => new(CommandResultActionType.ShowMessage, Message: message, MessageType: CommandResultMessageType.Info);
 }
 
+public enum CommandResultMessageType
+{
+    Error,
+    Info
+}
+
+public enum CommandResultActionType
+{
+    ShowMessage,
+    ChangeChapter
+}
 
 public class PerformCommandRequestHandler : IRequestHandler<PerformCommandRequest, Result<PerformCommandResult>>
 {
@@ -51,19 +66,25 @@ public class PerformCommandRequestHandler : IRequestHandler<PerformCommandReques
 
         // TODO (Roman):  validate command type and token match
 
-        var firstToken = request.Tokens.First();
-        var terminalCommands = terminalCommandProvider.Get(request.GameContext.Locale);
+        return request.CommandType switch
+        {
+            TerminalCommandType.Forward or
+            TerminalCommandType.Move or
+            TerminalCommandType.Decline or
+            TerminalCommandType.Confirm => await HandleChangeChapterRequest(request, chapter),
 
-        //foreach (var command in chapter.NavigationCommands)
-        //{
+            _ => throw new NotImplementedException(request.CommandType.ToString())
+        };
+    }
 
-        //}
+    private async Task<Result<PerformCommandResult>> HandleChangeChapterRequest(PerformCommandRequest request, IChapter chapter)
+    {
+        var navigationCommand = chapter.NavigationCommands.Single(x => x.Type == request.CommandType);
 
-        //if (!Enum.TryParse<TerminalCommandType>(request.Tokens.First(), out var chapterCommand))
-        //{
-        //    throw new InvalidOperationException("Command not found");
-        //}
+        var nextChapter = await chapterProvider.GetChapter(
+            request.GameContext.Game.GetCompositeChapterKey(navigationCommand.ChapterKey),
+            request.GameContext.Locale);
 
-        throw new Exception();
+        return Result.Ok(PerformCommandResult.ChangeChapter(nextChapter));
     }
 }

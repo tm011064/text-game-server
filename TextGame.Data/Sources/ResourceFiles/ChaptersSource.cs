@@ -36,6 +36,8 @@ public class ChaptersSource : IGameResourceJsonSource<IChapter[]>
         string Key,
         string GameKey,
         IReadOnlyCollection<Paragraph> Paragraphs,
-        IReadOnlyCollection<NavigationCommand> NavigationCommands,
-        Challenge? Challenge) : IChapter;
+        Challenge? Challenge) : IChapter
+    {
+        public IReadOnlyCollection<NavigationCommand> NavigationCommands { get; init; } = Array.Empty<NavigationCommand>();
+    }
 }

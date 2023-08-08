@@ -1,9 +1,11 @@
 ﻿namespace TextGame.Api.Controllers.Commands;
 
+using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.ComponentModel.DataAnnotations;
+using TextGame.Api.Controllers.Chapters;
 using TextGame.Core;
 using TextGame.Core.Games;
 using TextGame.Core.TerminalCommands;
@@ -51,15 +53,28 @@ public class CommandsController : ControllerBase
 
         var game = await gameProvider.Get(request.GameId!);
 
-        await mediator.Send(new PerformCommandRequest(
+        var result = await mediator.Send(new PerformCommandRequest(
             new GameContext(game, GameSettings.DefaultLocale),
             request.ChapterId!,
             request.Tokens!,
             request.CommandType ?? throw new Exception(),
             ticket));
 
-        throw new NotImplementedException();
+        return result switch
+        {
+            { IsSuccess: true } => Ok(ToWire(result.Value)),
+
+            _ => BadRequest(new { message = string.Join(", ", result.Errors.Select(x => x.Message)) })
+        };
     }
+
+    private static object? ToWire(PerformCommandResult record) => new
+    {
+        record.ActionType,
+        record.Message,
+        record.MessageType,
+        NextChapter = record.NextChapter?.ToWire()
+    };
 }
 
 public record PostSearchRequest(string? GameId, string? Locale = null);
