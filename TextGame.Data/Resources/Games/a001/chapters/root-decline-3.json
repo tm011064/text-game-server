@@ -5,10 +5,5 @@
     }
   ],
 
-  "navigationCommands": [
-    {
-      "type": "Forward",
-      "chapterKey": "key-type-challenge-1"
-    }
-  ]
+  "forwardChapterKey": "key-type-challenge-1"
 }

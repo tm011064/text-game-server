@@ -1,5 +1,6 @@
 ﻿using FluentResults;
 using MediatR;
+using System.Collections.Generic;
 using TextGame.Core.Chapters;
 using TextGame.Core.Cryptography;
 using TextGame.Core.Games;
@@ -23,11 +24,28 @@ public record PerformCommandResult(
     string? Message = null,
     CommandResultMessageType? MessageType = null)
 {
-    public static PerformCommandResult ChangeChapter(IChapter chapter) => new(CommandResultActionType.ChangeChapter, chapter);
+    public static PerformCommandResult ChangeChapter(IChapter chapter) => new(
+        CommandResultActionType.ChangeChapter,
+        chapter);
 
-    public static PerformCommandResult Error(string message) => new(CommandResultActionType.ShowMessage, Message: message, MessageType: CommandResultMessageType.Error);
+    public static PerformCommandResult ForwardChapter(
+        IReadOnlyCollection<Paragraph> forwardParagraphs,
+        IChapter chapter) => new(CommandResultActionType.ChangeChapter, chapter)
+        {
+            ForwardParagraphs = forwardParagraphs
+        };
 
-    public static PerformCommandResult Info(string message) => new(CommandResultActionType.ShowMessage, Message: message, MessageType: CommandResultMessageType.Info);
+    public static PerformCommandResult Error(string message) => new(
+        CommandResultActionType.ShowMessage,
+        Message: message,
+        MessageType: CommandResultMessageType.Error);
+
+    public static PerformCommandResult Info(string message) => new(
+        CommandResultActionType.ShowMessage,
+        Message: message,
+        MessageType: CommandResultMessageType.Info);
+
+    public IReadOnlyCollection<Paragraph> ForwardParagraphs { get; init; } = Array.Empty<Paragraph>();
 }
 
 public enum CommandResultMessageType
@@ -68,7 +86,6 @@ public class PerformCommandRequestHandler : IRequestHandler<PerformCommandReques
 
         return request.CommandType switch
         {
-            TerminalCommandType.Forward or
             TerminalCommandType.Move or
             TerminalCommandType.Decline or
             TerminalCommandType.Confirm => await HandleChangeChapterRequest(request, chapter),
@@ -84,6 +101,15 @@ public class PerformCommandRequestHandler : IRequestHandler<PerformCommandReques
         var nextChapter = await chapterProvider.GetChapter(
             request.GameContext.Game.GetCompositeChapterKey(navigationCommand.ChapterKey),
             request.GameContext.Locale);
+
+        if (nextChapter.ForwardChapterKey != null)
+        {
+            var forwardChapter = await chapterProvider.GetChapter(
+                request.GameContext.Game.GetCompositeChapterKey(nextChapter.ForwardChapterKey),
+                request.GameContext.Locale);
+
+            return Result.Ok(PerformCommandResult.ForwardChapter(nextChapter.Paragraphs, forwardChapter));
+        }
 
         return Result.Ok(PerformCommandResult.ChangeChapter(nextChapter));
     }

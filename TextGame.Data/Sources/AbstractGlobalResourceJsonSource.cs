@@ -10,7 +10,7 @@ namespace TextGame.Data.Sources
         public TRecord Get(string locale)
         {
             string resourceName = ResourceService.GlobalResources.SingleOrDefault(x => x.EndsWith(FileName))
-                ?? throw new NullReferenceException(); ;
+                ?? throw new NullReferenceException();
 
             using var stream = ResourceService.ResourceAssembly.GetManifestResourceStream(resourceName)!;
             using var reader = new StreamReader(stream);

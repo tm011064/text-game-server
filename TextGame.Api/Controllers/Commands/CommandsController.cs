@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.ComponentModel.DataAnnotations;
+using TextGame.Api.Auth;
 using TextGame.Api.Controllers.Chapters;
 using TextGame.Core;
 using TextGame.Core.Games;
@@ -14,6 +15,7 @@ using TextGame.Data;
 using TextGame.Data.Contracts.TerminalCommands;
 
 [ApiController]
+[Authorize]
 [ApiVersion("20220718")]
 [Route("api/v{version:apiVersion}/[controller]")]
 [Route("[controller]")]
@@ -73,7 +75,7 @@ public class CommandsController : ControllerBase
         record.ActionType,
         record.Message,
         record.MessageType,
-        NextChapter = record.NextChapter?.ToWire()
+        NextChapter = record.NextChapter?.ToWire(record.ForwardParagraphs)
     };
 }
 

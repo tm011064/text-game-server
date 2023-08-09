@@ -27,6 +27,11 @@ public class JwtMiddleware
             {
                 context.User.AddIdentity(new ClaimsIdentity(result.Value.Claims));
             }
+            else
+            {
+                // TODO (Roman): remove
+                Console.WriteLine(string.Join(",", result.Errors.Select(x => x.Message)) + " -> " + token);
+            }
         }
 
         await next(context);

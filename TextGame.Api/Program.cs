@@ -20,6 +20,7 @@ using TextGame.Core.Setup;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using TextGame.Api.Transformers;
 using TextGame.Core.Games;
+using TextGame.Api.Middleware.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,7 @@ builder.Services
     {
         options.Conventions.Add(
             new RouteTokenTransformerConvention(new KebabCaseTransformer()));
+        options.Filters.Add<SecurityTokenExceptionFilter>();
     })
     .AddJsonOptions(x =>
     {

@@ -11,4 +11,6 @@ public interface IChapter
     IReadOnlyCollection<NavigationCommand> NavigationCommands { get; }
 
     Challenge? Challenge { get; }
+
+    string ForwardChapterKey { get; }
 }

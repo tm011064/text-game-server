@@ -5,10 +5,5 @@
     }
   ],
 
-  "navigationCommands": [
-    {
-      "type": "Forward",
-      "chapterKey": "root"
-    }
-  ]
+  "forwardChapterKey": "root"
 }

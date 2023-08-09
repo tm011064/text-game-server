@@ -4,6 +4,5 @@ public enum TerminalCommandType
 {
     Confirm,
     Decline,
-    Forward,
     Move
 }

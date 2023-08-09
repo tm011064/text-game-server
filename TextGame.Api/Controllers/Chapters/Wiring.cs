@@ -4,11 +4,13 @@ using TextGame.Data.Contracts.Chapters;
 
 public static class ChapterWiring
 {
-    public static object ToWire(this IChapter record) => new
+    public static object ToWire(this IChapter record, IEnumerable<Paragraph>? forwardParagraphs = null) => new
     {
         Id = record.GetCompositeKey(),
 
-        Paragraphs = record.Paragraphs.Select(ToWire).ToArray(),
+        Paragraphs = (forwardParagraphs ?? Array.Empty<Paragraph>()).Concat(record.Paragraphs)
+            .Select(ParagraphWiring.ToWire)
+            .ToArray(),
         Challenge = record.Challenge?.ToWire(),
         AllowedCommands = record.NavigationCommands.Select(x => x.Type).ToArray()
     };
@@ -18,8 +20,11 @@ public static class ChapterWiring
         record.Type,
         record.Configuration
     };
+}
 
-    private static object ToWire(this Paragraph record, int index) => new
+public static class ParagraphWiring
+{
+    public static object ToWire(this Paragraph record, int index) => new
     {
         Index = index,
         record.Text

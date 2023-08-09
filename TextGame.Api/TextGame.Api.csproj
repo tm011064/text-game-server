@@ -29,9 +29,13 @@
     <None Remove="Auth\" />
     <None Remove="Controllers\TerminalCommands\" />
     <None Remove="Transformers\" />
+    <None Remove="Middleware\" />
+    <None Remove="Middleware\Exceptions\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\TerminalCommands\" />
     <Folder Include="Transformers\" />
+    <Folder Include="Middleware\" />
+    <Folder Include="Middleware\Exceptions\" />
   </ItemGroup>
 </Project>
