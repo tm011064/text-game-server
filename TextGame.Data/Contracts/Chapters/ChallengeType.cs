@@ -2,5 +2,5 @@
 
 public enum ChallengeType
 {
-    Spelling
+    TypeKeys
 }

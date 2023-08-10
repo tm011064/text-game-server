@@ -1,0 +1,21 @@
+{
+  "paragraphs": [
+    {
+      "text": "Hm. I don't know where I am, but I need to get home"
+    },
+    {
+      "text": "Can you help me?"
+    }
+  ],
+
+  "navigationCommands": [
+    {
+      "type": "Confirm",
+      "chapterKey": "key-type-challenge-1"
+    },
+    {
+      "type": "Decline",
+      "chapterKey": "root-decline-2"
+    }
+  ]
+}

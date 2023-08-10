@@ -1,26 +1,29 @@
 {
   "paragraphs": [
     {
-      "text": "my name is Zip, I'm a computer program. I'm trapped in this area and I need you to get me out of here so I can go back to Mum"
+      "text": "There is a gate, but it does not open"
     },
     {
-      "text": "let's first do some typing practice, try typing the following letters and press the 'Enter' button:"
+      "text": "We need to follow the instructions on its terminal:"
     }
   ],
 
   "challenge": {
-    "type": "Spelling",
+    "type": "TypeKeys",
     "configuration": {
-      "words": [
-        "b",
-        "a",
-        "n",
-        "a",
-        "n",
-        "a",
-        "ban",
-        "ana",
-        "banana"
+      "items": [
+        {
+          "description": "Type the numbers below",
+          "keys": [ "1", "2", "3" ]
+        },
+        {
+          "description": "Now try some letters",
+          "keys": [ "a", "b", "c" ]
+        },
+        {
+          "description": "Now, look for a key that spells 'tab' or has a symbol like ⇥ or ⇄ (hint: look at the left side of your keyboard)",
+          "keys": [ "[tab]" ]
+        }
       ]
     },
     "chapterKey": "learn-key-space"
