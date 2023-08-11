@@ -1,0 +1,14 @@
+{
+  "challenge": {
+    "type": "TypeKeys",
+    "configuration": {
+      "items": [
+        {
+          "description": "You now know how to get from left to right, but how do you get back? Try to find the [shift] key, look for a key that says 'shift' or has a ⇧ symbol",
+          "keys": [ "[shift]" ]
+        }
+      ]
+    },
+    "chapterKey": "challenge-learn-key-shift-tab"
+  }
+}

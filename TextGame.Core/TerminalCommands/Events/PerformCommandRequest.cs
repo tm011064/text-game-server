@@ -62,20 +62,11 @@ public enum CommandResultActionType
 
 public class PerformCommandRequestHandler : IRequestHandler<PerformCommandRequest, Result<PerformCommandResult>>
 {
-    private readonly IQueryService queryService;
-
     private readonly IChapterProvider chapterProvider;
 
-    private readonly ITerminalCommandProvider terminalCommandProvider;
-
-    public PerformCommandRequestHandler(
-        IQueryService queryService,
-        IChapterProvider chapterProvider,
-        ITerminalCommandProvider terminalCommandProvider)
+    public PerformCommandRequestHandler(IChapterProvider chapterProvider)
     {
-        this.queryService = queryService;
         this.chapterProvider = chapterProvider;
-        this.terminalCommandProvider = terminalCommandProvider;
     }
 
     public async Task<Result<PerformCommandResult>> Handle(PerformCommandRequest request, CancellationToken cancellationToken)

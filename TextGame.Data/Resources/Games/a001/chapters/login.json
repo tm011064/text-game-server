@@ -11,7 +11,7 @@
   "navigationCommands": [
     {
       "type": "Confirm",
-      "chapterKey": "key-type-challenge-1"
+      "chapterKey": "challenge-type-key-basics"
     },
     {
       "type": "Decline",

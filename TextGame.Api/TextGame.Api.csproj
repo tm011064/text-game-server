@@ -31,11 +31,13 @@
     <None Remove="Transformers\" />
     <None Remove="Middleware\" />
     <None Remove="Middleware\Exceptions\" />
+    <None Remove="Controllers\Challenges\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\TerminalCommands\" />
     <Folder Include="Transformers\" />
     <Folder Include="Middleware\" />
     <Folder Include="Middleware\Exceptions\" />
+    <Folder Include="Controllers\Challenges\" />
   </ItemGroup>
 </Project>

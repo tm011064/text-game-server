@@ -16,6 +16,8 @@
     <None Remove="Setup\" />
     <None Remove="Users\" />
     <None Remove="Users\Events\" />
+    <None Remove="Challenges\" />
+    <None Remove="Challenges\Events\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Chapters\" />
@@ -27,6 +29,8 @@
     <Folder Include="Setup\" />
     <Folder Include="Users\" />
     <Folder Include="Users\Events\" />
+    <Folder Include="Challenges\" />
+    <Folder Include="Challenges\Events\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentResults" Version="3.15.2" />

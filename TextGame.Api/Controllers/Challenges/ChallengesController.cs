@@ -1,38 +1,35 @@
-﻿namespace TextGame.Api.Controllers.Commands;
-
-using FluentResults;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.ComponentModel.DataAnnotations;
 using TextGame.Api.Auth;
 using TextGame.Api.Controllers.Chapters;
+using TextGame.Api.Controllers.Commands;
 using TextGame.Core;
+using TextGame.Core.Challenges.Events;
 using TextGame.Core.Games;
-using TextGame.Core.TerminalCommands;
-using TextGame.Core.TerminalCommands.Events;
 using TextGame.Data;
-using TextGame.Data.Contracts.TerminalCommands;
+
+namespace TextGame.Api.Controllers.TerminalCommands;
 
 [ApiController]
 [Authorize]
 [ApiVersion("20220718")]
 [Route("api/v{version:apiVersion}/[controller]")]
 [Route("[controller]")]
-public class CommandsController : ControllerBase
+public class ChallengesController : ControllerBase
 {
     private readonly IGameProvider gameProvider;
 
     private readonly IMediator mediator;
 
-    public CommandsController(IMediator mediator, IGameProvider gameProvider)
+    public ChallengesController(IGameProvider gameProvider, IMediator mediator)
     {
-        this.mediator = mediator;
         this.gameProvider = gameProvider;
+        this.mediator = mediator;
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] PostCommandRequest request)
+    public async Task<IActionResult> Post([FromBody] PostChallengeRequest request)
     {
         var ticket = this.GetTicket();
 
@@ -44,22 +41,12 @@ public class CommandsController : ControllerBase
         {
             return BadRequest($"{nameof(request.ChapterId)} must not be empty");
         }
-        if (request.CommandType == null)
-        {
-            return BadRequest($"{nameof(request.CommandType)} must not be empty");
-        }
-        if ((request.Tokens?.Length ?? 0) == 0)
-        {
-            return BadRequest($"{nameof(request.Tokens)} must not be empty");
-        }
 
         var game = await gameProvider.Get(request.GameId!);
 
-        var result = await mediator.Send(new PerformCommandRequest(
+        var result = await mediator.Send(new ChallengeSucceededRequest(
             new GameContext(game, GameSettings.DefaultLocale),
             request.ChapterId!,
-            request.Tokens!,
-            request.CommandType ?? throw new Exception(),
             ticket));
 
         return result switch
@@ -70,18 +57,13 @@ public class CommandsController : ControllerBase
         };
     }
 
-    private static object? ToWire(PerformCommandResult record) => new
+    private static object? ToWire(ChallengeSucceededResult record) => new
     {
-        record.ActionType,
-        record.Message,
-        record.MessageType,
         NextChapter = record.NextChapter?.ToWire(record.ForwardParagraphs)
     };
 }
 
-public record PostCommandRequest(
+public record PostChallengeRequest(
     [Required] string? GameId,
     [Required] string? ChapterId,
-    [Required] TerminalCommandType? CommandType,
-    [Required] string[]? Tokens,
     [Required] string? Locale);

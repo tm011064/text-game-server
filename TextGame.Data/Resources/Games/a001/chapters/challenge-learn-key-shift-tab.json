@@ -1,0 +1,14 @@
+{
+  "challenge": {
+    "type": "LearnShiftTabKey",
+    "configuration": {
+      "items": [
+        {
+          "description": "First, press and hold the [shift] key, then press the [tab] key. You have to press both keys at the same time.",
+          "tabCount": 5
+        }
+      ]
+    },
+    "chapterKey": "challenge-learn-key-shift"
+  }
+}

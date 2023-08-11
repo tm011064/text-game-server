@@ -2,5 +2,7 @@
 
 public enum ChallengeType
 {
+    LearnShiftTabKey,
+    LearnTabKey,
     TypeKeys
 }
