@@ -11,7 +11,8 @@
       "items": [
         {
           "description": "The [tab] key is a special key, you can use it to jump from one place to another. Try pressing [tab] a few times and see what happens",
-          "tabCount": 5
+          "tabCount": 5,
+          "targetIndex": 4
         }
       ]
     },

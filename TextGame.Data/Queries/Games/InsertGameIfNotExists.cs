@@ -1,11 +1,8 @@
-﻿namespace TextGame.Data.Queries.Users;
-
-using Dapper;
+﻿using Dapper;
 using System.Data;
-using System.Net.Sockets;
-using System.Threading.Tasks;
 using TextGame.Data.Contracts;
-using TextGame.Data.Contracts.Games;
+
+namespace TextGame.Data.Queries.Users;
 
 public class InsertGameIfNotExists : IQuery<long>
 {
