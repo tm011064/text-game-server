@@ -1,6 +1,7 @@
-﻿namespace TextGame.Api.Controllers.Chapters;
-using TextGame.Core.Chapters;
+﻿using TextGame.Core.Chapters;
 using TextGame.Data.Contracts.Chapters;
+
+namespace TextGame.Api.Controllers.Chapters;
 
 public static class ChapterWiring
 {

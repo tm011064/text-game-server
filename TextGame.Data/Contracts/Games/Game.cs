@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TextGame.Data.Contracts.Games;
+﻿namespace TextGame.Data.Contracts.Games;
 
 public interface IGame
 {
@@ -15,4 +13,3 @@ public class GameResource : IGame
 
     public string Key { get; set; } = null!;
 }
-

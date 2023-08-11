@@ -1,18 +1,15 @@
-﻿namespace TextGame.Api.Controllers.Commands;
-
-using FluentResults;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.ComponentModel.DataAnnotations;
 using TextGame.Api.Auth;
 using TextGame.Api.Controllers.Chapters;
 using TextGame.Core;
 using TextGame.Core.Games;
-using TextGame.Core.TerminalCommands;
 using TextGame.Core.TerminalCommands.Events;
 using TextGame.Data;
 using TextGame.Data.Contracts.TerminalCommands;
+
+namespace TextGame.Api.Controllers.Commands;
 
 [ApiController]
 [Authorize]

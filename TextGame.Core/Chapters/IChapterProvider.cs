@@ -1,6 +1,6 @@
-﻿namespace TextGame.Core.Chapters;
+﻿using TextGame.Data.Contracts.Chapters;
 
-using TextGame.Data.Contracts.Chapters;
+namespace TextGame.Core.Chapters;
 
 public interface IChapterProvider
 {

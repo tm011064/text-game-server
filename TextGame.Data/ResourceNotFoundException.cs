@@ -1,14 +1,13 @@
-﻿namespace TextGame.Data
-{
-    public class ResourceNotFoundException : Exception
-    {
-        public ResourceNotFoundException()
-        {
-        }
+﻿namespace TextGame.Data;
 
-        public ResourceNotFoundException(string message) : base(message)
-        {
-        }
+public class ResourceNotFoundException : Exception
+{
+    public ResourceNotFoundException()
+    {
+    }
+
+    public ResourceNotFoundException(string message) : base(message)
+    {
     }
 }
 

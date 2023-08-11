@@ -1,10 +1,8 @@
-﻿namespace TextGame.Core.Cryptography;
-
-using System;
-using System.IO;
+﻿using System.Security.Cryptography;
 using System.Text;
-using System.Security.Cryptography;
 using TextGame.Data.Contracts;
+
+namespace TextGame.Core.Cryptography;
 
 public class Rfc2898PasswordEncryptor
 {
@@ -44,7 +42,7 @@ public class Rfc2898PasswordEncryptor
             cipherBytes: cipherBytes);
     }
 
-    private byte[] CreateRandomBytes()
+    private static byte[] CreateRandomBytes()
     {
         var salt = new byte[8];
 

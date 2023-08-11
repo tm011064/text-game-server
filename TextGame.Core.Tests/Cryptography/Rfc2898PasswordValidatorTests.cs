@@ -1,7 +1,7 @@
-﻿namespace TextGame.Core.Tests.Cryptography;
-
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using TextGame.Core.Cryptography;
+
+namespace TextGame.Core.Tests.Cryptography;
 
 public class Rfc2898PasswordValidatorTests
 {

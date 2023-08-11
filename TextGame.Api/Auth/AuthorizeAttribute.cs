@@ -1,10 +1,8 @@
-﻿namespace TextGame.Api.Auth;
-using Microsoft.AspNetCore.Mvc;
-
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System;
 using System.IdentityModel.Tokens.Jwt;
-using TextGame.Data.Contracts;
+
+namespace TextGame.Api.Auth;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class AuthorizeAttribute : Attribute, IAuthorizationFilter

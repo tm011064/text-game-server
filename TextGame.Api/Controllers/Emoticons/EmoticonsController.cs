@@ -1,9 +1,9 @@
-﻿namespace TextGame.Api.Controllers.Emoticons;
-
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TextGame.Api.Auth;
 using TextGame.Core.Emotions;
 using TextGame.Data.Contracts.Emotions;
+
+namespace TextGame.Api.Controllers.Emoticons;
 
 [ApiController]
 [ApiVersion("20220718")]
@@ -11,13 +11,10 @@ using TextGame.Data.Contracts.Emotions;
 [Route("[controller]")]
 public class EmoticonsController : ControllerBase
 {
-    private readonly ILogger<EmoticonsController> logger;
-
     private readonly IEmotionProvider provider;
 
-    public EmoticonsController(ILogger<EmoticonsController> logger, IEmotionProvider provider)
+    public EmoticonsController(IEmotionProvider provider)
     {
-        this.logger = logger;
         this.provider = provider;
     }
 

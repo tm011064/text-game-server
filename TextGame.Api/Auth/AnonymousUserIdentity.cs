@@ -1,5 +1,4 @@
-﻿using System;
-using TextGame.Data.Contracts;
+﻿using TextGame.Data.Contracts;
 
 namespace TextGame.Api.Auth;
 

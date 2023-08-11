@@ -1,9 +1,9 @@
-﻿namespace TextGame.Core.Chapters;
-
-using LazyCache;
+﻿using LazyCache;
 using TextGame.Data;
 using TextGame.Data.Contracts.Chapters;
 using TextGame.Data.Sources;
+
+namespace TextGame.Core.Chapters;
 
 public class ChapterProvider : IChapterProvider
 {
@@ -37,4 +37,3 @@ public class ChapterProvider : IChapterProvider
             ? chapter
             : throw new ResourceNotFoundException());
 }
-

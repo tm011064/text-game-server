@@ -1,18 +1,10 @@
 ﻿using LazyCache;
-using System;
-using TextGame.Core.Emotions;
-using TextGame.Data.Contracts.Emotions;
-using TextGame.Data.Sources;
-
-namespace TextGame.Core.Games;
-
-using LazyCache;
 using TextGame.Data;
-using TextGame.Data.Contracts.Emotions;
 using TextGame.Data.Contracts.Games;
 using TextGame.Data.Queries.Games;
 using TextGame.Data.Resources;
-using TextGame.Data.Sources;
+
+namespace TextGame.Core.Games;
 
 public class GameProvider : IGameProvider
 {

@@ -1,6 +1,4 @@
-﻿namespace TextGame.Api.Controllers.Users;
-
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using TextGame.Api.Auth;
 using TextGame.Api.Controllers.Users.Models;
@@ -8,6 +6,8 @@ using TextGame.Core.Users.Events;
 using TextGame.Data;
 using TextGame.Data.Contracts;
 using TextGame.Data.Queries.Users;
+
+namespace TextGame.Api.Controllers.Users;
 
 [ApiController]
 [ApiVersion("20220718")]
@@ -38,7 +38,7 @@ public class UsersController : ControllerBase
     [HttpGet("/{id}")]
     public async Task<IActionResult> Get(string id)
     {
-        var user = await queryService.Run(GetUser.ByKey(id));
+        var user = await queryService.Run(GetUser.ByKey(id)) ?? throw new ResourceNotFoundException();
 
         return Ok(ToWire(user));
     }

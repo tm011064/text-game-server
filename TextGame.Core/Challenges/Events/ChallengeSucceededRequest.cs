@@ -1,12 +1,9 @@
 ﻿using FluentResults;
 using MediatR;
-using System;
 using TextGame.Core.Chapters;
 using TextGame.Core.Games;
-using TextGame.Core.TerminalCommands.Events;
 using TextGame.Data.Contracts;
 using TextGame.Data.Contracts.Chapters;
-using TextGame.Data.Contracts.TerminalCommands;
 
 namespace TextGame.Core.Challenges.Events;
 

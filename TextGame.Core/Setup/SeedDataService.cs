@@ -1,6 +1,4 @@
 ﻿using MediatR;
-using System;
-using System.Net.Sockets;
 using TextGame.Core.Cryptography;
 using TextGame.Core.Users.Events;
 using TextGame.Data;

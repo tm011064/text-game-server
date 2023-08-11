@@ -1,11 +1,11 @@
-﻿namespace TextGame.Api.Controllers.Authentications;
-
-using FluentResults;
+﻿using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using TextGame.Api.Auth;
 using TextGame.Api.Controllers.Authentication.Events;
 using TextGame.Api.Controllers.Authentication.Models;
+
+namespace TextGame.Api.Controllers.Authentications;
 
 [ApiController]
 [ApiVersion("20220718")]

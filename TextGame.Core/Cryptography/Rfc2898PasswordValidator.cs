@@ -1,9 +1,8 @@
-﻿namespace TextGame.Core.Cryptography;
-
-using System.IO;
+﻿using System.Security.Cryptography;
 using System.Text;
-using System.Security.Cryptography;
 using TextGame.Data.Contracts;
+
+namespace TextGame.Core.Cryptography;
 
 public class Rfc2898PasswordValidator
 {

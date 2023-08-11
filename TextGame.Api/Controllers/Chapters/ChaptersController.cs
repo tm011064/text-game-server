@@ -1,9 +1,8 @@
-﻿namespace TextGame.Api.Controllers.Chapters;
-
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TextGame.Api.Auth;
 using TextGame.Core.Chapters;
-using TextGame.Data.Contracts.Chapters;
+
+namespace TextGame.Api.Controllers.Chapters;
 
 [ApiController]
 [ApiVersion("20220718")]
@@ -11,13 +10,10 @@ using TextGame.Data.Contracts.Chapters;
 [Route("[controller]")]
 public class ChaptersController : ControllerBase
 {
-    private readonly ILogger<ChaptersController> logger;
-
     private readonly IChapterProvider provider;
 
-    public ChaptersController(ILogger<ChaptersController> logger, IChapterProvider provider)
+    public ChaptersController(IChapterProvider provider)
     {
-        this.logger = logger;
         this.provider = provider;
     }
 

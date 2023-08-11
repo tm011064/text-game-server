@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using TextGame.Api.Auth;
 using TextGame.Api.Controllers.Chapters;
-using TextGame.Api.Controllers.Commands;
 using TextGame.Core;
 using TextGame.Core.Challenges.Events;
 using TextGame.Core.Games;

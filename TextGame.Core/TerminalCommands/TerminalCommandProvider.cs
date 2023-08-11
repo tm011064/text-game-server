@@ -1,8 +1,8 @@
-﻿namespace TextGame.Core.TerminalCommands;
-
-using LazyCache;
+﻿using LazyCache;
 using TextGame.Data.Contracts.TerminalCommands;
 using TextGame.Data.Sources;
+
+namespace TextGame.Core.TerminalCommands;
 
 public class TerminalCommandProvider : ITerminalCommandProvider
 {

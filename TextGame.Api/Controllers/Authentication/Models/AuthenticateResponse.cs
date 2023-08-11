@@ -6,5 +6,5 @@ public record AuthenticateResponse(string Id, string Token)
 {
     public static AuthenticateResponse FromUser(
         IUser user,
-        string token) => new AuthenticateResponse(user.Key, token);
+        string token) => new(user.Key, token);
 };

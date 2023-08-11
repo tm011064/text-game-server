@@ -27,6 +27,6 @@ public class CreateUserRequestHandler : IRequestHandler<CreateUserRequest, IUser
             password: password,
             ticket: request.Ticket));
 
-        return await queryService.Run(GetUser.ById(id));
+        return await queryService.Run(GetUser.ById(id)) ?? throw new ResourceNotFoundException();
     }
 }

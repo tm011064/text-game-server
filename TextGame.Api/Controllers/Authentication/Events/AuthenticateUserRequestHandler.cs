@@ -1,11 +1,9 @@
 ﻿using FluentResults;
 using MediatR;
-using Microsoft.Extensions.Configuration;
 using TextGame.Api.Auth;
 using TextGame.Core.Cryptography;
 using TextGame.Data;
 using TextGame.Data.Queries.Users;
-using static TextGame.Api.Controllers.Authentication.Events.AuthenticateUserRequest;
 
 namespace TextGame.Api.Controllers.Authentication.Events;
 

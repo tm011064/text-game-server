@@ -1,26 +1,26 @@
 using Dapper;
 using FluentMigrator.Runner;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.OpenApi.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text.Json.Serialization;
 using TextGame.Api.Auth;
 using TextGame.Api.Controllers.Authentication.Events;
+using TextGame.Api.Middleware.Exceptions;
+using TextGame.Api.Transformers;
 using TextGame.Core.Chapters;
 using TextGame.Core.Emotions;
-using TextGame.Core.Users.Events;
+using TextGame.Core.Games;
+using TextGame.Core.Setup;
 using TextGame.Core.TerminalCommands;
+using TextGame.Core.Users.Events;
 using TextGame.Data;
 using TextGame.Data.Contracts.Chapters;
 using TextGame.Data.Contracts.Emotions;
 using TextGame.Data.Contracts.TerminalCommands;
 using TextGame.Data.Sources;
 using TextGame.Data.Sources.ResourceFiles;
-using TextGame.Core.Setup;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using TextGame.Api.Transformers;
-using TextGame.Core.Games;
-using TextGame.Api.Middleware.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 

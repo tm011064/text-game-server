@@ -1,8 +1,7 @@
-﻿namespace TextGame.Data.Sources
+﻿namespace TextGame.Data.Sources;
+
+public interface IGlobalResourceJsonSource<TRecord>
 {
-    public interface IGlobalResourceJsonSource<TRecord>
-    {
-        TRecord Get(string locale);
-    }
+    TRecord Get(string locale);
 }
 

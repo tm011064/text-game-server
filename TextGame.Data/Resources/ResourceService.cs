@@ -1,8 +1,8 @@
-﻿namespace TextGame.Data.Resources;
-
-using System.Reflection;
+﻿using System.Reflection;
 using TextGame.Data.Resources.Games;
 using TextGame.Data.Resources.Global;
+
+namespace TextGame.Data.Resources;
 
 public static class ResourceService
 {

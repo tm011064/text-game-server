@@ -1,10 +1,7 @@
-﻿namespace TextGame.Api.Auth;
-
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using TextGame.Data;
-using TextGame.Data.Contracts;
+
+namespace TextGame.Api.Auth;
 
 public class JwtMiddleware
 {

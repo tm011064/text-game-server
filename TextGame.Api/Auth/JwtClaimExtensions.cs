@@ -1,7 +1,7 @@
-﻿namespace TextGame.Api.Auth;
-
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+
+namespace TextGame.Api.Auth;
 
 public static class JwtClaimExtensions
 {
