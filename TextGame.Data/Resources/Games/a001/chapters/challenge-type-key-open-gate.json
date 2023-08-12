@@ -1,0 +1,19 @@
+{
+  "paragraphs": [
+    {
+      "text": "I think we are ready to open the gate now!"
+    }
+  ],
+
+  "challenge": {
+    "type": "TypeKeys",
+    "configuration": {
+      "items": [
+        {
+          "keys": [ "O", "p", "e", "n", "[blank]", "!" ]
+        }
+      ]
+    },
+    "chapterKey": "root"
+  }
+}

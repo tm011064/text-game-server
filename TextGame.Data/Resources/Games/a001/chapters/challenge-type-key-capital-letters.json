@@ -1,0 +1,18 @@
+{
+  "challenge": {
+    "type": "TypeKeys",
+    "configuration": {
+      "items": [
+        {
+          "description": "There is more you can do with the [shift] key - you can make letters go tall! Hold the [shift] key like you did before and try typing the letters below",
+          "keys": [ "S", "W", "E", "E", "T" ]
+        },
+        {
+          "description": "Now hold the [shift] key and find these odd characters",
+          "keys": [ "!", "?" ]
+        }
+      ]
+    },
+    "chapterKey": "challenge-type-key-open-gate"
+  }
+}

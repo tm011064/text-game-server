@@ -35,10 +35,11 @@ public class ChaptersSource : IGameResourceJsonSource<IChapter[]>
     private record ChapterBuilder(
         string Key,
         string GameKey,
-        IReadOnlyCollection<Paragraph> Paragraphs,
         string ForwardChapterKey,
         Challenge? Challenge) : IChapter
     {
         public IReadOnlyCollection<NavigationCommand> NavigationCommands { get; init; } = Array.Empty<NavigationCommand>();
+
+        public IReadOnlyCollection<Paragraph> Paragraphs { get; init; } = Array.Empty<Paragraph>();
     }
 }
