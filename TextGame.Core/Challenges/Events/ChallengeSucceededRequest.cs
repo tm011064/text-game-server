@@ -12,7 +12,7 @@ public record ChallengeSucceededRequest(
     string ChapterKey,
     AuthTicket Ticket) : IRequest<Result<ChallengeSucceededResult>>;
 
-public record ChallengeSucceededResult(IChapter NextChapter)
+public record ChallengeSucceededResult(IChapter NextChapter, string SuccessMessage)
 {
     public IReadOnlyCollection<Paragraph> ForwardParagraphs { get; init; } = Array.Empty<Paragraph>();
 }
@@ -40,12 +40,12 @@ public class ChallengeSucceededRequestHandler : IRequestHandler<ChallengeSucceed
                 request.GameContext.Game.GetCompositeChapterKey(nextChapter.ForwardChapterKey),
                 request.GameContext.Locale);
 
-            return Result.Ok(new ChallengeSucceededResult(forwardChapter)
+            return Result.Ok(new ChallengeSucceededResult(forwardChapter, chapter.Challenge!.SuccessMessage)
             {
                 ForwardParagraphs = nextChapter.Paragraphs
             });
         }
 
-        return Result.Ok(new ChallengeSucceededResult(nextChapter));
+        return Result.Ok(new ChallengeSucceededResult(nextChapter, chapter.Challenge!.SuccessMessage));
     }
 }

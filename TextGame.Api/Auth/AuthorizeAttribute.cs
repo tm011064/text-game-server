@@ -15,9 +15,12 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
             return;
         }
 
-        if (context.HttpContext.User.HasClaim(x => x.Value == JwtRegisteredClaimNames.Sub))
+        if (!context.HttpContext.User.HasClaim(x => x.Type == JwtRegisteredClaimNames.Sub))
         {
-            context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
+            context.Result = new JsonResult(new { message = "Unauthorized" })
+            {
+                StatusCode = StatusCodes.Status401Unauthorized
+            };
         }
     }
 }

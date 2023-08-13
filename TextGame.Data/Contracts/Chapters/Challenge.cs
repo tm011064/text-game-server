@@ -3,4 +3,5 @@
 public record Challenge(
     ChallengeType Type,
     object Configuration,
-    string ChapterKey);
+    string ChapterKey,
+    string SuccessMessage);

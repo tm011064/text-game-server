@@ -5,6 +5,7 @@ using TextGame.Core.Chapters;
 namespace TextGame.Api.Controllers.Chapters;
 
 [ApiController]
+[Authorize]
 [ApiVersion("20220718")]
 [Route("api/v{version:apiVersion}/[controller]")]
 [Route("[controller]")]

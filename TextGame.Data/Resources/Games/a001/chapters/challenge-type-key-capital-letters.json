@@ -13,6 +13,7 @@
         }
       ]
     },
+    "successMessage": "Challenge Completed: capital letters",
     "chapterKey": "challenge-type-key-open-gate"
   }
 }

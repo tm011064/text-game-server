@@ -16,6 +16,7 @@
         }
       ]
     },
+    "successMessage": "Challenge Completed: [tab]",
     "chapterKey": "challenge-type-key-shift"
   }
 }

@@ -11,11 +11,12 @@
         },
         {
           "description": "Amazing, try a few more times",
-          "tabCount": 10,
+          "tabCount": 5,
           "randomTargetCount": 5
         }
       ]
     },
+    "successMessage": "Challenge Completed: [shift] and [tab]",
     "chapterKey": "challenge-type-key-capital-letters"
   }
 }

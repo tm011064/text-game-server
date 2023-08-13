@@ -58,7 +58,8 @@ public class ChallengesController : ControllerBase
 
     private static object? ToWire(ChallengeSucceededResult record) => new
     {
-        NextChapter = record.NextChapter?.ToWire(record.ForwardParagraphs)
+        NextChapter = record.NextChapter?.ToWire(record.ForwardParagraphs),
+        SuccessMessage = record.SuccessMessage
     };
 }
 

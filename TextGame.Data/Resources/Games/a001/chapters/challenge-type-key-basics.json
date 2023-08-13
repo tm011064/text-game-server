@@ -26,6 +26,7 @@
         }
       ]
     },
+    "successMessage": "Challenge Completed: basic typing",
     "chapterKey": "challenge-learn-key-tab"
   }
 }
