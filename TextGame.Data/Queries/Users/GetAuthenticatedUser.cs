@@ -21,9 +21,9 @@ public class GetAuthenticatedUser : IQuery<AuthenticatedUser>
         this.key = key;
     }
 
-    public async Task<AuthenticatedUser> Execute(IDbConnection connection, AuthTicket ticket)
+    public async Task<AuthenticatedUser> Execute(QueryContext context)
     {
-        return await connection.QuerySingleAsync<AuthenticatedUser>($@"
+        return await context.Connection.QuerySingleAsync<AuthenticatedUser>($@"
             select
                 {UsersSql.SelectColumns},
                 refresh_token as {nameof(AuthenticatedUser.RefreshToken)},

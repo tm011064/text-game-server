@@ -24,9 +24,9 @@ public class InsertUser : IQuery<long>
         this.password = password;
     }
 
-    public Task<long> Execute(IDbConnection connection, AuthTicket ticket)
+    public Task<long> Execute(QueryContext context)
     {
-        return connection.QuerySingleAsync<long>($@"
+        return context.Connection.QuerySingleAsync<long>($@"
             insert into users (
                 resource_key,
                 email,
@@ -48,10 +48,10 @@ public class InsertUser : IQuery<long>
                 @{nameof(password.Iterations)},
                 @{nameof(password.Data)},
                 @{nameof(password.CipherBytes)},
-                @{nameof(ticket.CreatedAt)},
-                @{nameof(ticket.CreatedBy)},
-                @{nameof(ticket.CreatedAt)},
-                @{nameof(ticket.CreatedBy)}
+                @{nameof(context.Ticket.CreatedAt)},
+                @{nameof(context.Ticket.CreatedBy)},
+                @{nameof(context.Ticket.CreatedAt)},
+                @{nameof(context.Ticket.CreatedBy)}
             );
 
             select last_insert_rowid();",
@@ -64,8 +64,8 @@ public class InsertUser : IQuery<long>
                 password.Iterations,
                 password.Data,
                 password.CipherBytes,
-                ticket.CreatedAt,
-                ticket.CreatedBy
+                context.Ticket.CreatedAt,
+                context.Ticket.CreatedBy
             });
     }
 }

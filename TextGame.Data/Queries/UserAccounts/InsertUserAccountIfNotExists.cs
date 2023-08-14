@@ -1,10 +1,9 @@
 ﻿using Dapper;
-using System.Data;
 using TextGame.Data.Contracts;
 
 namespace TextGame.Data.Queries.UserAccounts;
 
-public class InsertUserAccountIfNotExists : IQuery<long>
+public class InsertUserAccountIfNotExists : IQuery<IUserAccount>
 {
     private readonly long userId;
 
@@ -18,13 +17,14 @@ public class InsertUserAccountIfNotExists : IQuery<long>
         string name)
     {
         userId = user.Id;
+
         this.key = key;
         this.name = name;
     }
 
-    public Task<long> Execute(IDbConnection connection, AuthTicket ticket)
+    public async Task<IUserAccount> Execute(QueryContext context)
     {
-        return connection.QuerySingleAsync<long>($@"
+        var rowsAffected = await context.Connection.ExecuteAsync($@"
             insert into user_accounts (
                 resource_key,
                 user_id,
@@ -36,25 +36,21 @@ public class InsertUserAccountIfNotExists : IQuery<long>
                 @{nameof(key)},
                 @{nameof(userId)},
                 @{nameof(name)},
-                @{nameof(ticket.CreatedAt)},
-                @{nameof(ticket.CreatedBy)}
+                @{nameof(context.Ticket.CreatedAt)},
+                @{nameof(context.Ticket.CreatedBy)}
             )
-            on conflict do nothing;
-
-            select
-                id
-            from
-                user_accounts
-            where
-                resource_key = @{nameof(key)}
-                and deleted_at is null;",
+            on conflict do nothing;",
             new
             {
                 key,
                 userId,
                 name,
-                ticket.CreatedAt,
-                ticket.CreatedBy
+                context.Ticket.CreatedAt,
+                context.Ticket.CreatedBy
             });
+
+        return rowsAffected == 0
+            ? await context.Execute(GetUserAccount.ByUserIdAndName(userId, name))
+            : await context.Execute(GetUserAccount.ByKey(key));
     }
 }

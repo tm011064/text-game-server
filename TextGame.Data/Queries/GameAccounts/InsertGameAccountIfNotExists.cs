@@ -1,11 +1,10 @@
 ﻿using Dapper;
-using System.Data;
 using TextGame.Data.Contracts;
 using TextGame.Data.Contracts.Games;
 
 namespace TextGame.Data.Queries.GameAccounts;
 
-public class InsertGameAccountIfNotExists : IQuery<long>
+public class InsertGameAccountIfNotExists : IQuery<IGameAccount>
 {
     private readonly long userAccountId;
 
@@ -28,9 +27,9 @@ public class InsertGameAccountIfNotExists : IQuery<long>
         userAccountId = userAccount.Id;
     }
 
-    public Task<long> Execute(IDbConnection connection, AuthTicket ticket)
+    public async Task<IGameAccount> Execute(QueryContext context)
     {
-        return connection.QuerySingleAsync<long>($@"
+        var rowsAffected = await context.Connection.ExecuteAsync($@"
             insert into game_accounts (
                 resource_key,
                 user_account_id,
@@ -44,26 +43,22 @@ public class InsertGameAccountIfNotExists : IQuery<long>
                 @{nameof(userAccountId)},
                 @{nameof(gameId)},
                 @{nameof(progressJson)},
-                @{nameof(ticket.CreatedAt)},
-                @{nameof(ticket.CreatedBy)}
+                @{nameof(context.Ticket.CreatedAt)},
+                @{nameof(context.Ticket.CreatedBy)}
             )
-            on conflict do nothing;
-
-            select
-                id
-            from
-                game_accounts
-            where
-                resource_key = @{nameof(key)}
-                and deleted_at is null;",
+            on conflict do nothing;",
             new
             {
                 key,
                 userAccountId,
                 gameId,
                 progressJson,
-                ticket.CreatedAt,
-                ticket.CreatedBy
+                context.Ticket.CreatedAt,
+                context.Ticket.CreatedBy
             });
+
+        return rowsAffected == 0
+            ? await context.Execute(GetGameAccount.ByGameIdAndUserAccountId(gameId, userAccountId))
+            : await context.Execute(GetGameAccount.ByKey(key));
     }
 }

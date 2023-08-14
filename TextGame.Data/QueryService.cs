@@ -23,6 +23,16 @@ public class QueryService : IQueryService
     {
         using var connection = CreateConnection();
 
-        return query.Execute(connection, ticket);
+        var context = new QueryContext(connection, ticket);
+
+        return query.Execute(context);
     }
 }
+
+public record QueryContext(IDbConnection Connection, AuthTicket Ticket)
+{
+    public Task<TRecord> Execute<TRecord>(IQuery<TRecord> query)
+    {
+        return query.Execute(this);
+    }
+};

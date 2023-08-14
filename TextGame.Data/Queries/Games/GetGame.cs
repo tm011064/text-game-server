@@ -21,9 +21,9 @@ public class GetGame : IQuery<IGame>
         this.key = key;
     }
 
-    public async Task<IGame> Execute(IDbConnection connection, AuthTicket ticket)
+    public async Task<IGame> Execute(QueryContext context)
     {
-        return await connection.QuerySingleAsync<GameResource>($@"
+        return await context.Connection.QuerySingleAsync<GameResource>($@"
             select
                 id as {nameof(GameResource.Id)},
                 resource_key as {nameof(GameResource.Key)}

@@ -1,9 +1,7 @@
 ﻿namespace TextGame.Data.Queries.Users;
 
 using Dapper;
-using System.Data;
 using System.Threading.Tasks;
-using TextGame.Data.Contracts;
 
 public class UpdateUserRefreshToken : IQuery<int>
 {
@@ -20,9 +18,9 @@ public class UpdateUserRefreshToken : IQuery<int>
         this.expiresAt = expiresAt;
     }
 
-    public Task<int> Execute(IDbConnection connection, AuthTicket ticket)
+    public Task<int> Execute(QueryContext context)
     {
-        return connection.QuerySingleAsync<int>($@"
+        return context.Connection.QuerySingleAsync<int>($@"
             update users
             set
                 refresh_token = @{nameof(token)},

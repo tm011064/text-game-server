@@ -1,10 +1,10 @@
 ﻿using Dapper;
-using System.Data;
-using TextGame.Data.Contracts;
+using TextGame.Data.Contracts.Games;
+using TextGame.Data.Queries.Games;
 
 namespace TextGame.Data.Queries.Users;
 
-public class InsertGameIfNotExists : IQuery<long>
+public class InsertGameIfNotExists : IQuery<IGame>
 {
     private readonly string key;
 
@@ -13,9 +13,9 @@ public class InsertGameIfNotExists : IQuery<long>
         this.key = key;
     }
 
-    public Task<long> Execute(IDbConnection connection, AuthTicket ticket)
+    public async Task<IGame> Execute(QueryContext context)
     {
-        return connection.QuerySingleAsync<long>($@"
+        await context.Connection.ExecuteAsync($@"
             insert into games (
                 resource_key,
                 created_at,
@@ -23,23 +23,17 @@ public class InsertGameIfNotExists : IQuery<long>
             )
             values (
                 @{nameof(key)},
-                @{nameof(ticket.CreatedAt)},
-                @{nameof(ticket.CreatedBy)}
+                @{nameof(context.Ticket.CreatedAt)},
+                @{nameof(context.Ticket.CreatedBy)}
             )
-            on conflict do nothing;
-
-            select
-                id
-            from
-                games
-            where
-                resource_key = @{nameof(key)}
-                and deleted_at is null;",
+            on conflict do nothing;",
             new
             {
                 key,
-                ticket.CreatedAt,
-                ticket.CreatedBy
+                context.Ticket.CreatedAt,
+                context.Ticket.CreatedBy
             });
+
+        return await context.Execute(GetGame.ByKey(key));
     }
 }

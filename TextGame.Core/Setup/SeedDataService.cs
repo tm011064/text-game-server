@@ -62,11 +62,9 @@ public class SeedDataService
         var ticket = AuthTicket.System;
         var existing = await queryService.Run(GetUser.ByEmail(email), ticket) ?? throw new ResourceNotFoundException();
 
-        var userAccountId = await queryService.Run(
+        var userAccount = await queryService.Run(
             new InsertUserAccountIfNotExists(existing, Guid.NewGuid().ToString(), email),
             ticket);
-
-        var userAccount = await queryService.Run(GetUserAccount.ById(userAccountId), ticket);
 
         var games = await queryService.Run(new SearchGames(), ticket);
 

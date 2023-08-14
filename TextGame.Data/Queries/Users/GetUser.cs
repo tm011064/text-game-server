@@ -26,9 +26,9 @@ public class GetUser : IQuery<IUser?>
         this.key = key;
     }
 
-    public async Task<IUser?> Execute(IDbConnection connection, AuthTicket ticket)
+    public async Task<IUser?> Execute(QueryContext context)
     {
-        return await connection.QuerySingleOrDefaultAsync<UserResource>($@"
+        return await context.Connection.QuerySingleOrDefaultAsync<UserResource>($@"
             select
                 {UsersSql.SelectColumns}
             from

@@ -19,9 +19,9 @@ public class UpdateUserPassword : IQuery<long>
         this.password = password;
     }
 
-    public Task<long> Execute(IDbConnection connection, AuthTicket ticket)
+    public Task<long> Execute(QueryContext context)
     {
-        return connection.QuerySingleAsync<long>($@"
+        return context.Connection.QuerySingleAsync<long>($@"
             update
                 users
             set
@@ -30,8 +30,8 @@ public class UpdateUserPassword : IQuery<long>
                 password_iterations = @{nameof(password.Iterations)},
                 password_data = @{nameof(password.Data)},
                 password_cipher_text = @{nameof(password.CipherBytes)},
-                updated_at = @{nameof(ticket.CreatedAt)},
-                updated_by = @{nameof(ticket.CreatedBy)}
+                updated_at = @{nameof(context.Ticket.CreatedAt)},
+                updated_by = @{nameof(context.Ticket.CreatedBy)}
             where
                 id = @{nameof(id)}            ",
             new
@@ -42,8 +42,8 @@ public class UpdateUserPassword : IQuery<long>
                 password.Iterations,
                 password.Data,
                 password.CipherBytes,
-                ticket.CreatedAt,
-                ticket.CreatedBy
+                context.Ticket.CreatedAt,
+                context.Ticket.CreatedBy
             });
     }
 }

@@ -14,9 +14,9 @@ public class GetUserPassword : IQuery<UserPassword>
         this.userId = userId;
     }
 
-    public Task<UserPassword> Execute(IDbConnection connection, AuthTicket ticket)
+    public Task<UserPassword> Execute(QueryContext context)
     {
-        return connection.QuerySingleAsync<UserPassword>($@"
+        return context.Connection.QuerySingleAsync<UserPassword>($@"
             select
                 password_initialization_vector as {nameof(UserPassword.InitializationVector)},
                 password_salt as {nameof(UserPassword.Salt)},
