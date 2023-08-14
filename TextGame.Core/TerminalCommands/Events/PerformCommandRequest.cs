@@ -74,6 +74,7 @@ public class PerformCommandRequestHandler : IRequestHandler<PerformCommandReques
 
         return request.CommandType switch
         {
+            TerminalCommandType.Next or
             TerminalCommandType.Move or
             TerminalCommandType.Decline or
             TerminalCommandType.Confirm => await HandleChangeChapterRequest(request, chapter),

@@ -1,7 +1,7 @@
 {
   "paragraphs": [
     {
-      "text": "Hm. I don't know where I am, but I need to get home"
+      "text": "Hey, I'm lost"
     },
     {
       "text": "Can you help me?"
@@ -11,11 +11,11 @@
   "navigationCommands": [
     {
       "type": "Confirm",
-      "chapterKey": "challenge-type-key-basics"
+      "chapterKey": "waiting-room-challenge-type-key-basics"
     },
     {
       "type": "Decline",
-      "chapterKey": "root-decline-2"
+      "chapterKey": "waiting-room-decline"
     }
   ]
 }

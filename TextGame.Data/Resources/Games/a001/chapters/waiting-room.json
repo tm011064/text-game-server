@@ -1,0 +1,15 @@
+{
+  "paragraphs": [
+    {
+      "text": "Amazing, now type 'enter door' to walk through"
+    }
+  ],
+
+  "navigationCommands": [
+    {
+      "type": "Enter",
+      "tokens": [ "door", "playground" ],
+      "chapterKey": "playground-lobby-enter"
+    }
+  ]
+}

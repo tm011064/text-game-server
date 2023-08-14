@@ -2,14 +2,14 @@
 
 public interface IGame
 {
-    public int Id { get; }
+    public long Id { get; }
 
     public string Key { get; }
 }
 
-public class GameResource : IGame
+internal class GameResource : IGame
 {
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     public string Key { get; set; } = null!;
 }

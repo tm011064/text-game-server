@@ -1,7 +1,7 @@
 {
   "paragraphs": [
     {
-      "text": "I think we are ready to open the gate now!"
+      "text": "I think we are ready to open the door now!"
     }
   ],
 
@@ -14,7 +14,7 @@
         }
       ]
     },
-    "successMessage": "The gate has opened",
-    "chapterKey": "root"
+    "successMessage": "Challenge Completed: Open playground door",
+    "chapterKey": "waiting-room-challenge-type-key-space"
   }
 }

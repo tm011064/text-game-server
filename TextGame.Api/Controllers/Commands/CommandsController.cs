@@ -45,7 +45,7 @@ public class CommandsController : ControllerBase
         {
             return BadRequest($"{nameof(request.CommandType)} must not be empty");
         }
-        if ((request.Tokens?.Length ?? 0) == 0)
+        if (request.CommandType != TerminalCommandType.Next && (request.Tokens?.Length ?? 0) == 0)
         {
             return BadRequest($"{nameof(request.Tokens)} must not be empty");
         }
@@ -55,7 +55,7 @@ public class CommandsController : ControllerBase
         var result = await mediator.Send(new PerformCommandRequest(
             new GameContext(game, GameSettings.DefaultLocale),
             request.ChapterId!,
-            request.Tokens!,
+            request.Tokens ?? Array.Empty<string>(),
             request.CommandType ?? throw new Exception(),
             ticket));
 
@@ -80,5 +80,5 @@ public record PostCommandRequest(
     [Required] string? GameId,
     [Required] string? ChapterId,
     [Required] TerminalCommandType? CommandType,
-    [Required] string[]? Tokens,
+    string[]? Tokens,
     [Required] string? Locale);

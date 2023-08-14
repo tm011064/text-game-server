@@ -1,0 +1,24 @@
+{
+  "paragraphs": [
+    {
+      "text": "Wow, the door has opened!"
+    },
+    {
+      "text": "To go through the door you need to learn the '[space]' key. It allows you to put a space between letters!"
+    }
+  ],
+
+  "challenge": {
+    "type": "TypeKeys",
+    "configuration": {
+      "items": [
+        {
+          "description": "The space bar is usually located at the bottom of the keyboard. It is significantly wider than the other keys",
+          "keys": [ "[space]" ]
+        }
+      ]
+    },
+    "successMessage": "Challenge Completed: [space] key",
+    "chapterKey": "waiting-room-challenge-learn-key-shift-tab"
+  }
+}

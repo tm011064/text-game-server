@@ -1,21 +1,14 @@
 {
-  "paragraphs": [
-    {
-      "text": "Hey"
+  "challenge": {
+    "type": "TypeKeys",
+    "configuration": {
+      "items": [
+        {
+          "description": "Press the [enter] key. If you don't know that key, look for a key that says 'enter' or 'return', or has a symbol like ↵",
+          "keys": [ "[enter]" ]
+        }
+      ]
     },
-    {
-      "text": "Can you help me?"
-    }
-  ],
-
-  "navigationCommands": [
-    {
-      "type": "Confirm",
-      "chapterKey": "challenge-type-key-basics"
-    },
-    {
-      "type": "Decline",
-      "chapterKey": "root-decline-1"
-    }
-  ]
+    "chapterKey": "waiting-room"
+  }
 }

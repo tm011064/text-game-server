@@ -1,7 +1,7 @@
 {
   "paragraphs": [
     {
-      "text": "There is a gate, but it does not open"
+      "text": "It is dark here. I think there is a door, but it does not open."
     },
     {
       "text": "We need to follow the instructions on its terminal:"
@@ -13,7 +13,7 @@
     "configuration": {
       "items": [
         {
-          "description": "Type the numbers below",
+          "description": "To enter the playground, type the numbers below",
           "keys": [ "1", "2", "3" ]
         },
         {
@@ -27,6 +27,6 @@
       ]
     },
     "successMessage": "Challenge Completed: basic typing",
-    "chapterKey": "challenge-learn-key-tab"
+    "chapterKey": "waiting-room-challenge-learn-key-tab"
   }
 }

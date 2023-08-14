@@ -3,6 +3,9 @@ using TextGame.Core.Cryptography;
 using TextGame.Core.Users.Events;
 using TextGame.Data;
 using TextGame.Data.Contracts;
+using TextGame.Data.Queries.GameAccounts;
+using TextGame.Data.Queries.Games;
+using TextGame.Data.Queries.UserAccounts;
 using TextGame.Data.Queries.Users;
 using TextGame.Data.Resources;
 
@@ -50,6 +53,24 @@ public class SeedDataService
         if (!passwordValidator.IsValid(password, userPassword))
         {
             await queryService.Run(new UpdateUserPassword(existing.Id, passwordEncryptor.Encrypt(password), ticket));
+        }
+    }
+
+    public async Task CreateTestUserGameAccountsIfNotExists(string email)
+    {
+        var ticket = CreateTicket();
+        var existing = await queryService.Run(GetUser.ByEmail(email)) ?? throw new ResourceNotFoundException();
+
+        var userAccountId = await queryService.Run(
+            new InsertUserAccountIfNotExists(existing, Guid.NewGuid().ToString(), email, ticket));
+
+        var userAccount = await queryService.Run(GetUserAccount.ById(userAccountId));
+
+        var games = await queryService.Run(new SearchGames());
+
+        foreach (var game in games)
+        {
+            await queryService.Run(new InsertGameAccountIfNotExists(userAccount, game, Guid.NewGuid().ToString(), "{}", ticket));
         }
     }
 

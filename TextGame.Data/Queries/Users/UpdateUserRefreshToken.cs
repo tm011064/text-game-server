@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 public class UpdateUserRefreshToken : IQuery<int>
 {
-    private readonly int id;
+    private readonly long id;
 
     private readonly string token;
 
     private readonly DateTimeOffset expiresAt;
 
-    public UpdateUserRefreshToken(int id, string token, DateTimeOffset expiresAt)
+    public UpdateUserRefreshToken(long id, string token, DateTimeOffset expiresAt)
     {
         this.id = id;
         this.token = token;

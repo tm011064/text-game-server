@@ -2,7 +2,7 @@
 
 public class AuthenticatedUser : IUser
 {
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     public string Key { get; set; } = null!;
 

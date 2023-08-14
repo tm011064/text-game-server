@@ -5,16 +5,16 @@ using System.Data;
 using System.Threading.Tasks;
 using TextGame.Data.Contracts;
 
-public class UpdateUserPassword : IQuery<int>
+public class UpdateUserPassword : IQuery<long>
 {
-    private readonly int id;
+    private readonly long id;
 
     private readonly UserPassword password;
 
     private readonly AuthTicket ticket;
 
     public UpdateUserPassword(
-        int id,
+        long id,
         UserPassword password,
         AuthTicket ticket)
     {
@@ -23,9 +23,9 @@ public class UpdateUserPassword : IQuery<int>
         this.ticket = ticket;
     }
 
-    public Task<int> Execute(IDbConnection connection)
+    public Task<long> Execute(IDbConnection connection)
     {
-        return connection.QuerySingleAsync<int>($@"
+        return connection.QuerySingleAsync<long>($@"
             update
                 users
             set

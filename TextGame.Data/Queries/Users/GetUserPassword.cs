@@ -7,9 +7,9 @@ using TextGame.Data.Contracts;
 
 public class GetUserPassword : IQuery<UserPassword>
 {
-    private readonly int userId;
+    private readonly long userId;
 
-    public GetUserPassword(int userId)
+    public GetUserPassword(long userId)
     {
         this.userId = userId;
     }

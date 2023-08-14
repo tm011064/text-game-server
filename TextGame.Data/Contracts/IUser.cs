@@ -7,7 +7,7 @@ public interface IUserIdentity
 
 public interface IUser : IUserIdentity
 {
-    int Id { get; }
+    long Id { get; }
 
     string Email { get; }
 }

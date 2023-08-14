@@ -129,6 +129,8 @@ if (app.Environment.IsDevelopment())
 
     await seedDataService.CreateTestUserIfNotExists("test", "test");
     await seedDataService.CreateTestUserIfNotExists("admin", "admin");
+    await seedDataService.CreateTestUserGameAccountsIfNotExists("test");
+    await seedDataService.CreateTestUserGameAccountsIfNotExists("admin");
 }
 
 app.UseCors(x => x

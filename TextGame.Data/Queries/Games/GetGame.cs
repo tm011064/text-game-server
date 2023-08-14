@@ -1,9 +1,6 @@
 ﻿using Dapper;
-using System;
 using System.Data;
-using TextGame.Data.Contracts;
 using TextGame.Data.Contracts.Games;
-using TextGame.Data.Queries.Games;
 
 namespace TextGame.Data.Queries.Games;
 
@@ -17,7 +14,7 @@ public class GetGame : IQuery<IGame>
 
     private readonly string? key;
 
-    private GetGame(string? email = null, long? id = null, string? key = null)
+    private GetGame(long? id = null, string? key = null)
     {
         this.id = id;
         this.key = key;
@@ -42,4 +39,3 @@ public class GetGame : IQuery<IGame>
             });
     }
 }
-

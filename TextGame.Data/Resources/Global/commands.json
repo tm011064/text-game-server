@@ -3,11 +3,16 @@
     "key": "Move",
     "terms": [
       "go",
-      "go to",
       "move",
-      "move to",
-      "enter",
-      "exit"
+      "walk"
+    ]
+  },
+  {
+    "key": "Enter",
+    "terms": [
+      "walk through",
+      "go through",
+      "enter"
     ]
   },
   {
@@ -28,6 +33,12 @@
       "nah",
       "nope",
       "nae"
+    ]
+  },
+  {
+    "key": "Next",
+    "terms": [
+      "[blank]"
     ]
   }
 ]
