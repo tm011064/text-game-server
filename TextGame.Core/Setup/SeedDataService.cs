@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using TextGame.Core.Cryptography;
+using TextGame.Core.Users;
 using TextGame.Core.Users.Events;
 using TextGame.Data;
 using TextGame.Data.Contracts;
@@ -29,18 +30,18 @@ public class SeedDataService
 
     public async Task InsertResourceFileGamesIfNotExist()
     {
-        var ticket = CreateTicket();
+        var ticket = AuthTicket.System;
 
         foreach (var gameKey in ResourceService.GameKeys)
         {
-            await queryService.Run(new InsertGameIfNotExists(gameKey, ticket));
+            await queryService.Run(new InsertGameIfNotExists(gameKey), ticket);
         }
     }
 
     public async Task CreateTestUserIfNotExists(string email, string password)
     {
-        var ticket = CreateTicket();
-        var existing = await queryService.Run(GetUser.ByEmail(email));
+        var ticket = AuthTicket.System;
+        var existing = await queryService.Run(GetUser.ByEmail(email), ticket);
 
         if (existing == null)
         {
@@ -48,42 +49,31 @@ public class SeedDataService
             return;
         }
 
-        var userPassword = await queryService.Run(new GetUserPassword(existing.Id));
+        var userPassword = await queryService.Run(new GetUserPassword(existing.Id), ticket);
 
         if (!passwordValidator.IsValid(password, userPassword))
         {
-            await queryService.Run(new UpdateUserPassword(existing.Id, passwordEncryptor.Encrypt(password), ticket));
+            await queryService.Run(new UpdateUserPassword(existing.Id, passwordEncryptor.Encrypt(password)), ticket);
         }
     }
 
     public async Task CreateTestUserGameAccountsIfNotExists(string email)
     {
-        var ticket = CreateTicket();
-        var existing = await queryService.Run(GetUser.ByEmail(email)) ?? throw new ResourceNotFoundException();
+        var ticket = AuthTicket.System;
+        var existing = await queryService.Run(GetUser.ByEmail(email), ticket) ?? throw new ResourceNotFoundException();
 
         var userAccountId = await queryService.Run(
-            new InsertUserAccountIfNotExists(existing, Guid.NewGuid().ToString(), email, ticket));
+            new InsertUserAccountIfNotExists(existing, Guid.NewGuid().ToString(), email),
+            ticket);
 
-        var userAccount = await queryService.Run(GetUserAccount.ById(userAccountId));
+        var userAccount = await queryService.Run(GetUserAccount.ById(userAccountId), ticket);
 
-        var games = await queryService.Run(new SearchGames());
+        var games = await queryService.Run(new SearchGames(), ticket);
 
         foreach (var game in games)
         {
-            await queryService.Run(new InsertGameAccountIfNotExists(userAccount, game, Guid.NewGuid().ToString(), "{}", ticket));
+            await queryService.Run(new InsertGameAccountIfNotExists(userAccount, game, Guid.NewGuid().ToString(), "{}"), ticket);
         }
-    }
-
-    private static AuthTicket CreateTicket()
-    {
-        return new AuthTicket(DateTimeOffset.UtcNow, SystemUserIdentity.Instance);
-    }
-
-    private record SystemUserIdentity : IUserIdentity
-    {
-        public static readonly SystemUserIdentity Instance = new();
-
-        public string Key { get; init; } = "system";
     }
 }
 

@@ -3,6 +3,7 @@ using MediatR;
 using TextGame.Api.Auth;
 using TextGame.Core.Cryptography;
 using TextGame.Data;
+using TextGame.Data.Contracts;
 using TextGame.Data.Queries.Users;
 
 namespace TextGame.Api.Controllers.Authentication.Events;
@@ -29,14 +30,15 @@ public class AuthenticateUserRequestHandler : IRequestHandler<AuthenticateUserRe
 
     public async Task<Result<UserTokenResponse>> Handle(AuthenticateUserRequest request, CancellationToken cancellationToken)
     {
-        var user = await queryService.Run(GetUser.ByEmail(request.Email!));
+        var ticket = AuthTicket.System;
+        var user = await queryService.Run(GetUser.ByEmail(request.Email!), ticket);
 
         if (user == null)
         {
             return Result.Fail<UserTokenResponse>("User not found");
         }
 
-        var password = await queryService.Run(new GetUserPassword(user.Id));
+        var password = await queryService.Run(new GetUserPassword(user.Id), ticket);
 
         if (!validator.IsValid(request.Password!, password))
         {
@@ -44,7 +46,7 @@ public class AuthenticateUserRequestHandler : IRequestHandler<AuthenticateUserRe
         }
 
         var token = tokenFactory.Create(user);
-        var refreshToken = await refreshTokenFactory.Create(user);
+        var refreshToken = await refreshTokenFactory.Create(user, ticket);
 
         return Result.Ok(new UserTokenResponse(user, token, refreshToken));
     }

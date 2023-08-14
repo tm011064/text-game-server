@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using System.Data;
+using TextGame.Data.Contracts;
 using TextGame.Data.Contracts.Games;
 
 namespace TextGame.Data.Queries.Games;
@@ -20,7 +21,7 @@ public class GetGame : IQuery<IGame>
         this.key = key;
     }
 
-    public async Task<IGame> Execute(IDbConnection connection)
+    public async Task<IGame> Execute(IDbConnection connection, AuthTicket ticket)
     {
         return await connection.QuerySingleAsync<GameResource>($@"
             select

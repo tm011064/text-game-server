@@ -21,12 +21,13 @@ public class CreateUserRequestHandler : IRequestHandler<CreateUserRequest, IUser
     {
         var password = encryptor.Encrypt(request.Password);
 
-        var id = await queryService.Run(new InsertUser(
-            key: Guid.NewGuid().ToString(),
-            email: request.Email,
-            password: password,
-            ticket: request.Ticket));
+        var id = await queryService.Run(
+            new InsertUser(
+                key: Guid.NewGuid().ToString(),
+                email: request.Email,
+                password: password),
+            request.Ticket);
 
-        return await queryService.Run(GetUser.ById(id)) ?? throw new ResourceNotFoundException();
+        return await queryService.Run(GetUser.ById(id), request.Ticket) ?? throw new ResourceNotFoundException();
     }
 }

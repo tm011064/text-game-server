@@ -1,5 +1,6 @@
 ﻿using LazyCache;
 using TextGame.Data;
+using TextGame.Data.Contracts;
 using TextGame.Data.Contracts.Games;
 using TextGame.Data.Queries.Games;
 using TextGame.Data.Resources;
@@ -25,7 +26,7 @@ public class GameProvider : IGameProvider
         async () =>
         {
             return ResourceService.GameKeys.Contains(key)
-                ? await queryService.Run(GetGame.ByKey(key))
+                ? await queryService.Run(GetGame.ByKey(key), AuthTicket.System)
                 : throw new InvalidOperationException(); // TODO (Roman): fix this
         },
         TimeSpan.FromDays(1));

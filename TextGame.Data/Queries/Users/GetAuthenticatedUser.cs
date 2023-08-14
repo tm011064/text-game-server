@@ -21,7 +21,7 @@ public class GetAuthenticatedUser : IQuery<AuthenticatedUser>
         this.key = key;
     }
 
-    public async Task<AuthenticatedUser> Execute(IDbConnection connection)
+    public async Task<AuthenticatedUser> Execute(IDbConnection connection, AuthTicket ticket)
     {
         return await connection.QuerySingleAsync<AuthenticatedUser>($@"
             select

@@ -26,7 +26,7 @@ public class GetUser : IQuery<IUser?>
         this.key = key;
     }
 
-    public async Task<IUser?> Execute(IDbConnection connection)
+    public async Task<IUser?> Execute(IDbConnection connection, AuthTicket ticket)
     {
         return await connection.QuerySingleOrDefaultAsync<UserResource>($@"
             select

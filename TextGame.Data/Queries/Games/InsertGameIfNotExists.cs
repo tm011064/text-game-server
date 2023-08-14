@@ -8,17 +8,12 @@ public class InsertGameIfNotExists : IQuery<long>
 {
     private readonly string key;
 
-    private readonly AuthTicket ticket;
-
-    public InsertGameIfNotExists(
-        string key,
-        AuthTicket ticket)
+    public InsertGameIfNotExists(string key)
     {
         this.key = key;
-        this.ticket = ticket;
     }
 
-    public Task<long> Execute(IDbConnection connection)
+    public Task<long> Execute(IDbConnection connection, AuthTicket ticket)
     {
         return connection.QuerySingleAsync<long>($@"
             insert into games (

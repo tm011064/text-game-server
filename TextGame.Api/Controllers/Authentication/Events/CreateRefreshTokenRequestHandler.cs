@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using TextGame.Api.Auth;
 using TextGame.Data;
+using TextGame.Data.Contracts;
 using TextGame.Data.Queries.Users;
 
 namespace TextGame.Api.Controllers.Authentication.Events;
@@ -48,7 +49,7 @@ public class CreateRefreshTokenRequestHandler : IRequestHandler<CreateRefreshTok
             return Result.Fail<UserTokenResponse>($"Claim {JwtRegisteredClaimNames.Sub} not found");
         }
 
-        var user = await queryService.Run(GetAuthenticatedUser.ByKey(userKey));
+        var user = await queryService.Run(GetAuthenticatedUser.ByKey(userKey), AuthTicket.System);
         if (user == null)
         {
             return Result.Fail<UserTokenResponse>($"User with key {userKey} not found");
@@ -65,7 +66,7 @@ public class CreateRefreshTokenRequestHandler : IRequestHandler<CreateRefreshTok
         }
 
         var token = tokenFactory.Create(user);
-        var refreshToken = await refreshTokenFactory.Create(user);
+        var refreshToken = await refreshTokenFactory.Create(user, AuthTicket.System);
 
         return Result.Ok(new UserTokenResponse(user, token, refreshToken));
     }

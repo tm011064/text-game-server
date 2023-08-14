@@ -14,21 +14,17 @@ public class InsertUser : IQuery<long>
 
     private readonly UserPassword password;
 
-    private readonly AuthTicket ticket;
-
     public InsertUser(
         string key,
         string email,
-        UserPassword password,
-        AuthTicket ticket)
+        UserPassword password)
     {
         this.key = key;
         this.email = email;
         this.password = password;
-        this.ticket = ticket;
     }
 
-    public Task<long> Execute(IDbConnection connection)
+    public Task<long> Execute(IDbConnection connection, AuthTicket ticket)
     {
         return connection.QuerySingleAsync<long>($@"
             insert into users (

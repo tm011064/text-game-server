@@ -38,7 +38,9 @@ public class UsersController : ControllerBase
     [HttpGet("/{id}")]
     public async Task<IActionResult> Get(string id)
     {
-        var user = await queryService.Run(GetUser.ByKey(id)) ?? throw new ResourceNotFoundException();
+        var ticket = this.GetTicket();
+
+        var user = await queryService.Run(GetUser.ByKey(id), ticket) ?? throw new ResourceNotFoundException();
 
         return Ok(ToWire(user));
     }

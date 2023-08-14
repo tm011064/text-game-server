@@ -20,7 +20,7 @@ public class GetGameAccount : IQuery<IGameAccount>
         this.key = key;
     }
 
-    public async Task<IGameAccount> Execute(IDbConnection connection)
+    public async Task<IGameAccount> Execute(IDbConnection connection, AuthTicket ticket)
     {
         return await connection.QuerySingleAsync<GameAccountResource>($@"
             select

@@ -4,5 +4,5 @@ namespace TextGame.Api.Auth;
 
 public interface IRefreshTokenFactory
 {
-    Task<string> Create(IUser user);
+    Task<string> Create(IUser user, AuthTicket ticket);
 }

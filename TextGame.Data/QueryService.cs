@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
 using System.Data;
+using TextGame.Data.Contracts;
 
 namespace TextGame.Data;
 
@@ -18,10 +19,10 @@ public class QueryService : IQueryService
         return new SqliteConnection(connectionString);
     }
 
-    public Task<TRecord> Run<TRecord>(IQuery<TRecord> query)
+    public Task<TRecord> Run<TRecord>(IQuery<TRecord> query, AuthTicket ticket)
     {
         using var connection = CreateConnection();
 
-        return query.Execute(connection);
+        return query.Execute(connection, ticket);
     }
 }

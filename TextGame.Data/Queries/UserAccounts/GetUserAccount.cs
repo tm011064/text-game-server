@@ -20,7 +20,7 @@ public class GetUserAccount : IQuery<IUserAccount>
         this.key = key;
     }
 
-    public async Task<IUserAccount> Execute(IDbConnection connection)
+    public async Task<IUserAccount> Execute(IDbConnection connection, AuthTicket ticket)
     {
         return await connection.QuerySingleAsync<UserAccountResource>($@"
             select

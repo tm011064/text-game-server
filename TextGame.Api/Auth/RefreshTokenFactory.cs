@@ -19,11 +19,13 @@ public class RefreshTokenFactory : IRefreshTokenFactory
             ?? TimeSpan.FromDays(1);
     }
 
-    public async Task<string> Create(IUser user)
+    public async Task<string> Create(IUser user, AuthTicket ticket)
     {
         var token = GenerateRefreshToken();
 
-        await queryService.Run(new UpdateUserRefreshToken(user.Id, token, DateTimeOffset.UtcNow.Add(refreshTokenExpiry)));
+        await queryService.Run(
+            new UpdateUserRefreshToken(user.Id, token, DateTimeOffset.UtcNow.Add(refreshTokenExpiry)),
+            ticket);
 
         return token;
     }

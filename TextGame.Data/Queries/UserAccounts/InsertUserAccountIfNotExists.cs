@@ -12,21 +12,17 @@ public class InsertUserAccountIfNotExists : IQuery<long>
 
     private readonly string name;
 
-    private readonly AuthTicket ticket;
-
     public InsertUserAccountIfNotExists(
         IUser user,
         string key,
-        string name,
-        AuthTicket ticket)
+        string name)
     {
         userId = user.Id;
         this.key = key;
         this.name = name;
-        this.ticket = ticket;
     }
 
-    public Task<long> Execute(IDbConnection connection)
+    public Task<long> Execute(IDbConnection connection, AuthTicket ticket)
     {
         return connection.QuerySingleAsync<long>($@"
             insert into user_accounts (

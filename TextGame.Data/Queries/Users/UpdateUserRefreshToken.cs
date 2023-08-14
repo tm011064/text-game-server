@@ -3,6 +3,7 @@
 using Dapper;
 using System.Data;
 using System.Threading.Tasks;
+using TextGame.Data.Contracts;
 
 public class UpdateUserRefreshToken : IQuery<int>
 {
@@ -19,7 +20,7 @@ public class UpdateUserRefreshToken : IQuery<int>
         this.expiresAt = expiresAt;
     }
 
-    public Task<int> Execute(IDbConnection connection)
+    public Task<int> Execute(IDbConnection connection, AuthTicket ticket)
     {
         return connection.QuerySingleAsync<int>($@"
             update users

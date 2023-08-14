@@ -1,12 +1,13 @@
 ﻿using Dapper;
 using System.Data;
+using TextGame.Data.Contracts;
 using TextGame.Data.Contracts.Games;
 
 namespace TextGame.Data.Queries.Games;
 
 public class SearchGames : IQuery<IReadOnlyCollection<IGame>>
 {
-    public async Task<IReadOnlyCollection<IGame>> Execute(IDbConnection connection)
+    public async Task<IReadOnlyCollection<IGame>> Execute(IDbConnection connection, AuthTicket ticket)
     {
         var records = await connection
             .QueryAsync<GameResource>($@"

@@ -14,7 +14,7 @@ public class GetUserPassword : IQuery<UserPassword>
         this.userId = userId;
     }
 
-    public Task<UserPassword> Execute(IDbConnection connection)
+    public Task<UserPassword> Execute(IDbConnection connection, AuthTicket ticket)
     {
         return connection.QuerySingleAsync<UserPassword>($@"
             select
