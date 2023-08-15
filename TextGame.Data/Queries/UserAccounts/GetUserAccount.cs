@@ -19,7 +19,7 @@ public class GetUserAccount : IQuery<IUserAccount>
 
     private readonly string? name;
 
-    private GetUserAccount(long? id = null, string? key = null, long? userId = 0, string? name = null)
+    private GetUserAccount(long? id = null, string? key = null, long? userId = null, string? name = null)
     {
         this.id = id;
         this.key = key;
@@ -40,13 +40,15 @@ public class GetUserAccount : IQuery<IUserAccount>
             where
                 deleted_at is null
                 {SqlWhere.AndOptional("id", nameof(id), id)}
-                {SqlWhere.AndOptional("user_id", nameof(userId), id)}
-                {SqlWhere.AndOptional("name", nameof(name), id)}
+                {SqlWhere.AndOptional("user_id", nameof(userId), userId)}
+                {SqlWhere.AndOptional("name", nameof(name), name)}
                 {SqlWhere.AndOptional("resource_key", nameof(key), key)}",
             new
             {
                 id,
-                key
+                key,
+                userId,
+                name
             });
     }
 }

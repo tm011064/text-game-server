@@ -6,11 +6,13 @@ public interface IGameAccount
 
     string Key { get; }
 
-    string ProgressJson { get; }
+    string GameStateJson { get; }
 
     long UserAccountId { get; }
 
     long GameId { get; }
+
+    long Version { get; }
 }
 
 internal class GameAccountResource : IGameAccount
@@ -19,11 +21,13 @@ internal class GameAccountResource : IGameAccount
 
     public string Key { get; set; } = null!;
 
-    public string ProgressJson { get; set; } = null!;
+    public string GameStateJson { get; set; } = null!;
 
     public long UserAccountId { get; set; }
 
     public long GameId { get; set; }
+
+    public long Version { get; set; }
 }
 
 

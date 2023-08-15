@@ -1,15 +1,21 @@
 {
   "paragraphs": [
     {
-      "text": "Amazing, now type 'enter door' to walk through"
+      "text": "Hey, I'm lost"
+    },
+    {
+      "text": "Can you help me?"
     }
   ],
 
   "navigationCommands": [
     {
-      "type": "Enter",
-      "tokens": [ "door", "playground" ],
-      "chapterKey": "playground-lobby-enter"
+      "type": "Confirm",
+      "chapterKey": "waiting-room-challenge-type-key-basics"
+    },
+    {
+      "type": "Decline",
+      "chapterKey": "waiting-room-decline"
     }
   ]
 }

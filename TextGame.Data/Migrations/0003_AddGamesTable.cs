@@ -19,9 +19,10 @@ public class AddGamesTable : Migration
         Create.Table("game_accounts")
             .WithPrimaryIdAndResourceKey()
             .WithCreatedAtAndDeletedAt()
+            .WithRowVersion()
             .WithColumn("game_id").AsInt64().NotNullable().ForeignKey("games", "id")
             .WithColumn("user_account_id").AsInt64().NotNullable().ForeignKey("user_accounts", "id")
-            .WithColumn("progress_json").AsString(int.MaxValue).NotNullable();
+            .WithColumn("game_states_json").AsString(int.MaxValue).NotNullable();
 
         this.CreateUniqueIndexWithNullable(
             table: "game_accounts",

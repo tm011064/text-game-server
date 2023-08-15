@@ -19,7 +19,7 @@ public class TerminalCommandsController : ControllerBase
     }
 
     [HttpPost("search")]
-    public async Task<IActionResult> Search([FromBody] PostSearchRequest request)
+    public async Task<IActionResult> Search([FromBody] PostTerminalCommandsSearchRequest request)
     {
         var records = await provider.Get(request.Locale ?? GameSettings.DefaultLocale);
 
@@ -33,4 +33,4 @@ public class TerminalCommandsController : ControllerBase
     };
 }
 
-public record PostSearchRequest(string? Locale);
+public record PostTerminalCommandsSearchRequest(string? Locale);

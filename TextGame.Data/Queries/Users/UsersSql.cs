@@ -1,5 +1,6 @@
-﻿namespace TextGame.Data.Queries.Users;
-using TextGame.Data.Contracts;
+﻿using TextGame.Data.Contracts;
+
+namespace TextGame.Data.Queries.Users;
 
 internal static class UsersSql
 {

@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using TextGame.Api.Auth;
 using TextGame.Api.Controllers.Chapters;
+using TextGame.Api.Controllers.GameAccounts;
 using TextGame.Core;
 using TextGame.Core.Challenges.Events;
+using TextGame.Core.GameAccounts.Events;
 using TextGame.Core.Games;
 using TextGame.Data;
 
@@ -32,38 +34,61 @@ public class ChallengesController : ControllerBase
     {
         var ticket = this.GetTicket();
 
-        if (request.GameId.IsNullOrWhitespace())
+        if (request.GameAccountId.IsNullOrWhitespace())
         {
-            return BadRequest($"{nameof(request.GameId)} must not be empty");
+            return BadRequest($"{nameof(request.GameAccountId)} must not be empty");
         }
         if (request.ChapterId.IsNullOrWhitespace())
         {
             return BadRequest($"{nameof(request.ChapterId)} must not be empty");
         }
-
-        var game = await gameProvider.Get(request.GameId!);
-
-        var result = await mediator.Send(new ChallengeSucceededRequest(
-            new GameContext(game, GameSettings.DefaultLocale),
-            request.ChapterId!,
-            ticket));
-
-        return result switch
+        if (request.GameAccountVersion == null)
         {
-            { IsSuccess: true } => Ok(ToWire(result.Value)),
+            return BadRequest($"{nameof(request.GameAccountVersion)} must not be empty");
+        }
 
-            _ => BadRequest(new { message = string.Join(", ", result.Errors.Select(x => x.Message)) })
-        };
+        var locale = request.Locale ?? GameSettings.DefaultLocale;
+
+        try
+        {
+            var gameAccount = await mediator.Send(new GetGameAccountRequest(
+            request.GameAccountId!,
+            locale,
+            ticket,
+            request.GameAccountVersion!));
+
+            var game = await gameProvider.GetById(gameAccount.GameId);
+
+            var gameContext = new GameContext(game, gameAccount, locale);
+
+            var result = await mediator.Send(new ChallengeSucceededRequest(
+                gameContext,
+                request.ChapterId!,
+                ticket));
+
+            return result switch
+            {
+                { IsSuccess: true } => Ok(ToWire(result.Value)),
+
+                _ => BadRequest(new { message = string.Join(", ", result.Errors.Select(x => x.Message)) })
+            };
+        }
+        catch (ConcurrencyException exception)
+        {
+            throw; // TODO (Roman): handle this, return latest autosave instead
+        }
     }
 
     private static object? ToWire(ChallengeSucceededResult record) => new
     {
         NextChapter = record.NextChapter?.ToWire(record.ForwardParagraphs),
-        SuccessMessage = record.SuccessMessage
+        record.SuccessMessage,
+        GameAccount = record.GameAccount.ToWire()
     };
 }
 
 public record PostChallengeRequest(
-    [Required] string? GameId,
+    [Required] string? GameAccountId,
+    [Required] long? GameAccountVersion,
     [Required] string? ChapterId,
     [Required] string? Locale);

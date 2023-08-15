@@ -11,9 +11,11 @@ using TextGame.Api.Middleware.Exceptions;
 using TextGame.Api.Transformers;
 using TextGame.Core.Chapters;
 using TextGame.Core.Emotions;
+using TextGame.Core.GameAccounts;
 using TextGame.Core.Games;
 using TextGame.Core.Setup;
 using TextGame.Core.TerminalCommands;
+using TextGame.Core.Users;
 using TextGame.Core.Users.Events;
 using TextGame.Data;
 using TextGame.Data.Contracts.Chapters;
@@ -79,6 +81,9 @@ builder.Services.AddSingleton<ITerminalCommandProvider, TerminalCommandProvider>
 builder.Services.AddSingleton<IEmotionProvider, EmotionProvider>();
 builder.Services.AddSingleton<IGameProvider, GameProvider>();
 builder.Services.AddSingleton<SeedDataService>();
+builder.Services.AddSingleton<GameStateSerializer>();
+builder.Services.AddSingleton<GameStateCollectionBuilderFactory>();
+builder.Services.AddSingleton<GameAccountConverter>();
 
 builder.Services.AddSingleton<IGlobalResourceJsonSource<TerminalCommand[]>, TerminalCommandsSource>();
 builder.Services.AddSingleton<IGlobalResourceJsonSource<Emotion[]>, EmotionsSource>();

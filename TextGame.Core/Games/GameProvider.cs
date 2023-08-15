@@ -7,6 +7,13 @@ using TextGame.Data.Resources;
 
 namespace TextGame.Core.Games;
 
+public interface IGameProvider
+{
+    Task<IGame> Get(string key);
+
+    Task<IGame> GetById(long id);
+}
+
 public class GameProvider : IGameProvider
 {
     private static readonly string CachePrefix = Guid.NewGuid().ToString();
@@ -21,15 +28,22 @@ public class GameProvider : IGameProvider
         this.cache = cache;
     }
 
-    private async Task<IGame> GetCached(string key) => await cache.GetOrAdd(
-        $"{CachePrefix}-{key}",
+    private async Task<GameCache> GetGameCache() => await cache.GetOrAdd(
+        CachePrefix,
         async () =>
         {
-            return ResourceService.GameKeys.Contains(key)
-                ? await queryService.Run(GetGame.ByKey(key), AuthTicket.System)
-                : throw new InvalidOperationException(); // TODO (Roman): fix this
+            var records = await queryService.Run(new SearchGames(), AuthTicket.System);
+            return new GameCache(
+                records.ToDictionary(x => x.Id),
+                records.ToDictionary(x => x.Key));
         },
-        TimeSpan.FromDays(1));
+        TimeSpan.FromHours(1));
 
-    public async Task<IGame> Get(string key) => await GetCached(key);
+    public async Task<IGame> Get(string key) => (await GetGameCache()).GamesByKey.GetOrNotFound(key);
+
+    public async Task<IGame> GetById(long id) => (await GetGameCache()).GamesById.GetOrNotFound(id);
+
+    private record GameCache(
+        IReadOnlyDictionary<long, IGame> GamesById,
+        IReadOnlyDictionary<string, IGame> GamesByKey);
 }

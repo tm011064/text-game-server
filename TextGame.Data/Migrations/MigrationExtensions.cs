@@ -21,6 +21,11 @@ public static class MigrationExtensions
             .WithColumn("deleted_by").AsString(256).Nullable();
     }
 
+    public static ICreateTableWithColumnSyntax WithRowVersion(this ICreateTableWithColumnSyntax self)
+    {
+        return self.WithColumn("version").AsInt64();
+    }
+
     public static ICreateTableWithColumnSyntax WithAuditColumns(this ICreateTableWithColumnSyntax self)
     {
         return self

@@ -5,6 +5,13 @@ using TextGame.Data.Sources;
 
 namespace TextGame.Core.Chapters;
 
+public interface IChapterProvider
+{
+    Task<IChapter> GetChapter(string chapterKey, string locale = GameSettings.DefaultLocale);
+
+    IReadOnlyDictionary<string, IChapter> GetChaptersMap(IReadOnlySet<string> keys, string locale);
+}
+
 public class ChapterProvider : IChapterProvider
 {
     private static readonly string CachePrefix = Guid.NewGuid().ToString();
@@ -36,4 +43,15 @@ public class ChapterProvider : IChapterProvider
         GetChaptersByKey(locale).TryGetValue(chapterKey, out var chapter)
             ? chapter
             : throw new ResourceNotFoundException());
+
+    public IReadOnlyDictionary<string, IChapter> GetChaptersMap(IReadOnlySet<string> keys, string locale)
+    {
+        var dictionary = GetChaptersByKey(locale);
+
+        return keys
+            .Select(key => dictionary.TryGetValue(key, out var chapter)
+                ? chapter
+                : throw new ResourceNotFoundException())
+            .ToDictionary(x => x.GetCompositeKey());
+    }
 }

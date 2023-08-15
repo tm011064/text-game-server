@@ -1,10 +1,13 @@
 ﻿using FluentResults;
 using MediatR;
 using TextGame.Core.Chapters;
+using TextGame.Core.GameAccounts;
 using TextGame.Core.Games;
+using TextGame.Data;
 using TextGame.Data.Contracts;
 using TextGame.Data.Contracts.Chapters;
 using TextGame.Data.Contracts.TerminalCommands;
+using TextGame.Data.Queries.GameAccounts;
 
 namespace TextGame.Core.TerminalCommands.Events;
 
@@ -18,16 +21,19 @@ public record PerformCommandRequest(
 public record PerformCommandResult(
     CommandResultActionType ActionType,
     IChapter? NextChapter = null,
+    GameAccount? GameAccount = null,
     string? Message = null,
     CommandResultMessageType? MessageType = null)
 {
-    public static PerformCommandResult ChangeChapter(IChapter chapter) => new(
+    public static PerformCommandResult ChangeChapter(IChapter chapter, GameAccount gameAccount) => new(
         CommandResultActionType.ChangeChapter,
-        chapter);
+        chapter,
+        gameAccount);
 
     public static PerformCommandResult ForwardChapter(
         IReadOnlyCollection<Paragraph> forwardParagraphs,
-        IChapter chapter) => new(CommandResultActionType.ChangeChapter, chapter)
+        IChapter chapter,
+        GameAccount gameAccount) => new(CommandResultActionType.ChangeChapter, chapter, gameAccount)
         {
             ForwardParagraphs = forwardParagraphs
         };
@@ -61,9 +67,22 @@ public class PerformCommandRequestHandler : IRequestHandler<PerformCommandReques
 {
     private readonly IChapterProvider chapterProvider;
 
-    public PerformCommandRequestHandler(IChapterProvider chapterProvider)
+    private readonly IQueryService queryService;
+
+    private readonly GameStateCollectionBuilderFactory gameStateCollectionBuilderFactory;
+
+    private readonly GameAccountConverter gameAccountConverter;
+
+    public PerformCommandRequestHandler(
+        IChapterProvider chapterProvider,
+        IQueryService queryService,
+        GameStateCollectionBuilderFactory gameStateCollectionBuilderFactory,
+        GameAccountConverter gameAccountConverter)
     {
         this.chapterProvider = chapterProvider;
+        this.queryService = queryService;
+        this.gameStateCollectionBuilderFactory = gameStateCollectionBuilderFactory;
+        this.gameAccountConverter = gameAccountConverter;
     }
 
     public async Task<Result<PerformCommandResult>> Handle(PerformCommandRequest request, CancellationToken cancellationToken)
@@ -91,15 +110,44 @@ public class PerformCommandRequestHandler : IRequestHandler<PerformCommandReques
             request.GameContext.Game.GetCompositeChapterKey(navigationCommand.ChapterKey),
             request.GameContext.Locale);
 
-        if (nextChapter.ForwardChapterKey != null)
-        {
-            var forwardChapter = await chapterProvider.GetChapter(
-                request.GameContext.Game.GetCompositeChapterKey(nextChapter.ForwardChapterKey),
-                request.GameContext.Locale);
+        var gameStateBuilder = gameStateCollectionBuilderFactory.Create(request.GameContext.GameAccount)
+            .Replace(
+                x => x.IsAutoSave(),
+                x => x.WithVisitedChapter(chapter)
+                    with
+                {
+                    CurrentChapter = nextChapter,
+                    UpdatedAt = request.Ticket.CreatedAt
+                });
 
-            return Result.Ok(PerformCommandResult.ForwardChapter(nextChapter.Paragraphs, forwardChapter));
+        if (nextChapter.ForwardChapterKey == null)
+        {
+            return Result.Ok(PerformCommandResult.ChangeChapter(
+                nextChapter,
+                await UpdateGameAccount(request, gameStateBuilder)));
         }
 
-        return Result.Ok(PerformCommandResult.ChangeChapter(nextChapter));
+        var forwardChapter = await chapterProvider.GetChapter(
+            request.GameContext.Game.GetCompositeChapterKey(nextChapter.ForwardChapterKey),
+            request.GameContext.Locale);
+
+        return Result.Ok(PerformCommandResult.ForwardChapter(
+            nextChapter.Paragraphs,
+            forwardChapter,
+            await UpdateGameAccount(request, gameStateBuilder)));
+    }
+
+    private async Task<GameAccount> UpdateGameAccount(
+        PerformCommandRequest request,
+        GameStateCollectionBuilder gameStateBuilder)
+    {
+        var record = await queryService.Run(
+            new UpdateGameAccountGameState(
+                request.GameContext.GameAccount.Id,
+                request.GameContext.GameAccount.Version,
+                gameStateBuilder.Build()),
+            request.Ticket);
+
+        return gameAccountConverter.Convert(record, request.GameContext.Locale);
     }
 }

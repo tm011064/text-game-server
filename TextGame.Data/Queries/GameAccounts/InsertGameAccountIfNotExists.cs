@@ -12,16 +12,16 @@ public class InsertGameAccountIfNotExists : IQuery<IGameAccount>
 
     private readonly string key;
 
-    private readonly string progressJson;
+    private readonly string gameStateJson;
 
     public InsertGameAccountIfNotExists(
         IUserAccount userAccount,
         IGame game,
         string key,
-        string progressJson)
+        string gameStateJson)
     {
         this.key = key;
-        this.progressJson = progressJson;
+        this.gameStateJson = gameStateJson;
 
         gameId = game.Id;
         userAccountId = userAccount.Id;
@@ -32,17 +32,19 @@ public class InsertGameAccountIfNotExists : IQuery<IGameAccount>
         var rowsAffected = await context.Connection.ExecuteAsync($@"
             insert into game_accounts (
                 resource_key,
+                version,
                 user_account_id,
                 game_id,
-                progress_json,
+                game_states_json,
                 created_at,
                 created_by
             )
             values (
                 @{nameof(key)},
+                {SqlStatements.CreateRandomNumber},
                 @{nameof(userAccountId)},
                 @{nameof(gameId)},
-                @{nameof(progressJson)},
+                @{nameof(gameStateJson)},
                 @{nameof(context.Ticket.CreatedAt)},
                 @{nameof(context.Ticket.CreatedBy)}
             )
@@ -52,7 +54,7 @@ public class InsertGameAccountIfNotExists : IQuery<IGameAccount>
                 key,
                 userAccountId,
                 gameId,
-                progressJson,
+                gameStateJson,
                 context.Ticket.CreatedAt,
                 context.Ticket.CreatedBy
             });

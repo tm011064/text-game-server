@@ -13,7 +13,8 @@ public static class JsonOptions
         {
             PropertyNameCaseInsensitive = true,
             IgnoreReadOnlyFields = false,
-            IgnoreReadOnlyProperties = false
+            IgnoreReadOnlyProperties = false,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
 
         options.Converters.Add(new JsonStringEnumConverter());

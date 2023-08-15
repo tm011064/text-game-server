@@ -1,5 +1,7 @@
 ﻿using MediatR;
+using TextGame.Core.Chapters;
 using TextGame.Core.Cryptography;
+using TextGame.Core.GameAccounts;
 using TextGame.Core.Users;
 using TextGame.Core.Users.Events;
 using TextGame.Data;
@@ -14,6 +16,10 @@ namespace TextGame.Core.Setup;
 
 public class SeedDataService
 {
+    private readonly IChapterProvider chapterProvider;
+
+    private readonly GameStateSerializer gameStateSerializer;
+
     private readonly IQueryService queryService;
 
     private readonly IMediator mediator;
@@ -22,10 +28,12 @@ public class SeedDataService
 
     private readonly Rfc2898PasswordEncryptor passwordEncryptor = new();
 
-    public SeedDataService(IQueryService queryService, IMediator mediator)
+    public SeedDataService(IQueryService queryService, IMediator mediator, IChapterProvider chapterProvider, GameStateSerializer gameStateSerializer)
     {
         this.queryService = queryService;
         this.mediator = mediator;
+        this.chapterProvider = chapterProvider;
+        this.gameStateSerializer = gameStateSerializer;
     }
 
     public async Task InsertResourceFileGamesIfNotExist()
@@ -70,7 +78,14 @@ public class SeedDataService
 
         foreach (var game in games)
         {
-            await queryService.Run(new InsertGameAccountIfNotExists(userAccount, game, Guid.NewGuid().ToString(), "{}"), ticket);
+            var root = await chapterProvider.GetChapter($"{game.Key}-root");
+
+            var defaultSaveSlot = GameState.New(root, "default", ticket);
+            var autoSaveSlot = GameState.New(root, null, ticket);
+
+            var gameStateJson = gameStateSerializer.Serialize(defaultSaveSlot, autoSaveSlot);
+
+            await queryService.Run(new InsertGameAccountIfNotExists(userAccount, game, Guid.NewGuid().ToString(), gameStateJson), ticket);
         }
     }
 }

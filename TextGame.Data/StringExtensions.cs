@@ -9,6 +9,11 @@ public static class StringExtensions
         return string.IsNullOrWhiteSpace(self);
     }
 
+    public static bool NotEmpty(this string? self)
+    {
+        return !string.IsNullOrWhiteSpace(self);
+    }
+
     public static IEnumerable<string> SplitAndTrim(this string source, string splitOn = ",")
     {
         return source.Split(splitOn).Select(x => x.Trim()).WhereNot(string.IsNullOrWhiteSpace);
