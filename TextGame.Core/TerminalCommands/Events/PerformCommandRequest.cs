@@ -67,6 +67,8 @@ public class PerformCommandRequestHandler : IRequestHandler<PerformCommandReques
 {
     private readonly IChapterProvider chapterProvider;
 
+    private readonly ITerminalCommandProvider terminalCommandProvider;
+
     private readonly IQueryService queryService;
 
     private readonly GameStateCollectionBuilderFactory gameStateCollectionBuilderFactory;
@@ -77,12 +79,14 @@ public class PerformCommandRequestHandler : IRequestHandler<PerformCommandReques
         IChapterProvider chapterProvider,
         IQueryService queryService,
         GameStateCollectionBuilderFactory gameStateCollectionBuilderFactory,
-        GameAccountConverter gameAccountConverter)
+        GameAccountConverter gameAccountConverter,
+        ITerminalCommandProvider terminalCommandProvider)
     {
         this.chapterProvider = chapterProvider;
         this.queryService = queryService;
         this.gameStateCollectionBuilderFactory = gameStateCollectionBuilderFactory;
         this.gameAccountConverter = gameAccountConverter;
+        this.terminalCommandProvider = terminalCommandProvider;
     }
 
     public async Task<Result<PerformCommandResult>> Handle(PerformCommandRequest request, CancellationToken cancellationToken)
@@ -93,6 +97,7 @@ public class PerformCommandRequestHandler : IRequestHandler<PerformCommandReques
 
         return request.CommandType switch
         {
+            TerminalCommandType.Enter or
             TerminalCommandType.Next or
             TerminalCommandType.Move or
             TerminalCommandType.Decline or
@@ -102,9 +107,28 @@ public class PerformCommandRequestHandler : IRequestHandler<PerformCommandReques
         };
     }
 
+    private bool DoTokensMatch(IEnumerable<string> tokens, TerminalCommand terminalCommand, string commandText)
+    {
+        return tokens.Any(
+            token => terminalCommand.Terms.Any(
+                term => string.Equals(string.Concat(term, " ", token), commandText, StringComparison.OrdinalIgnoreCase)));
+    }
+
     private async Task<Result<PerformCommandResult>> HandleChangeChapterRequest(PerformCommandRequest request, IChapter chapter)
     {
-        var navigationCommand = chapter.NavigationCommands.Single(x => x.Type == request.CommandType);
+        var terminalCommands = await terminalCommandProvider.Get(request.GameContext.Locale);
+        var terminalCommand = terminalCommands.GetOrNotFound(request.CommandType);
+        var commandText = string.Join(" ", request.Tokens);
+
+        var navigationCommand = chapter.NavigationCommands
+            .Where(x => x.Type == request.CommandType)
+            .Where(x => !x.Tokens.Any() || DoTokensMatch(x.Tokens, terminalCommand, commandText))
+            .FirstOrDefault();
+
+        if (navigationCommand == null)
+        {
+            return Result.Fail("Command not understood"); // TODO (Roman): needs list of responses from json locale
+        }
 
         var nextChapter = await chapterProvider.GetChapter(
             request.GameContext.Game.GetCompositeChapterKey(navigationCommand.ChapterKey),
