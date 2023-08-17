@@ -1,14 +1,11 @@
-﻿namespace TextGame.Data.Contracts;
+﻿using TextGame.Core.Users;
 
-using System;
-using TextGame.Core.Users;
+namespace TextGame.Data.Contracts;
 
 public readonly record struct AuthTicket(
     DateTimeOffset CreatedAt,
-    IUserIdentity User)
+    string CreatedBy)
 {
-    public static AuthTicket System => new(DateTimeOffset.UtcNow, SystemUserIdentity.Instance);
-
-    public string CreatedBy { get; } = User.Key;
+    public static AuthTicket System => new(DateTimeOffset.UtcNow, SystemUserIdentity.Instance.Key);
 }
 

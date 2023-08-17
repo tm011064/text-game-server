@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using TextGame.Api.Auth;
@@ -13,7 +14,6 @@ using TextGame.Data;
 namespace TextGame.Api.Controllers.TerminalCommands;
 
 [ApiController]
-[Authorize]
 [ApiVersion("20220718")]
 [Route("api/v{version:apiVersion}/[controller]")]
 [Route("[controller]")]
@@ -29,6 +29,7 @@ public class ChallengesController : ControllerBase
         this.mediator = mediator;
     }
 
+    [Authorize(Policy.HasGameAccount)]
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] PostChallengeRequest request)
     {

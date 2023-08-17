@@ -1,7 +1,10 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using TextGame.Api.Auth;
 using TextGame.Api.Controllers.Users.Models;
+using TextGame.Core;
 using TextGame.Core.Users.Events;
 using TextGame.Data;
 using TextGame.Data.Contracts;
@@ -28,9 +31,9 @@ public class UsersController : ControllerBase
     [HttpPost()]
     public async Task<IActionResult> Post(PostUserRequest request)
     {
-        var ticket = new AuthTicket(DateTimeOffset.UtcNow, AnonymousUserIdentity.Instance);
+        var ticket = new AuthTicket(DateTimeOffset.UtcNow, AnonymousUserIdentity.Instance.Key);
 
-        var record = await mediator.Send(new CreateUserRequest(request.Email!, request.Password!, ticket));
+        var record = await mediator.Send(new CreateUserRequest(request.Email!, request.Password!, new[] { UserRole.User }.ToHashSet(), ticket));
 
         return Ok(ToWire(record));
     }

@@ -57,8 +57,7 @@ public class ChallengeSucceededRequestHandler : IRequestHandler<ChallengeSucceed
                 x => x.IsAutoSave(),
                 x => x
                     .WithCompletedChallenge(chapter)
-                    .WithVisitedChapter(chapter)
-                    with
+                    .WithVisitedChapter(chapter) with
                 {
                     CurrentChapter = nextChapter,
                     UpdatedAt = request.Ticket.CreatedAt
@@ -78,7 +77,11 @@ public class ChallengeSucceededRequestHandler : IRequestHandler<ChallengeSucceed
 
         gameStateBuilder = gameStateBuilder.Replace(
             x => x.IsAutoSave(),
-            x => x.WithVisitedChapter(nextChapter));
+            x => x.WithVisitedChapter(nextChapter) with
+            {
+                CurrentChapter = forwardChapter,
+                UpdatedAt = request.Ticket.CreatedAt
+            });
 
         var result = new ChallengeSucceededResult(
             forwardChapter,

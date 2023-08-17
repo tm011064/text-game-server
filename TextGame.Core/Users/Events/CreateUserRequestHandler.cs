@@ -25,7 +25,8 @@ public class CreateUserRequestHandler : IRequestHandler<CreateUserRequest, IUser
             new InsertUser(
                 key: Guid.NewGuid().ToString(),
                 email: request.Email,
-                password: password),
+                password: password,
+                roles: request.Roles),
             request.Ticket);
 
         return await queryService.Run(GetUser.ById(id), request.Ticket) ?? throw new ResourceNotFoundException();

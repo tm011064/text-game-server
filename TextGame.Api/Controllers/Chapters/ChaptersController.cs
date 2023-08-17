@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TextGame.Api.Auth;
 using TextGame.Core.Chapters;
 
 namespace TextGame.Api.Controllers.Chapters;
 
 [ApiController]
-[Authorize]
+[Authorize(Policy = Policy.HasGameAccount)]
 [ApiVersion("20220718")]
 [Route("api/v{version:apiVersion}/[controller]")]
 [Route("[controller]")]

@@ -1,21 +1,27 @@
 using Dapper;
 using FluentMigrator.Runner;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.OpenApi.Models;
 using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
 using System.Text.Json.Serialization;
 using TextGame.Api.Auth;
 using TextGame.Api.Controllers.Authentication.Events;
+using TextGame.Api.Controllers.GameAccounts.Policies;
+using TextGame.Api.Middleware;
+using TextGame.Api.Middleware.AuthorizationHandlers;
 using TextGame.Api.Middleware.Exceptions;
 using TextGame.Api.Transformers;
+using TextGame.Core;
 using TextGame.Core.Chapters;
 using TextGame.Core.Emotions;
 using TextGame.Core.GameAccounts;
 using TextGame.Core.Games;
 using TextGame.Core.Setup;
 using TextGame.Core.TerminalCommands;
-using TextGame.Core.Users;
 using TextGame.Core.Users.Events;
 using TextGame.Data;
 using TextGame.Data.Contracts.Chapters;
@@ -98,6 +104,16 @@ builder.Services.AddSingleton<IJwtTokenValidator, JwtTokenValidator>();
 builder.Services.AddSingleton<IJwtTokenFactory, JwtTokenFactory>();
 builder.Services.AddSingleton<IRefreshTokenFactory, RefreshTokenFactory>();
 
+var rules = Assembly.GetExecutingAssembly().GetTypes()
+    .Where(x => !x.IsAbstract && x.IsClass && typeof(IAuthorizationHandler).IsAssignableFrom(x));
+
+foreach (var rule in rules)
+{
+    builder.Services.Add(new ServiceDescriptor(typeof(IAuthorizationHandler), rule, ServiceLifetime.Transient));
+}
+
+builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+
 builder.Services.AddMediatR(x => x
     .RegisterServicesFromAssemblyContaining<AuthenticateUserRequest>()
     .RegisterServicesFromAssemblyContaining<CreateUserRequest>());
@@ -114,6 +130,18 @@ builder.Services.AddFluentMigratorCore()
     .ConfigureRunner(builder => builder.AddSQLite()
         .WithGlobalConnectionString("SqlLiteDatabase")
         .ScanIn(typeof(QueryService).Assembly).For.Migrations());
+
+builder.Services
+    .AddAuthentication(options =>
+    {
+        options.DefaultScheme = nameof(TokenAuthenticationHandler);
+    })
+    .AddScheme<TokenAuthenticationOptions, TokenAuthenticationHandler>(nameof(TokenAuthenticationHandler), _ => { });
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(Policy.HasGameAccount, policy => policy.Requirements.Add(new HasGameAccountRequirement()));
+    options.AddPolicy(Policy.CanViewGameAccount, policy => policy.Requirements.Add(new CanViewGameAccountRequirement()));
+});
 
 var app = builder.Build();
 
@@ -132,8 +160,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 
-    await seedDataService.CreateTestUserIfNotExists("test", "test");
-    await seedDataService.CreateTestUserIfNotExists("admin", "admin");
+    await seedDataService.CreateTestUserIfNotExists("test", "test", UserRole.User);
+    await seedDataService.CreateTestUserIfNotExists("admin", "admin", UserRole.User, UserRole.GameAdmin);
     await seedDataService.CreateTestUserGameAccountsIfNotExists("test");
     await seedDataService.CreateTestUserGameAccountsIfNotExists("admin");
 }
@@ -148,7 +176,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.UseMiddleware<JwtMiddleware>();
 
 app.Run();

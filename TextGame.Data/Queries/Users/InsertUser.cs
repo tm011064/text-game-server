@@ -1,8 +1,7 @@
 ﻿namespace TextGame.Data.Queries.Users;
 
 using Dapper;
-using System.Data;
-using System.Net.Sockets;
+using System.Text.Json;
 using System.Threading.Tasks;
 using TextGame.Data.Contracts;
 
@@ -14,14 +13,19 @@ public class InsertUser : IQuery<long>
 
     private readonly UserPassword password;
 
+    private readonly string rolesJson;
+
     public InsertUser(
         string key,
         string email,
-        UserPassword password)
+        UserPassword password,
+        IReadOnlySet<string> roles)
     {
         this.key = key;
         this.email = email;
         this.password = password;
+
+        rolesJson = JsonSerializer.Serialize(roles);
     }
 
     public Task<long> Execute(QueryContext context)
@@ -30,6 +34,7 @@ public class InsertUser : IQuery<long>
             insert into users (
                 resource_key,
                 email,
+                roles_json,
                 password_initialization_vector,
                 password_salt,
                 password_iterations,
@@ -43,6 +48,7 @@ public class InsertUser : IQuery<long>
             values (
                 @{nameof(key)},
                 @{nameof(email)},
+                @{nameof(rolesJson)},
                 @{nameof(password.InitializationVector)},
                 @{nameof(password.Salt)},
                 @{nameof(password.Iterations)},
@@ -59,6 +65,7 @@ public class InsertUser : IQuery<long>
             {
                 key,
                 email,
+                rolesJson,
                 password.InitializationVector,
                 password.Salt,
                 password.Iterations,

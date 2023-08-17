@@ -2,4 +2,8 @@
 
 namespace TextGame.Api.Auth;
 
-public record UserIdentity(string Key) : IUserIdentity;
+public record UserIdentity(
+    string Key,
+    bool IsGameAdmin,
+    IReadOnlySet<string> GameKeys,
+    IReadOnlySet<string> GameAccountKeys) : IUserIdentity;

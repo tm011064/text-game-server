@@ -127,7 +127,7 @@ public class PerformCommandRequestHandler : IRequestHandler<PerformCommandReques
 
         if (navigationCommand == null)
         {
-            return Result.Fail("Command not understood"); // TODO (Roman): needs list of responses from json locale
+            return Result.Ok(PerformCommandResult.Error("Don't understand")); // TODO (Roman): needs list of responses from json locale
         }
 
         var nextChapter = await chapterProvider.GetChapter(
@@ -154,6 +154,14 @@ public class PerformCommandRequestHandler : IRequestHandler<PerformCommandReques
         var forwardChapter = await chapterProvider.GetChapter(
             request.GameContext.Game.GetCompositeChapterKey(nextChapter.ForwardChapterKey),
             request.GameContext.Locale);
+
+        gameStateBuilder = gameStateBuilder.Replace(
+            x => x.IsAutoSave(),
+            x => x.WithVisitedChapter(nextChapter) with
+            {
+                CurrentChapter = forwardChapter,
+                UpdatedAt = request.Ticket.CreatedAt
+            });
 
         return Result.Ok(PerformCommandResult.ForwardChapter(
             nextChapter.Paragraphs,

@@ -46,14 +46,14 @@ public class SeedDataService
         }
     }
 
-    public async Task CreateTestUserIfNotExists(string email, string password)
+    public async Task CreateTestUserIfNotExists(string email, string password, params string[] roles)
     {
         var ticket = AuthTicket.System;
         var existing = await queryService.Run(GetUser.ByEmail(email), ticket);
 
         if (existing == null)
         {
-            await mediator.Send(new CreateUserRequest(email, password, ticket));
+            await mediator.Send(new CreateUserRequest(email, password, roles.ToHashSet(), ticket));
             return;
         }
 

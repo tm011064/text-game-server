@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using TextGame.Api.Auth;
@@ -14,7 +15,7 @@ using TextGame.Data.Contracts.TerminalCommands;
 namespace TextGame.Api.Controllers.Commands;
 
 [ApiController]
-[Authorize]
+[Authorize(Policy = Policy.HasGameAccount)]
 [ApiVersion("20220718")]
 [Route("api/v{version:apiVersion}/[controller]")]
 [Route("[controller]")]
@@ -30,6 +31,7 @@ public class CommandsController : ControllerBase
         this.gameProvider = gameProvider;
     }
 
+    [Authorize(Policy.HasGameAccount)]
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] PostCommandRequest request)
     {
@@ -88,7 +90,6 @@ public class CommandsController : ControllerBase
         {
             throw; // TODO (Roman): handle this, return latest autosave instead
         }
-
     }
 
     private static object? ToWire(PerformCommandResult record) => new

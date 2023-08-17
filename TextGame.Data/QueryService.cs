@@ -27,6 +27,15 @@ public class QueryService : IQueryService
 
         return query.Execute(context);
     }
+
+    public Task<TRecord> WithContext<TRecord>(Func<QueryContext, Task<TRecord>> query, AuthTicket ticket)
+    {
+        using var connection = CreateConnection();
+
+        var context = new QueryContext(connection, ticket);
+
+        return query(context);
+    }
 }
 
 public record QueryContext(IDbConnection Connection, AuthTicket Ticket)

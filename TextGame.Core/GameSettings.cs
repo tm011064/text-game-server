@@ -9,3 +9,10 @@ public static class GameSettings
 }
 
 public record GameContext(IGame Game, GameAccount GameAccount, string Locale);
+
+public static class UserRole
+{
+    public const string User = nameof(User);
+
+    public const string GameAdmin = nameof(GameAdmin);
+}

@@ -10,4 +10,6 @@ public interface IUser : IUserIdentity
     long Id { get; }
 
     string Email { get; }
+
+    IReadOnlySet<string> Roles { get; }
 }

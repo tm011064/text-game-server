@@ -4,6 +4,8 @@ using TextGame.Api.Auth;
 using TextGame.Core.Cryptography;
 using TextGame.Data;
 using TextGame.Data.Contracts;
+using TextGame.Data.Queries.GameAccounts;
+using TextGame.Data.Queries.UserAccounts;
 using TextGame.Data.Queries.Users;
 
 namespace TextGame.Api.Controllers.Authentication.Events;
@@ -38,14 +40,20 @@ public class AuthenticateUserRequestHandler : IRequestHandler<AuthenticateUserRe
             return Result.Fail<UserTokenResponse>("User not found");
         }
 
-        var password = await queryService.Run(new GetUserPassword(user.Id), ticket);
+        var (password, gameAccounts) = await queryService.WithContext(async context =>
+        {
+            var password = await queryService.Run(new GetUserPassword(user.Id), ticket);
+            var gameAccounts = await context.Execute(new SearchGameAccounts(userId: user.Id));
+
+            return (password, gameAccounts);
+        }, ticket);
 
         if (!validator.IsValid(request.Password!, password))
         {
             return Result.Fail<UserTokenResponse>("Password not valid");
         }
 
-        var token = tokenFactory.Create(user);
+        var token = await tokenFactory.Create(user, gameAccounts);
         var refreshToken = await refreshTokenFactory.Create(user, ticket);
 
         return Result.Ok(new UserTokenResponse(user, token, refreshToken));

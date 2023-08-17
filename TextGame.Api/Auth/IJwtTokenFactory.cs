@@ -4,5 +4,5 @@ namespace TextGame.Api.Auth;
 
 public interface IJwtTokenFactory
 {
-    string Create(IUser user);
+    Task<string> Create(IUser user, IReadOnlyCollection<IGameAccount> gameAccounts);
 }

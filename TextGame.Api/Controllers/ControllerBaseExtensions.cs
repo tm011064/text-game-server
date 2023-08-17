@@ -11,7 +11,7 @@ public static class ControllerBaseExtensions
     {
         var key = self.HttpContext.User.Claims.GetClaimOrThrow(JwtRegisteredClaimNames.Sub);
 
-        return new AuthTicket(DateTimeOffset.UtcNow, new UserIdentity(key));
+        return new AuthTicket(DateTimeOffset.UtcNow, key);
     }
 }
 

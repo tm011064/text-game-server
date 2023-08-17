@@ -33,6 +33,8 @@
     <None Remove="Middleware\Exceptions\" />
     <None Remove="Controllers\Challenges\" />
     <None Remove="Controllers\GameAccounts\" />
+    <None Remove="Controllers\GameAccounts\Policies\" />
+    <None Remove="Middleware\AuthorizationHandlers\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\TerminalCommands\" />
@@ -41,5 +43,7 @@
     <Folder Include="Middleware\Exceptions\" />
     <Folder Include="Controllers\Challenges\" />
     <Folder Include="Controllers\GameAccounts\" />
+    <Folder Include="Controllers\GameAccounts\Policies\" />
+    <Folder Include="Middleware\AuthorizationHandlers\" />
   </ItemGroup>
 </Project>

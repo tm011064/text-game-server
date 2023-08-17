@@ -3,7 +3,6 @@ using TextGame.Data;
 using TextGame.Data.Contracts;
 using TextGame.Data.Contracts.Games;
 using TextGame.Data.Queries.Games;
-using TextGame.Data.Resources;
 
 namespace TextGame.Core.Games;
 
@@ -12,6 +11,8 @@ public interface IGameProvider
     Task<IGame> Get(string key);
 
     Task<IGame> GetById(long id);
+
+    Task<IReadOnlyDictionary<long, IGame>> GetMap();
 }
 
 public class GameProvider : IGameProvider
@@ -42,6 +43,8 @@ public class GameProvider : IGameProvider
     public async Task<IGame> Get(string key) => (await GetGameCache()).GamesByKey.GetOrNotFound(key);
 
     public async Task<IGame> GetById(long id) => (await GetGameCache()).GamesById.GetOrNotFound(id);
+
+    public async Task<IReadOnlyDictionary<long, IGame>> GetMap() => (await GetGameCache()).GamesById;
 
     private record GameCache(
         IReadOnlyDictionary<long, IGame> GamesById,

@@ -31,10 +31,7 @@ public class GetUserAccount : IQuery<IUserAccount>
     {
         return await context.Connection.QuerySingleAsync<UserAccountResource>($@"
             select
-                id as {nameof(UserAccountResource.Id)},
-                resource_key as {nameof(UserAccountResource.Key)},
-                user_id as {nameof(UserAccountResource.UserId)},
-                name as {nameof(UserAccountResource.Name)}
+                {UserAccountsSql.SelectColumns}
             from
                 user_accounts
             where

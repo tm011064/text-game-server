@@ -1,15 +1,12 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TextGame.Api.Auth;
-using TextGame.Api.Controllers.Chapters;
-using TextGame.Core.GameAccounts;
 using TextGame.Core.GameAccounts.Events;
-using TextGame.Data.Contracts.Chapters;
 
 namespace TextGame.Api.Controllers.GameAccounts;
 
 [ApiController]
-[Authorize]
 [ApiVersion("20220718")]
 [Route("api/v{version:apiVersion}/[controller]")]
 [Route("[controller]")]
@@ -22,13 +19,11 @@ public class GameAccountsController : ControllerBase
         this.mediator = mediator;
     }
 
+    [Authorize(Policy.CanViewGameAccount)]
     [HttpPost("search")]
     public async Task<IActionResult> Search([FromBody] PostGameAccountsSearchRequest request)
     {
         var ticket = this.GetTicket();
-
-        // TODO (Roman): authorization
-        // TODO (Roman): validation
 
         var records = await mediator.Send(new SearchGameAccountsRequest(request.UserId, request.GameId, request.Locale, ticket));
 

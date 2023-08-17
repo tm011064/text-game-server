@@ -1,9 +1,7 @@
-﻿namespace TextGame.Data.Queries.Users;
-
-using Dapper;
-using System.Data;
-using System.Threading.Tasks;
+﻿using Dapper;
 using TextGame.Data.Contracts;
+
+namespace TextGame.Data.Queries.Users;
 
 public class GetUser : IQuery<IUser?>
 {

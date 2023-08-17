@@ -11,6 +11,7 @@ public class AddUsersTable : Migration
             .WithPrimaryIdAndResourceKey()
             .WithAuditColumns()
             .WithColumn("email").AsString(256).NotNullable()
+            .WithColumn("roles_json").AsString(512).NotNullable()
             .WithColumn("password_initialization_vector").AsBinary().NotNullable()
             .WithColumn("password_salt").AsBinary().NotNullable()
             .WithColumn("password_iterations").AsInt32().NotNullable()
