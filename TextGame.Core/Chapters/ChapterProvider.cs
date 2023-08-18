@@ -7,7 +7,7 @@ namespace TextGame.Core.Chapters;
 
 public interface IChapterProvider
 {
-    Task<IChapter> GetChapter(string chapterKey, string locale = GameSettings.DefaultLocale);
+    Task<IChapter> GetChapter(string chapterKey, string locale);
 
     IReadOnlyDictionary<string, IChapter> GetChaptersMap(IReadOnlySet<string> keys, string locale);
 }

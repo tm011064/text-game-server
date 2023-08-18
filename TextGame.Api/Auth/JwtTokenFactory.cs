@@ -6,7 +6,6 @@ using TextGame.Core;
 using TextGame.Core.Games;
 using TextGame.Data;
 using TextGame.Data.Contracts;
-using TextGame.Data.Contracts.Games;
 
 namespace TextGame.Api.Auth;
 
@@ -34,24 +33,27 @@ public class JwtTokenFactory : IJwtTokenFactory
     {
         var gamesById = await gameProvider.GetMap();
 
-        var claims = new[]
+        var subject = new ClaimsIdentity();
+
+        subject.AddClaim(new Claim(JwtRegisteredClaimNames.Sub, user.Key));
+        subject.AddClaim(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
+        subject.AddClaim(new Claim(
+            CustomClaimNames.IsGameAdmin,
+            user.Roles.Contains(UserRole.GameAdmin).ToString(),
+            ClaimValueTypes.Boolean));
+
+        foreach (var gameId in gameAccounts.Select(x => x.GameId).Distinct())
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Key),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(
-                CustomClaimNames.IsGameAdmin,
-                user.Roles.Contains(UserRole.GameAdmin).ToString()),
-            new Claim(
-                CustomClaimNames.GameIds,
-                string.Join(",", gameAccounts.Select(x => gamesById.GetOrNotFound(x.GameId).Key).Distinct())),
-            new Claim(
-                CustomClaimNames.GameAccountIds,
-                string.Join(",", gameAccounts.Select(x => x.Key)))
-        };
+            subject.AddClaim(new Claim(CustomClaimNames.GameIds, gamesById.GetOrNotFound(gameId).Key));
+        }
+        foreach (var gameAccount in gameAccounts)
+        {
+            subject.AddClaim(new Claim(CustomClaimNames.GameAccountIds, gameAccount.Key));
+        }
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(claims),
+            Subject = subject,
             Expires = DateTime.UtcNow.Add(tokenExpiry),
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey)),
@@ -66,9 +68,9 @@ public class JwtTokenFactory : IJwtTokenFactory
 
 public static class CustomClaimNames
 {
-    public const string IsGameAdmin = nameof(IsGameAdmin);
+    public const string IsGameAdmin = "isGameAdmin";
 
-    public const string GameIds = nameof(GameIds);
+    public const string GameIds = "gameIds";
 
-    public const string GameAccountIds = nameof(GameAccountIds);
+    public const string GameAccountIds = "gameAccountIds";
 }

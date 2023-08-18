@@ -141,6 +141,7 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy(Policy.HasGameAccount, policy => policy.Requirements.Add(new HasGameAccountRequirement()));
     options.AddPolicy(Policy.CanViewGameAccount, policy => policy.Requirements.Add(new CanViewGameAccountRequirement()));
+    options.AddPolicy(Policy.CanManageUsers, policy => policy.Requirements.Add(new CanManageUsersRequirement()));
 });
 
 var app = builder.Build();
@@ -176,5 +177,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseLocaleHeader();
 
 app.Run();

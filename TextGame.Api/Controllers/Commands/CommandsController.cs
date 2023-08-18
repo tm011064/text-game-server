@@ -58,7 +58,7 @@ public class CommandsController : ControllerBase
             return BadRequest($"{nameof(request.GameAccountVersion)} must not be empty");
         }
 
-        var locale = request.Locale ?? GameSettings.DefaultLocale;
+        var locale = this.GetLocale();
 
         try
         {
@@ -107,5 +107,4 @@ public record PostCommandRequest(
     [Required] long? GameAccountVersion,
     [Required] string? ChapterId,
     [Required] TerminalCommandType? CommandType,
-    string[]? Tokens,
-    [Required] string? Locale);
+    string[]? Tokens);

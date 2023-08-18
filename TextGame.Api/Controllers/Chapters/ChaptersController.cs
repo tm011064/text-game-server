@@ -24,7 +24,7 @@ public class ChaptersController : ControllerBase
     public async Task<IActionResult> GetChapter(
         [FromRoute] string id)
     {
-        var chapter = await provider.GetChapter(chapterKey: id);
+        var chapter = await provider.GetChapter(chapterKey: id, this.GetLocale());
 
         return Ok(chapter.ToWire());
     }

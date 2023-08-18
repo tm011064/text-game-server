@@ -10,3 +10,7 @@ public class PostUserRequest
     [Required]
     public string? Password { get; set; }
 }
+
+public record PostUserSearchRequest(
+    [Required] string Text,
+    [Range(1, 100)] int Limit = 100);

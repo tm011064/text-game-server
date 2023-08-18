@@ -25,6 +25,11 @@ public class GameAccountsController : ControllerBase
     {
         var ticket = this.GetTicket();
 
+        if (request.UserId == null)
+        {
+            throw new Exception();
+        }
+
         var records = await mediator.Send(new SearchGameAccountsRequest(request.UserId, request.GameId, request.Locale, ticket));
 
         return Ok(records.Select(Wiring.ToWire).ToArray());

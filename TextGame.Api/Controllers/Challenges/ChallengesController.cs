@@ -48,7 +48,7 @@ public class ChallengesController : ControllerBase
             return BadRequest($"{nameof(request.GameAccountVersion)} must not be empty");
         }
 
-        var locale = request.Locale ?? GameSettings.DefaultLocale;
+        var locale = this.GetLocale();
 
         try
         {
@@ -91,5 +91,4 @@ public class ChallengesController : ControllerBase
 public record PostChallengeRequest(
     [Required] string? GameAccountId,
     [Required] long? GameAccountVersion,
-    [Required] string? ChapterId,
-    [Required] string? Locale);
+    [Required] string? ChapterId);

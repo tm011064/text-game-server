@@ -23,7 +23,7 @@ public class EmoticonsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var records = await provider.Get();
+        var records = await provider.Get(this.GetLocale());
 
         return Ok(records.Select(ToWire).ToArray());
     }

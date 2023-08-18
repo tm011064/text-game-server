@@ -78,7 +78,7 @@ public class SeedDataService
 
         foreach (var game in games)
         {
-            var root = await chapterProvider.GetChapter($"{game.Key}-root");
+            var root = await chapterProvider.GetChapter($"{game.Key}-root", "en-US");
 
             var defaultSaveSlot = GameState.New(root, "default", ticket);
             var autoSaveSlot = GameState.New(root, null, ticket);

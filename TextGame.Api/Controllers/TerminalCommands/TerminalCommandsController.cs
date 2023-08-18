@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TextGame.Core;
 using TextGame.Core.TerminalCommands;
 using TextGame.Data.Contracts.TerminalCommands;
 
@@ -21,7 +20,7 @@ public class TerminalCommandsController : ControllerBase
     [HttpPost("search")]
     public async Task<IActionResult> Search([FromBody] PostTerminalCommandsSearchRequest request)
     {
-        var records = await provider.Get(request.Locale ?? GameSettings.DefaultLocale);
+        var records = await provider.Get(this.GetLocale());
 
         return Ok(records.Values.Select(ToWire).ToArray());
     }
@@ -33,4 +32,4 @@ public class TerminalCommandsController : ControllerBase
     };
 }
 
-public record PostTerminalCommandsSearchRequest(string? Locale);
+public record PostTerminalCommandsSearchRequest();

@@ -19,6 +19,7 @@ namespace TextGame.Api.Controllers.Users;
 public class UsersController : ControllerBase
 {
     private readonly IQueryService queryService;
+
     private readonly IMediator mediator;
 
     public UsersController(IQueryService queryService, IMediator mediator)
@@ -38,7 +39,8 @@ public class UsersController : ControllerBase
         return Ok(ToWire(record));
     }
 
-    [HttpGet("/{id}")]
+    [Authorize(Policy.CanManageUsers)]
+    [HttpGet("{id}")]
     public async Task<IActionResult> Get(string id)
     {
         var ticket = this.GetTicket();
@@ -46,6 +48,26 @@ public class UsersController : ControllerBase
         var user = await queryService.Run(GetUser.ByKey(id), ticket) ?? throw new ResourceNotFoundException();
 
         return Ok(ToWire(user));
+    }
+
+    [Authorize(Policy.CanManageUsers)]
+    [HttpPost("search")]
+    public async Task<IActionResult> Search(PostUserSearchRequest request)
+    {
+        var ticket = this.GetTicket();
+
+        if (Guid.TryParse(request.Text, out var _))
+        {
+            var record = await queryService.Run(GetUser.ByKey(request.Text), ticket);
+
+            return record == null
+                ? Ok()
+                : Ok(new[] { ToWire(record) });
+        }
+
+        var records = await queryService.Run(new SearchUsers(request.Text, request.Limit), ticket);
+
+        return Ok(records.Select(ToWire).ToArray());
     }
 
     private static object ToWire(IUser record) => new
