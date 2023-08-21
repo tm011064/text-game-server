@@ -34,12 +34,15 @@ public class GetGameAccount : IQuery<IGameAccount>
                 {GameAccountsSql.SelectColumns}
             from
                 game_accounts
+                join user_accounts on game_accounts.user_account_id = user_accounts.id
+                join users on user_accounts.user_id = users.id
+                join games on game_accounts.game_id = games.id
             where
-                deleted_at is null
-                {SqlWhere.AndOptional("id", nameof(id), id)}
-                {SqlWhere.AndOptional("game_id", nameof(gameId), gameId)}
-                {SqlWhere.AndOptional("user_account_id", nameof(userAccountId), userAccountId)}
-                {SqlWhere.AndOptional("resource_key", nameof(key), key)}",
+                game_accounts.deleted_at is null
+                {SqlWhere.AndOptional("game_accounts.id", nameof(id), id)}
+                {SqlWhere.AndOptional("game_accounts.game_id", nameof(gameId), gameId)}
+                {SqlWhere.AndOptional("game_accounts.user_account_id", nameof(userAccountId), userAccountId)}
+                {SqlWhere.AndOptional("game_accounts.resource_key", nameof(key), key)}",
             new
             {
                 id,

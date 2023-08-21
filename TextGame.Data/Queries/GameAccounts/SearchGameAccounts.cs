@@ -44,9 +44,9 @@ public class SearchGameAccounts : IQuery<IReadOnlyCollection<IGameAccount>>
                 {GameAccountsSql.SelectColumns}
             from
                 game_accounts
-            {(userId.HasValue || userKey.NotEmpty() ? "join user_accounts on game_accounts.user_account_id = user_accounts.id" : "")}
-            {(userKey.NotEmpty() ? "join users on user_accounts.user_id = users.id" : "")}
-            {(gameKey.NotEmpty() ? "join games on game_accounts.game_id = games.id" : "")}
+                join user_accounts on game_accounts.user_account_id = user_accounts.id
+                join users on user_accounts.user_id = users.id
+                join games on game_accounts.game_id = games.id
             where
                 game_accounts.deleted_at is null
                 {SqlWhere.AndOptional("game_accounts.id", nameof(id), id)}

@@ -1,6 +1,5 @@
 ﻿using TextGame.Api.Controllers.Chapters;
 using TextGame.Core.GameAccounts;
-using TextGame.Data.Contracts;
 
 namespace TextGame.Api.Controllers.GameAccounts;
 

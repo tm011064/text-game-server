@@ -3,7 +3,10 @@ using TextGame.Data.Contracts.Games;
 
 namespace TextGame.Core;
 
-public record GameContext(IGame Game, GameAccount GameAccount, string Locale);
+public record GameContext(GameAccount GameAccount, string Locale)
+{
+    public IGame Game => GameAccount.Game;
+}
 
 public static class UserRole
 {

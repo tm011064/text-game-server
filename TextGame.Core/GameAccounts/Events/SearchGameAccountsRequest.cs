@@ -13,13 +13,13 @@ public record SearchGameAccountsRequest(
 
 public class SearchGameAccountsRequestHandler : IRequestHandler<SearchGameAccountsRequest, IReadOnlyCollection<GameAccount>>
 {
-    private readonly GameStateSerializer serializer;
+    private readonly GameAccountConverter converter;
 
     private readonly IQueryService queryService;
 
-    public SearchGameAccountsRequestHandler(GameStateSerializer serializer, IQueryService queryService)
+    public SearchGameAccountsRequestHandler(GameAccountConverter converter, IQueryService queryService)
     {
-        this.serializer = serializer;
+        this.converter = converter;
         this.queryService = queryService;
     }
 
@@ -31,14 +31,6 @@ public class SearchGameAccountsRequestHandler : IRequestHandler<SearchGameAccoun
                 gameKey: request.GameKey),
             request.Ticket);
 
-        return records
-            .Select(x => new GameAccount(
-                x.Id,
-                x.Key,
-                serializer.Deserialize(x.GameStateJson, request.Locale).ToArray(),
-                x.UserAccountId,
-                x.GameId,
-                x.Version))
-            .ToArray();
+        return await Task.WhenAll(records.Select(x => converter.Convert(x, request.Locale)));
     }
 }

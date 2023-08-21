@@ -1,5 +1,6 @@
 using Dapper;
 using FluentMigrator.Runner;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
@@ -8,8 +9,8 @@ using Microsoft.OpenApi.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using TextGame.Api;
 using TextGame.Api.Auth;
-using TextGame.Api.Controllers.Authentication.Events;
 using TextGame.Api.Controllers.GameAccounts.Policies;
 using TextGame.Api.Middleware;
 using TextGame.Api.Middleware.AuthorizationHandlers;
@@ -22,7 +23,6 @@ using TextGame.Core.GameAccounts;
 using TextGame.Core.Games;
 using TextGame.Core.Setup;
 using TextGame.Core.TerminalCommands;
-using TextGame.Core.Users.Events;
 using TextGame.Data;
 using TextGame.Data.Contracts.Chapters;
 using TextGame.Data.Contracts.Emotions;
@@ -104,6 +104,9 @@ builder.Services.AddSingleton<IJwtTokenValidator, JwtTokenValidator>();
 builder.Services.AddSingleton<IJwtTokenFactory, JwtTokenFactory>();
 builder.Services.AddSingleton<IRefreshTokenFactory, RefreshTokenFactory>();
 
+builder.Services.AddValidatorsFromAssemblyContaining<ApiAssemblyPlaceholder>();
+builder.Services.AddValidatorsFromAssemblyContaining<CoreAssemblyPlaceholder>();
+
 var rules = Assembly.GetExecutingAssembly().GetTypes()
     .Where(x => !x.IsAbstract && x.IsClass && typeof(IAuthorizationHandler).IsAssignableFrom(x));
 
@@ -115,8 +118,8 @@ foreach (var rule in rules)
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddMediatR(x => x
-    .RegisterServicesFromAssemblyContaining<AuthenticateUserRequest>()
-    .RegisterServicesFromAssemblyContaining<CreateUserRequest>());
+    .RegisterServicesFromAssemblyContaining<ApiAssemblyPlaceholder>()
+    .RegisterServicesFromAssemblyContaining<CoreAssemblyPlaceholder>());
 
 builder.Services.AddApiVersioning(config =>
 {

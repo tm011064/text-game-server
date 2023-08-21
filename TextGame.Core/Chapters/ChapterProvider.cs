@@ -7,6 +7,8 @@ namespace TextGame.Core.Chapters;
 
 public interface IChapterProvider
 {
+    bool Exists(string chapterKey, string locale);
+
     Task<IChapter> GetChapter(string chapterKey, string locale);
 
     IReadOnlyDictionary<string, IChapter> GetChaptersMap(IReadOnlySet<string> keys, string locale);
@@ -53,5 +55,10 @@ public class ChapterProvider : IChapterProvider
                 ? chapter
                 : throw new ResourceNotFoundException())
             .ToDictionary(x => x.GetCompositeKey());
+    }
+
+    public bool Exists(string chapterKey, string locale)
+    {
+        return GetChaptersByKey(locale).ContainsKey(chapterKey);
     }
 }

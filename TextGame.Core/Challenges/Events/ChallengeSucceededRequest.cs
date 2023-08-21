@@ -1,13 +1,11 @@
 ﻿using FluentResults;
 using MediatR;
-using System.Net.Sockets;
 using TextGame.Core.Chapters;
 using TextGame.Core.GameAccounts;
 using TextGame.Core.Games;
 using TextGame.Data;
 using TextGame.Data.Contracts;
 using TextGame.Data.Contracts.Chapters;
-using TextGame.Data.Contracts.Games;
 using TextGame.Data.Queries.GameAccounts;
 
 namespace TextGame.Core.Challenges.Events;
@@ -105,6 +103,6 @@ public class ChallengeSucceededRequestHandler : IRequestHandler<ChallengeSucceed
                 gameStateBuilder.Build()),
             request.Ticket);
 
-        return gameAccountConverter.Convert(record, request.GameContext.Locale);
+        return await gameAccountConverter.Convert(record, request.GameContext.Locale);
     }
 }

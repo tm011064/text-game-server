@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using System;
 using TextGame.Data;
 using TextGame.Data.Contracts;
 using TextGame.Data.Queries.GameAccounts;
@@ -34,6 +33,6 @@ public class GetGameAccountRequestHandler : IRequestHandler<GetGameAccountReques
             throw new ConcurrencyException();
         }
 
-        return converter.Convert(record, request.Locale);
+        return await converter.Convert(record, request.Locale);
     }
 }

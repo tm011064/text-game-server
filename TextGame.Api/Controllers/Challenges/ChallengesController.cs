@@ -53,14 +53,13 @@ public class ChallengesController : ControllerBase
         try
         {
             var gameAccount = await mediator.Send(new GetGameAccountRequest(
-            request.GameAccountId!,
-            locale,
-            ticket,
-            request.GameAccountVersion!));
+                request.GameAccountId!,
+                locale,
+                ticket,
+                request.GameAccountVersion!));
 
-            var game = await gameProvider.GetById(gameAccount.GameId);
 
-            var gameContext = new GameContext(game, gameAccount, locale);
+            var gameContext = new GameContext(gameAccount, locale);
 
             var result = await mediator.Send(new ChallengeSucceededRequest(
                 gameContext,

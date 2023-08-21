@@ -1,8 +1,9 @@
-﻿using MediatR;
-using TextGame.Core.Chapters;
+﻿using TextGame.Core.Chapters;
+using TextGame.Core.Games;
 using TextGame.Data;
 using TextGame.Data.Contracts;
 using TextGame.Data.Contracts.Chapters;
+using TextGame.Data.Contracts.Games;
 
 namespace TextGame.Core.GameAccounts;
 // TODO (Roman): cleanup
@@ -46,11 +47,11 @@ public record GameState(
 
     public GameState WithCompletedChallenge(IChapter chapter) => CompletedChallenges.Contains(chapter)
         ? this
-        : this with { CompletedChallenges = CompletedChallenges.Concat(new[] { chapter }).ToHashSet() };
+        : this with { CompletedChallenges = CompletedChallenges.Concat(new[] { chapter }).OrderBy(x => x.Key).ToHashSet() };
 
     public GameState WithVisitedChapter(IChapter chapter) => VisitedChapters.Contains(chapter)
         ? this
-        : this with { VisitedChapters = VisitedChapters.Concat(new[] { chapter }).ToHashSet() };
+        : this with { VisitedChapters = VisitedChapters.Concat(new[] { chapter }).OrderBy(x => x.Key).ToHashSet() };
 }
 
 public class GameStateCollectionBuilderFactory
@@ -107,7 +108,10 @@ public record GameAccount(
     string Key,
     IReadOnlyCollection<GameState> GameStates,
     long UserAccountId,
-    long GameId,
+    string UserAccountKey,
+    long UserId,
+    string UserKey,
+    IGame Game,
     long Version);
 
 
@@ -115,19 +119,25 @@ public class GameAccountConverter
 {
     private readonly GameStateSerializer serializer;
 
-    public GameAccountConverter(GameStateSerializer serializer)
+    private readonly IGameProvider gameProvider;
+
+    public GameAccountConverter(GameStateSerializer serializer, IGameProvider gameProvider)
     {
         this.serializer = serializer;
+        this.gameProvider = gameProvider;
     }
 
-    public GameAccount Convert(IGameAccount record, string locale)
+    public async Task<GameAccount> Convert(IGameAccount record, string locale)
     {
         return new GameAccount(
             record.Id,
             record.Key,
             serializer.Deserialize(record.GameStateJson, locale).ToArray(),
             record.UserAccountId,
-            record.GameId,
+            record.UserAccountKey,
+            record.UserId,
+            record.UserKey,
+            await gameProvider.GetById(record.GameId),
             record.Version);
     }
 }

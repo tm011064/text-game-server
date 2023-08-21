@@ -33,11 +33,11 @@
     <Folder Include="Users\Events\" />
     <Folder Include="Challenges\" />
     <Folder Include="Challenges\Events\" />
-    <Folder Include="GameAccounts\" />
-    <Folder Include="GameAccounts\Events\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentResults" Version="3.15.2" />
+    <PackageReference Include="FluentValidation" Version="11.7.1" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.7.1" />
     <PackageReference Include="MediatR" Version="12.1.1" />
     <PackageReference Include="LazyCache" Version="2.4.0" />
     <PackageReference Include="LazyCache.AspNetCore" Version="2.4.0" />

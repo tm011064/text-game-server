@@ -7,7 +7,6 @@ using TextGame.Api.Controllers.Chapters;
 using TextGame.Api.Controllers.GameAccounts;
 using TextGame.Core;
 using TextGame.Core.GameAccounts.Events;
-using TextGame.Core.Games;
 using TextGame.Core.TerminalCommands.Events;
 using TextGame.Data;
 using TextGame.Data.Contracts.TerminalCommands;
@@ -21,14 +20,11 @@ namespace TextGame.Api.Controllers.Commands;
 [Route("[controller]")]
 public class CommandsController : ControllerBase
 {
-    private readonly IGameProvider gameProvider;
-
     private readonly IMediator mediator;
 
-    public CommandsController(IMediator mediator, IGameProvider gameProvider)
+    public CommandsController(IMediator mediator)
     {
         this.mediator = mediator;
-        this.gameProvider = gameProvider;
     }
 
     [Authorize(Policy.HasGameAccount)]
@@ -68,9 +64,7 @@ public class CommandsController : ControllerBase
                 ticket,
                 request.GameAccountVersion!));
 
-            var game = await gameProvider.GetById(gameAccount.GameId);
-
-            var gameContext = new GameContext(game, gameAccount, locale);
+            var gameContext = new GameContext(gameAccount, locale);
 
             var result = await mediator.Send(new PerformCommandRequest(
                 gameContext,

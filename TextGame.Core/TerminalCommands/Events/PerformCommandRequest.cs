@@ -107,7 +107,7 @@ public class PerformCommandRequestHandler : IRequestHandler<PerformCommandReques
         };
     }
 
-    private bool DoTokensMatch(IEnumerable<string> tokens, TerminalCommand terminalCommand, string commandText)
+    private static bool DoTokensMatch(IEnumerable<string> tokens, TerminalCommand terminalCommand, string commandText)
     {
         return tokens.Any(
             token => terminalCommand.Terms.Any(
@@ -180,6 +180,6 @@ public class PerformCommandRequestHandler : IRequestHandler<PerformCommandReques
                 gameStateBuilder.Build()),
             request.Ticket);
 
-        return gameAccountConverter.Convert(record, request.GameContext.Locale);
+        return await gameAccountConverter.Convert(record, request.GameContext.Locale);
     }
 }
