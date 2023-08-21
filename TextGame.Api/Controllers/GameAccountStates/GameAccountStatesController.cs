@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using TextGame.Api.Auth;
+using TextGame.Api.Controllers.GameAccounts;
 using TextGame.Core.Chapters;
 using TextGame.Core.GameAccounts;
 using TextGame.Core.GameAccounts.Events;
 using TextGame.Data;
-using TextGame.Data.Queries.GameAccounts;
 
 namespace TextGame.Api.Controllers.GameAccountStates;
 
@@ -19,36 +19,31 @@ public class GameAccountStatesController : ControllerBase
 {
     private readonly IMediator mediator;
 
-    private readonly IQueryService queryService;
-
-    public GameAccountStatesController(IMediator mediator, IQueryService queryService)
+    public GameAccountStatesController(IMediator mediator)
     {
         this.mediator = mediator;
-        this.queryService = queryService;
     }
 
     [Authorize(Policy.CanManageUsers)]
     [HttpPatch()]
-    public async Task<IActionResult> Search([FromBody] PatchGameAccountStateRequest request)
+    public async Task<IActionResult> Patch([FromBody] PatchGameAccountStateRequest request)
     {
         var ticket = this.GetTicket();
         var locale = this.GetLocale();
 
-        var gameAccount = await queryService.Run(
-            GetGameAccount.ByKey(request.GameAccountId!),
-            ticket) ?? throw new ResourceNotFoundException();
+        var gameAccount = await mediator.Send(
+            new GetGameAccountRequest(request.GameAccountId!, locale, ticket, request.Version!));
 
-        if (gameAccount.Version != request.Version)
-        {
-            throw new ConcurrencyException();
-        }
+        var record = await mediator.Send(new UpdateGameAccountStateRequest(
+            gameAccount,
+            request.GameStateId!,
+            request.CurrentChapterId,
+            request.VisitedChapterIds?.Let(x => x.ToHashSet()),
+            request.CompletedChallengeIds?.Let(x => x.ToHashSet()),
+            locale,
+            ticket));
 
-        var records = await mediator.Send(new UpdateGameAccountStateRequest(, locale, ticket));
-
-        var wired = records.SelectMany(gameAccount =>
-            gameAccount.GameStates.Select(gameState => ToWire(gameState, gameAccount)));
-
-        return Ok(wired.ToArray());
+        return Ok(record.ToWire());
     }
 
     [Authorize(Policy.CanManageUsers)]
@@ -89,7 +84,7 @@ public record PatchGameAccountStateRequest(
     [Required] long? Version,
     [Required] string? GameStateId,
     string? CurrentChapterId,
-    string? VisitedChapterIds,
-    string? CompletedChallengeIds);
+    string[]? VisitedChapterIds,
+    string[]? CompletedChallengeIds);
 
 public record PostGameAccountStatesSearchRequest(string? UserId);

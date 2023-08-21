@@ -18,7 +18,7 @@ public record UpdateGameAccountStateRequest(
 
 public class UpdateGameAccountStateRequestValidator : AbstractValidator<UpdateGameAccountStateRequest>
 {
-    public UpdateGameAccountStateRequestValidator(IChapterProvider provider)
+    public UpdateGameAccountStateRequestValidator()
     {
         RuleFor(x => x)
             .Must(x => !x.CurrentChapterKey.IsNullOrWhitespace()
@@ -26,24 +26,24 @@ public class UpdateGameAccountStateRequestValidator : AbstractValidator<UpdateGa
                 || x.VisitedChapterKeys != null)
             .WithMessage("At least one updateable property must be set");
 
-        RuleForEach(x => x.CurrentChapterKey)
-            .NotEmpty()
-            .When(x => x.CurrentChapterKey.NotEmpty());
-
-
         RuleForEach(x => x.CompletedChallengeKeys)
-            .Must((x, value) => provider.Exists(value, x.Locale))
-            .When(x => x.CurrentChapterKey.NotEmpty());
+            .NotEmpty()
+            .When(x => x.CompletedChallengeKeys != null);
 
-        //RuleFor(x => x.CompletedChallengeKeys)
-        //    .
-        //    .When(x => x.CompletedChallengeKeys != null)
-        //    .WithMessage(x => $"ChapterKey '{x.CurrentChapterKey}' not found");
+        RuleForEach(x => x.VisitedChapterKeys)
+            .NotEmpty()
+            .When(x => x.VisitedChapterKeys != null);
+
+        RuleFor(x => x.GameStateKey)
+            .Must((record, value) => record.GameAccount.GameStates.Any(x => x.Key == value))
+            .WithMessage(x => $"{nameof(x.GameStateKey)} not found");
     }
 }
 
 public class UpdateGameAccountStateRequestHandler : IRequestHandler<UpdateGameAccountStateRequest, GameAccount>
 {
+    private readonly GameStateCollectionBuilderFactory builderFactory;
+
     private readonly GameAccountConverter converter;
 
     private readonly IQueryService queryService;
@@ -52,12 +52,18 @@ public class UpdateGameAccountStateRequestHandler : IRequestHandler<UpdateGameAc
 
     private readonly IValidator<UpdateGameAccountStateRequest> validator;
 
-    public UpdateGameAccountStateRequestHandler(GameAccountConverter converter, IQueryService queryService, IValidator<UpdateGameAccountStateRequest> validator, IChapterProvider chapterProvider)
+    public UpdateGameAccountStateRequestHandler(
+        GameStateCollectionBuilderFactory builderFactory,
+        IQueryService queryService,
+        IValidator<UpdateGameAccountStateRequest> validator,
+        IChapterProvider chapterProvider,
+        GameAccountConverter converter)
     {
-        this.converter = converter;
+        this.builderFactory = builderFactory;
         this.queryService = queryService;
         this.validator = validator;
         this.chapterProvider = chapterProvider;
+        this.converter = converter;
     }
 
     public async Task<GameAccount> Handle(UpdateGameAccountStateRequest request, CancellationToken cancellationToken)
@@ -65,21 +71,36 @@ public class UpdateGameAccountStateRequestHandler : IRequestHandler<UpdateGameAc
         var chapterKeys = (request.CompletedChallengeKeys ?? Enumerable.Empty<string>())
             .Concat(request.VisitedChapterKeys ?? Enumerable.Empty<string>())
             .Concat(new[] { request.CurrentChapterKey })
-            .Where(x => !x.IsNullOrWhitespace());
+            .Where(x => !x.IsNullOrWhitespace())
+            .Select(x => x!);
 
-        var chapters = chapterProvider.GetChaptersMap(chapterKeys.ToHashSet(), GameSettings)
-
+        var chapters = chapterProvider.GetChaptersMap(chapterKeys.ToHashSet(), request.Locale);
 
         await validator.ValidateAndThrowAsync(request);
 
+        var json = builderFactory.Create(request.GameAccount)
+            .Replace(
+                x => x.Key == request.GameStateKey,
+                gameState => gameState with
+                {
+                    CurrentChapter = request.CurrentChapterKey
+                        ?.Let(chapters.GetOrNotFound)
+                        ?? gameState.CurrentChapter,
 
+                    CompletedChallenges = request.CompletedChallengeKeys
+                        ?.Let(x => x.Select(chapters.GetOrNotFound).ToHashSet())
+                        ?? gameState.CompletedChallenges,
 
-        var records = await queryService.Run(
-            new SearchGameAccounts(
-                userKey: request.UserKey,
-                gameKey: request.GameKey),
+                    VisitedChapters = request.VisitedChapterKeys
+                        ?.Let(x => x.Select(chapters.GetOrNotFound).ToHashSet())
+                        ?? gameState.VisitedChapters
+                })
+            .Build();
+
+        var gameAccount = await queryService.Run(
+            new UpdateGameAccountGameState(request.GameAccount.Id, request.GameAccount.Version, json),
             request.Ticket);
 
-        return await Task.WhenAll(records.Select(x => converter.Convert(x, request.Locale)));
+        return await converter.Convert(gameAccount, request.Locale);
     }
 }
