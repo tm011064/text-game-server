@@ -1,7 +1,12 @@
 {
-  "paragraphs": [
+  "localizedParagraphs": [
     {
-      "text": "Wow amazing, the gate has openend a tiny bit, but I still can't get through. There are more instructions"
+      "locale": "en-US",
+      "paragraphs": [
+        {
+          "text": "Wow amazing, the gate has openend a tiny bit, but I still can't get through. There are more instructions"
+        }
+      ]
     }
   ],
 

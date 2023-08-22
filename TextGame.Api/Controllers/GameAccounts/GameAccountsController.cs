@@ -28,7 +28,7 @@ public class GameAccountsController : ControllerBase
 
         var records = await mediator.Send(new SearchGameAccountsRequest(request.UserId, request.GameId, locale, ticket));
 
-        return Ok(records.Select(Wiring.ToWire).ToArray());
+        return Ok(records.Select(x => Wiring.ToWire(x, locale)).ToArray());
     }
 }
 

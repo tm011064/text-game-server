@@ -75,7 +75,7 @@ public class CommandsController : ControllerBase
 
             return result switch
             {
-                { IsSuccess: true } => Ok(ToWire(result.Value)),
+                { IsSuccess: true } => Ok(ToWire(result.Value, locale)),
 
                 _ => BadRequest(new { message = string.Join(", ", result.Errors.Select(x => x.Message)) })
             };
@@ -86,13 +86,13 @@ public class CommandsController : ControllerBase
         }
     }
 
-    private static object? ToWire(PerformCommandResult record) => new
+    private static object? ToWire(PerformCommandResult record, string locale) => new
     {
         record.ActionType,
         record.Message,
         record.MessageType,
-        GameAccount = record.GameAccount?.ToWire(),
-        NextChapter = record.NextChapter?.ToWire(record.ForwardParagraphs)
+        GameAccount = record.GameAccount?.ToWire(locale),
+        NextChapter = record.NextChapter?.ToWire(locale, record.ForwardParagraphs)
     };
 }
 

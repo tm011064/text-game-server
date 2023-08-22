@@ -1,12 +1,14 @@
-﻿namespace TextGame.Data.Contracts.Chapters;
+﻿using TextGame.Data.Sources.ResourceFiles;
+
+namespace TextGame.Data.Contracts.Chapters;
 
 public interface IChapter
 {
     string Key { get; }
 
-    string GameKey { get; } // TODO (Roman): proper domain model with objects
+    string GameKey { get; }
 
-    IReadOnlyCollection<Paragraph> Paragraphs { get; }
+    LocalizedContentProvider<IReadOnlyCollection<Paragraph>> ParagraphsByLocale { get; }
 
     IReadOnlyCollection<NavigationCommand> NavigationCommands { get; }
 

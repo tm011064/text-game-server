@@ -24,8 +24,7 @@ public class GameStateSerializer
                 .SelectMany(x => new[] { x.CurrentChapterKey }
                     .Concat(x.VisitedChapterKeys)
                     .Concat(x.CompletedChallengeKeys))
-                .ToHashSet(),
-            locale);
+                .ToHashSet());
 
         return deserialized
             .Select(json => new GameState(

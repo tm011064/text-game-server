@@ -8,6 +8,7 @@ using TextGame.Data.Contracts;
 using TextGame.Data.Contracts.Chapters;
 using TextGame.Data.Contracts.TerminalCommands;
 using TextGame.Data.Queries.GameAccounts;
+using TextGame.Data.Sources.ResourceFiles;
 
 namespace TextGame.Core.TerminalCommands.Events;
 
@@ -31,7 +32,7 @@ public record PerformCommandResult(
         gameAccount);
 
     public static PerformCommandResult ForwardChapter(
-        IReadOnlyCollection<Paragraph> forwardParagraphs,
+        LocalizedContentProvider<IReadOnlyCollection<Paragraph>> forwardParagraphs,
         IChapter chapter,
         GameAccount gameAccount) => new(CommandResultActionType.ChangeChapter, chapter, gameAccount)
         {
@@ -48,7 +49,7 @@ public record PerformCommandResult(
         Message: message,
         MessageType: CommandResultMessageType.Info);
 
-    public IReadOnlyCollection<Paragraph> ForwardParagraphs { get; init; } = Array.Empty<Paragraph>();
+    public LocalizedContentProvider<IReadOnlyCollection<Paragraph>> ForwardParagraphs { get; init; } = LocalizedContentProvider<IReadOnlyCollection<Paragraph>>.Empty;
 }
 
 public enum CommandResultMessageType
@@ -91,7 +92,7 @@ public class PerformCommandRequestHandler : IRequestHandler<PerformCommandReques
 
     public async Task<Result<PerformCommandResult>> Handle(PerformCommandRequest request, CancellationToken cancellationToken)
     {
-        var chapter = await chapterProvider.GetChapter(request.ChapterKey, request.GameContext.Locale);
+        var chapter = await chapterProvider.GetChapter(request.ChapterKey);
 
         // TODO (Roman):  validate command type and token match
 
@@ -131,8 +132,7 @@ public class PerformCommandRequestHandler : IRequestHandler<PerformCommandReques
         }
 
         var nextChapter = await chapterProvider.GetChapter(
-            request.GameContext.Game.GetCompositeChapterKey(navigationCommand.ChapterKey),
-            request.GameContext.Locale);
+            request.GameContext.Game.GetCompositeChapterKey(navigationCommand.ChapterKey));
 
         var gameStateBuilder = gameStateCollectionBuilderFactory.Create(request.GameContext.GameAccount)
             .Replace(
@@ -152,8 +152,7 @@ public class PerformCommandRequestHandler : IRequestHandler<PerformCommandReques
         }
 
         var forwardChapter = await chapterProvider.GetChapter(
-            request.GameContext.Game.GetCompositeChapterKey(nextChapter.ForwardChapterKey),
-            request.GameContext.Locale);
+            request.GameContext.Game.GetCompositeChapterKey(nextChapter.ForwardChapterKey));
 
         gameStateBuilder = gameStateBuilder.Replace(
             x => x.IsAutoSave(),
@@ -164,7 +163,7 @@ public class PerformCommandRequestHandler : IRequestHandler<PerformCommandReques
             });
 
         return Result.Ok(PerformCommandResult.ForwardChapter(
-            nextChapter.Paragraphs,
+            nextChapter.ParagraphsByLocale,
             forwardChapter,
             await UpdateGameAccount(request, gameStateBuilder)));
     }

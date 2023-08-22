@@ -68,7 +68,7 @@ public class ChallengesController : ControllerBase
 
             return result switch
             {
-                { IsSuccess: true } => Ok(ToWire(result.Value)),
+                { IsSuccess: true } => Ok(ToWire(result.Value, locale)),
 
                 _ => BadRequest(new { message = string.Join(", ", result.Errors.Select(x => x.Message)) })
             };
@@ -79,11 +79,11 @@ public class ChallengesController : ControllerBase
         }
     }
 
-    private static object? ToWire(ChallengeSucceededResult record) => new
+    private static object? ToWire(ChallengeSucceededResult record, string locale) => new
     {
-        NextChapter = record.NextChapter?.ToWire(record.ForwardParagraphs),
+        NextChapter = record.NextChapter?.ToWire(locale, record.ForwardParagraphs),
         record.SuccessMessage,
-        GameAccount = record.GameAccount.ToWire()
+        GameAccount = record.GameAccount.ToWire(locale)
     };
 }
 

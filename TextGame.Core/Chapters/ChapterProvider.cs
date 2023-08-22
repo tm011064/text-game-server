@@ -7,16 +7,16 @@ namespace TextGame.Core.Chapters;
 
 public interface IChapterProvider
 {
-    bool Exists(string chapterKey, string locale);
+    bool Exists(string chapterKey);
 
-    Task<IChapter> GetChapter(string chapterKey, string locale);
+    Task<IChapter> GetChapter(string chapterKey);
 
-    IReadOnlyDictionary<string, IChapter> GetChaptersMap(IReadOnlySet<string> keys, string locale);
+    IReadOnlyDictionary<string, IChapter> GetChaptersMap(IReadOnlySet<string> keys);
 }
 
 public class ChapterProvider : IChapterProvider
 {
-    private static readonly string CachePrefix = Guid.NewGuid().ToString();
+    private static readonly string CacheKey = Guid.NewGuid().ToString();
 
     private readonly IAppCache cache;
 
@@ -34,21 +34,21 @@ public class ChapterProvider : IChapterProvider
         this.gameSource = gameSource;
     }
 
-    private IReadOnlyDictionary<string, IChapter> GetChaptersByKey(string locale) => cache.GetOrAdd(
-        $"{CachePrefix}-{locale}",
+    private IReadOnlyDictionary<string, IChapter> GetChaptersByKey() => cache.GetOrAdd(
+        CacheKey,
         () => gameSource.GetKeys()
-            .SelectMany(x => source.Get(x, locale))
+            .SelectMany(source.Get)
             .ToDictionary(x => x.GetCompositeKey()),
         TimeSpan.FromDays(1));
 
-    public Task<IChapter> GetChapter(string chapterKey, string locale) => Task.FromResult(
-        GetChaptersByKey(locale).TryGetValue(chapterKey, out var chapter)
+    public Task<IChapter> GetChapter(string chapterKey) => Task.FromResult(
+        GetChaptersByKey().TryGetValue(chapterKey, out var chapter)
             ? chapter
             : throw new ResourceNotFoundException());
 
-    public IReadOnlyDictionary<string, IChapter> GetChaptersMap(IReadOnlySet<string> keys, string locale)
+    public IReadOnlyDictionary<string, IChapter> GetChaptersMap(IReadOnlySet<string> keys)
     {
-        var dictionary = GetChaptersByKey(locale);
+        var dictionary = GetChaptersByKey();
 
         return keys
             .Select(key => dictionary.TryGetValue(key, out var chapter)
@@ -57,8 +57,8 @@ public class ChapterProvider : IChapterProvider
             .ToDictionary(x => x.GetCompositeKey());
     }
 
-    public bool Exists(string chapterKey, string locale)
+    public bool Exists(string chapterKey)
     {
-        return GetChaptersByKey(locale).ContainsKey(chapterKey);
+        return GetChaptersByKey().ContainsKey(chapterKey);
     }
 }

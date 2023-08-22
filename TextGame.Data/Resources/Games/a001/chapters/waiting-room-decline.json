@@ -1,7 +1,12 @@
 {
-  "paragraphs": [
+  "localizedParagraphs": [
     {
-      "text": "Hm..."
+      "locale": "en-US",
+      "paragraphs": [
+        {
+          "text": "Hm..."
+        }
+      ]
     }
   ],
 

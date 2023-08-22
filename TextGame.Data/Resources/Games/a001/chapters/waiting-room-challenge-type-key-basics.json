@@ -1,10 +1,15 @@
 {
-  "paragraphs": [
+  "localizedParagraphs": [
     {
-      "text": "It is dark here. I think there is a door, but it does not open."
-    },
-    {
-      "text": "We need to follow the instructions on its terminal:"
+      "locale": "en-US",
+      "paragraphs": [
+        {
+          "text": "It is dark here. I think there is a door, but it does not open."
+        },
+        {
+          "text": "We need to follow the instructions on its terminal:"
+        }
+      ]
     }
   ],
 

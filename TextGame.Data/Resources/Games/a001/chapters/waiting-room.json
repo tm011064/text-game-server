@@ -1,10 +1,15 @@
 {
-  "paragraphs": [
+  "localizedParagraphs": [
     {
-      "text": "Hey, I'm lost"
-    },
-    {
-      "text": "Can you help me?"
+      "locale": "en-US",
+      "paragraphs": [
+        {
+          "text": "Hey, I'm lost"
+        },
+        {
+          "text": "Can you help me?"
+        }
+      ]
     }
   ],
 

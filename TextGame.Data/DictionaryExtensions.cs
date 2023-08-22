@@ -8,6 +8,6 @@ public static class DictionaryExtensions
     {
         return self.TryGetValue(key, out var value)
             ? value
-            : throw new ResourceNotFoundException();
+            : throw new ResourceNotFoundException($"Resource with key {key} does not exist");
     }
 }

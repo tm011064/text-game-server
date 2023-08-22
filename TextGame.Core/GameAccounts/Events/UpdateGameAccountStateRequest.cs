@@ -74,7 +74,7 @@ public class UpdateGameAccountStateRequestHandler : IRequestHandler<UpdateGameAc
             .Where(x => !x.IsNullOrWhitespace())
             .Select(x => x!);
 
-        var chapters = chapterProvider.GetChaptersMap(chapterKeys.ToHashSet(), request.Locale);
+        var chapters = chapterProvider.GetChaptersMap(chapterKeys.ToHashSet());
 
         await validator.ValidateAndThrowAsync(request);
 

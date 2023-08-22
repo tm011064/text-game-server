@@ -2,6 +2,6 @@
 
 public interface IGameResourceJsonSource<TRecord>
 {
-    TRecord Get(string gameKey, string locale);
+    TRecord Get(string gameKey);
 }
 

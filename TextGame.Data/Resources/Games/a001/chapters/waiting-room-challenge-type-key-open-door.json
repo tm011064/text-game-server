@@ -1,7 +1,12 @@
 {
-  "paragraphs": [
+  "localizedParagraphs": [
     {
-      "text": "I think we are ready to open the door now!"
+      "locale": "en-US",
+      "paragraphs": [
+        {
+          "text": "I think we are ready to open the door now!"
+        }
+      ]
     }
   ],
 

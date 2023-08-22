@@ -8,7 +8,7 @@ public class ChaptersSource : IGameResourceJsonSource<IChapter[]>
 {
     private const string FOLDER_NAME = ".chapters.";
 
-    public IChapter[] Get(string gameKey, string locale)
+    public IChapter[] Get(string gameKey)
     {
         return ResourceService.ResourceNames[gameKey]
             .Where(x => x.Contains(FOLDER_NAME))
@@ -28,18 +28,51 @@ public class ChaptersSource : IGameResourceJsonSource<IChapter[]>
 
         var fileName = resourceName[(resourceName.IndexOf(FOLDER_NAME) + FOLDER_NAME.Length)..];
         var chapterKey = fileName[..fileName.LastIndexOf('.')];
+        var paragraphsByLocale = builder.LocalizedParagraphs?.ToDictionary(x => x.Locale, x => x.Paragraphs);
 
-        return builder with { Key = chapterKey, GameKey = gameKey };
+        return builder with
+        {
+            Key = chapterKey,
+            GameKey = gameKey,
+            ParagraphsByLocale = new LocalizedContentProvider<IReadOnlyCollection<Paragraph>>(paragraphsByLocale)
+        };
     }
 
     private record ChapterBuilder(
         string Key,
         string GameKey,
         string ForwardChapterKey,
+        LocalizedParagraph[] LocalizedParagraphs,
         Challenge? Challenge) : IChapter
     {
         public IReadOnlyCollection<NavigationCommand> NavigationCommands { get; init; } = Array.Empty<NavigationCommand>();
 
-        public IReadOnlyCollection<Paragraph> Paragraphs { get; init; } = Array.Empty<Paragraph>();
+        public LocalizedContentProvider<IReadOnlyCollection<Paragraph>> ParagraphsByLocale { get; init; } = null!;
+    }
+}
+
+public class LocalizedContentProvider<TValue>
+{
+    public static readonly LocalizedContentProvider<TValue> Empty = new(null);
+
+    private readonly IReadOnlyDictionary<string, TValue>? map;
+
+    public LocalizedContentProvider(IReadOnlyDictionary<string, TValue>? map)
+    {
+        this.map = map;
+    }
+
+    public TValue? Get(string locale)
+    {
+        return map == null
+            ? default
+            : map!.GetOrNotFound(locale);
+    }
+
+    public TValue Get(string locale, TValue defaultValue)
+    {
+        return map == null
+            ? defaultValue
+            : map!.GetOrNotFound(locale);
     }
 }

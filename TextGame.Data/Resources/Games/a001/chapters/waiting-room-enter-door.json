@@ -1,7 +1,12 @@
 {
-  "paragraphs": [
+  "localizedParagraphs": [
     {
-      "text": "Amazing, now type 'enter door' to walk through!"
+      "locale": "en-US",
+      "paragraphs": [
+        {
+          "text": "Amazing, now type 'enter door' to walk through!"
+        }
+      ]
     }
   ],
 

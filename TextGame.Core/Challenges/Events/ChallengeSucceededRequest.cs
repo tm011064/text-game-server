@@ -7,6 +7,7 @@ using TextGame.Data;
 using TextGame.Data.Contracts;
 using TextGame.Data.Contracts.Chapters;
 using TextGame.Data.Queries.GameAccounts;
+using TextGame.Data.Sources.ResourceFiles;
 
 namespace TextGame.Core.Challenges.Events;
 
@@ -17,7 +18,7 @@ public record ChallengeSucceededRequest(
 
 public record ChallengeSucceededResult(IChapter NextChapter, GameAccount GameAccount, string SuccessMessage)
 {
-    public IReadOnlyCollection<Paragraph> ForwardParagraphs { get; init; } = Array.Empty<Paragraph>();
+    public LocalizedContentProvider<IReadOnlyCollection<Paragraph>> ForwardParagraphs { get; init; } = LocalizedContentProvider<IReadOnlyCollection<Paragraph>>.Empty;
 }
 
 public class ChallengeSucceededRequestHandler : IRequestHandler<ChallengeSucceededRequest, Result<ChallengeSucceededResult>>
@@ -44,11 +45,10 @@ public class ChallengeSucceededRequestHandler : IRequestHandler<ChallengeSucceed
 
     public async Task<Result<ChallengeSucceededResult>> Handle(ChallengeSucceededRequest request, CancellationToken cancellationToken)
     {
-        var chapter = await chapterProvider.GetChapter(request.ChapterKey, request.GameContext.Locale);
+        var chapter = await chapterProvider.GetChapter(request.ChapterKey);
 
         var nextChapter = await chapterProvider.GetChapter(
-            request.GameContext.Game.GetCompositeChapterKey(chapter.Challenge!.ChapterKey),
-            request.GameContext.Locale);
+            request.GameContext.Game.GetCompositeChapterKey(chapter.Challenge!.ChapterKey));
 
         var gameStateBuilder = gameStateCollectionBuilderFactory.Create(request.GameContext.GameAccount)
             .Replace(
@@ -70,8 +70,7 @@ public class ChallengeSucceededRequestHandler : IRequestHandler<ChallengeSucceed
         }
 
         var forwardChapter = await chapterProvider.GetChapter(
-            request.GameContext.Game.GetCompositeChapterKey(nextChapter.ForwardChapterKey),
-            request.GameContext.Locale);
+            request.GameContext.Game.GetCompositeChapterKey(nextChapter.ForwardChapterKey));
 
         gameStateBuilder = gameStateBuilder.Replace(
             x => x.IsAutoSave(),
@@ -86,7 +85,7 @@ public class ChallengeSucceededRequestHandler : IRequestHandler<ChallengeSucceed
             await UpdateGameAccount(request, gameStateBuilder),
             chapter.Challenge!.SuccessMessage)
         {
-            ForwardParagraphs = nextChapter.Paragraphs
+            ForwardParagraphs = nextChapter.ParagraphsByLocale
         };
 
         return Result.Ok(result);

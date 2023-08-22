@@ -43,7 +43,7 @@ public class GameAccountStatesController : ControllerBase
             locale,
             ticket));
 
-        return Ok(record.ToWire());
+        return Ok(record.ToWire(locale));
     }
 
     [Authorize(Policy.CanManageUsers)]
