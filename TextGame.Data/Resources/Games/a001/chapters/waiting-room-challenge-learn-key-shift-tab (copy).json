@@ -1,22 +1,23 @@
 {
   "challenge": {
     "type": "LearnTabKey",
+
     "configuration": {
       "items": [
         {
-          "description": "First, press and hold the [shift] key, then press the [tab] key. You have to press both keys at the same time.",
+          "description": "{{first-description}}",
           "tabCount": 5,
           "targetIndex": 0,
           "startIndex": 4
         },
         {
-          "description": "Amazing, try a few more times",
+          "description": "{{second-description}}",
           "tabCount": 5,
           "randomTargetCount": 5
         }
       ]
     },
-    "successMessage": "Challenge Completed: [shift] and [tab]",
+    "successMessage": "{{success-message}}",
     "chapterKey": "waiting-room-challenge-type-key-capital-letters"
   }
 }

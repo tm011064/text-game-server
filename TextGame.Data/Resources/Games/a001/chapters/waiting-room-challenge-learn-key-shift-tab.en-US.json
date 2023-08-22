@@ -1,0 +1,14 @@
+[
+  {
+    "key": "first-description",
+    "value": "First, press and hold the [shift] key, then press the [tab] key. You have to press both keys at the same time."
+  },
+  {
+    "key": "second-description",
+    "value": "Amazing, try a few more times"
+  },
+  {
+    "key": "success-message",
+    "value": "Challenge Completed: [shift] and [tab]"
+  }
+]
