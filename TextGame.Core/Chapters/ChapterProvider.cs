@@ -42,9 +42,7 @@ public class ChapterProvider : IChapterProvider
         TimeSpan.FromDays(1));
 
     public Task<IChapter> GetChapter(string chapterKey) => Task.FromResult(
-        GetChaptersByKey().TryGetValue(chapterKey, out var chapter)
-            ? chapter
-            : throw new ResourceNotFoundException());
+        GetChaptersByKey().GetOrNotFound(chapterKey));
 
     public IReadOnlyDictionary<string, IChapter> GetChaptersMap(IReadOnlySet<string> keys)
     {

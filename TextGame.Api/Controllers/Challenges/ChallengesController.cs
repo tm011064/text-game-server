@@ -19,13 +19,10 @@ namespace TextGame.Api.Controllers.TerminalCommands;
 [Route("[controller]")]
 public class ChallengesController : ControllerBase
 {
-    private readonly IGameProvider gameProvider;
-
     private readonly IMediator mediator;
 
-    public ChallengesController(IGameProvider gameProvider, IMediator mediator)
+    public ChallengesController(IMediator mediator)
     {
-        this.gameProvider = gameProvider;
         this.mediator = mediator;
     }
 
@@ -82,7 +79,7 @@ public class ChallengesController : ControllerBase
     private static object? ToWire(ChallengeSucceededResult record, string locale) => new
     {
         NextChapter = record.NextChapter?.ToWire(locale, record.ForwardParagraphs),
-        record.SuccessMessage,
+        record.LocalizedChallenges.Get(locale)!.SuccessMessage,
         GameAccount = record.GameAccount.ToWire(locale)
     };
 }

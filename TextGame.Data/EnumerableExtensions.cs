@@ -8,4 +8,13 @@ public static class EnumerableExtensions
     {
         return source.Where(x => !predicate(x));
     }
+
+    public static (IEnumerable<TSource> Success, IEnumerable<TSource> Failed) Split<TSource>(
+        this IEnumerable<TSource> source,
+        Func<TSource, bool> predicate)
+    {
+        var lookup = source.ToLookup(predicate);
+
+        return (lookup[true], lookup[false]);
+    }
 }

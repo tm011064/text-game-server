@@ -1,4 +1,5 @@
 ﻿using TextGame.Core.Chapters;
+using TextGame.Data;
 using TextGame.Data.Contracts.Chapters;
 using TextGame.Data.Sources.ResourceFiles;
 
@@ -14,10 +15,10 @@ public static class ChapterWiring
         Id = record.GetCompositeKey(),
 
         Paragraphs = forwardParagraphs.Get(locale, Array.Empty<Paragraph>())
-            .Concat(record.ParagraphsByLocale.Get(locale, Array.Empty<Paragraph>()))
+            .Concat(record.LocalizedParagraphs.Get(locale, Array.Empty<Paragraph>()))
             .Select(ParagraphWiring.ToWire)
             .ToArray(),
-        Challenge = record.Challenge?.ToWire(),
+        Challenge = record.LocalizedChallenges?.Let(x => x.Get(locale)),
         AllowedCommands = record.NavigationCommands.Select(x => x.Type).ToArray()
     };
 

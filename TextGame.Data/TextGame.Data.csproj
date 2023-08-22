@@ -6,13 +6,13 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 	<ItemGroup>
-		<EmbeddedResource Include="Resources\Games\*\*.json">
+		<EmbeddedResource Include="Resources\Games\*\*.json" WithCulture="false">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</EmbeddedResource>
-		<EmbeddedResource Include="Resources\Games\*\chapters\*.json">
+		<EmbeddedResource Include="Resources\Games\*\chapters\*.json" WithCulture="false">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</EmbeddedResource>
-		<EmbeddedResource Include="Resources\Global\*.json">
+		<EmbeddedResource Include="Resources\Global\*.json" WithCulture="false">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</EmbeddedResource>
 	</ItemGroup>
@@ -23,19 +23,5 @@
 		<PackageReference Include="FluentMigrator.Runner.SQLite" Version="3.3.2" />
 		<PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.9" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
-	</ItemGroup>
-	<ItemGroup>
-	  <None Remove="Queries\" />
-	  <None Remove="Queries\Users\" />
-	  <None Remove="Contracts\Games\" />
-	  <None Remove="Queries\Games\" />
-	  <None Remove="Queries\GameAccounts\" />
-	  <None Remove="Queries\UserAccounts\" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Contracts\Games\" />
-	  <Folder Include="Queries\Games\" />
-	  <Folder Include="Queries\GameAccounts\" />
-	  <Folder Include="Queries\UserAccounts\" />
 	</ItemGroup>
 </Project>

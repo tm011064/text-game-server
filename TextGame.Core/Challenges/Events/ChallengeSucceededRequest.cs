@@ -16,7 +16,10 @@ public record ChallengeSucceededRequest(
     string ChapterKey,
     AuthTicket Ticket) : IRequest<Result<ChallengeSucceededResult>>;
 
-public record ChallengeSucceededResult(IChapter NextChapter, GameAccount GameAccount, string SuccessMessage)
+public record ChallengeSucceededResult(
+    IChapter NextChapter,
+    GameAccount GameAccount,
+    LocalizedContentProvider<Challenge> LocalizedChallenges)
 {
     public LocalizedContentProvider<IReadOnlyCollection<Paragraph>> ForwardParagraphs { get; init; } = LocalizedContentProvider<IReadOnlyCollection<Paragraph>>.Empty;
 }
@@ -48,7 +51,7 @@ public class ChallengeSucceededRequestHandler : IRequestHandler<ChallengeSucceed
         var chapter = await chapterProvider.GetChapter(request.ChapterKey);
 
         var nextChapter = await chapterProvider.GetChapter(
-            request.GameContext.Game.GetCompositeChapterKey(chapter.Challenge!.ChapterKey));
+            request.GameContext.Game.GetCompositeChapterKey(chapter.LocalizedChallenges.First()!.ChapterKey));
 
         var gameStateBuilder = gameStateCollectionBuilderFactory.Create(request.GameContext.GameAccount)
             .Replace(
@@ -66,7 +69,7 @@ public class ChallengeSucceededRequestHandler : IRequestHandler<ChallengeSucceed
             return Result.Ok(new ChallengeSucceededResult(
                 nextChapter,
                 await UpdateGameAccount(request, gameStateBuilder),
-                chapter.Challenge!.SuccessMessage));
+                chapter.LocalizedChallenges));
         }
 
         var forwardChapter = await chapterProvider.GetChapter(
@@ -83,9 +86,9 @@ public class ChallengeSucceededRequestHandler : IRequestHandler<ChallengeSucceed
         var result = new ChallengeSucceededResult(
             forwardChapter,
             await UpdateGameAccount(request, gameStateBuilder),
-            chapter.Challenge!.SuccessMessage)
+            chapter.LocalizedChallenges)
         {
-            ForwardParagraphs = nextChapter.ParagraphsByLocale
+            ForwardParagraphs = nextChapter.LocalizedParagraphs
         };
 
         return Result.Ok(result);

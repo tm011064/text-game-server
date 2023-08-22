@@ -8,11 +8,11 @@ public interface IChapter
 
     string GameKey { get; }
 
-    LocalizedContentProvider<IReadOnlyCollection<Paragraph>> ParagraphsByLocale { get; }
+    LocalizedContentProvider<IReadOnlyCollection<Paragraph>> LocalizedParagraphs { get; }
 
     IReadOnlyCollection<NavigationCommand> NavigationCommands { get; }
 
-    Challenge? Challenge { get; }
+    LocalizedContentProvider<Challenge> LocalizedChallenges { get; }
 
     string ForwardChapterKey { get; }
 }

@@ -163,7 +163,7 @@ public class PerformCommandRequestHandler : IRequestHandler<PerformCommandReques
             });
 
         return Result.Ok(PerformCommandResult.ForwardChapter(
-            nextChapter.ParagraphsByLocale,
+            nextChapter.LocalizedParagraphs,
             forwardChapter,
             await UpdateGameAccount(request, gameStateBuilder)));
     }
