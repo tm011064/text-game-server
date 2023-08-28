@@ -91,8 +91,9 @@ builder.Services.AddSingleton<GameStateSerializer>();
 builder.Services.AddSingleton<GameStateCollectionBuilderFactory>();
 builder.Services.AddSingleton<GameAccountConverter>();
 
-builder.Services.AddSingleton<IGlobalResourceJsonSource<TerminalCommand[]>, TerminalCommandsSource>();
-builder.Services.AddSingleton<IGlobalResourceJsonSource<Emotion[]>, EmotionsSource>();
+builder.Services.AddSingleton<ITerminalCommandsSource, TerminalCommandsSource>();
+builder.Services.AddSingleton<IEmotionsSource, EmotionsSource>();
+builder.Services.AddSingleton<IGameObjectsSource, GameObjectsSource>();
 builder.Services.AddSingleton<IGameResourceJsonSource<IChapter[]>, ChaptersSource>();
 builder.Services.AddSingleton<IGameSource, GameSource>();
 

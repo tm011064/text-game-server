@@ -1,0 +1,25 @@
+{
+  "locationKey": "playground",
+  "localizedParagraphs": [
+    {
+      "locale": "en-US",
+      "paragraphs": [
+        {
+          "text": "Lobby Info"
+        },
+        {
+          "text": "HELLO CONTESTANT, YOU ARE IN THE GAME LOBBY!"
+        },
+        {
+          "text": "IF YOU CLEAR ALL CHALLENGES YOU WILL RECEIVE THE KEY FOR THE BIG RED DOOR:"
+        },
+        {
+          "text": "THE DOORS ARE NUMBERED 1 TO 9, TO START A CHALLENGE TYPE 'enter door' AND THE DOOR'S NUMBER."
+        },
+        {
+          "text": "I WOULD SUGGEST YOU START WITH 'enter door 1' "
+        }
+      ]
+    }
+  ]
+}

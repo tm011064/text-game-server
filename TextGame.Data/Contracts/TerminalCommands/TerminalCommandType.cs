@@ -6,5 +6,8 @@ public enum TerminalCommandType
     Decline,
     Enter,
     Move,
-    Next
+    Next,
+
+    Look,
+    Take
 }

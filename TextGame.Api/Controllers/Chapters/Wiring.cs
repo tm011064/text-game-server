@@ -1,7 +1,7 @@
 ﻿using TextGame.Core.Chapters;
 using TextGame.Data;
 using TextGame.Data.Contracts.Chapters;
-using TextGame.Data.Sources.ResourceFiles;
+using TextGame.Data.Sources;
 
 namespace TextGame.Api.Controllers.Chapters;
 

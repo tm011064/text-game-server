@@ -1,0 +1,62 @@
+﻿{
+  "objects": [
+    {
+      "key": "Phone",
+      "requiredChapterKeys": [ "playground-lobby-table" ]
+    }
+  ],
+
+  "hints": [
+    {
+      "type": "FindObject",
+      "objectKey": "Phone",
+      "paragraphs": [
+        {
+          "text": "Have you tried looking at the table? There might be something interesting"
+        },
+        {
+          "text": "Remember, it helps to explore and look around. Maybe you can 'look at the table'?"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "paragraphs": [
+        {
+          "text": "Have you entered all doors?"
+        },
+        {
+          "text": "Remember, it helps to explore and look around. Maybe you can 'look at the table'?"
+        }
+      ]
+    }
+  ],
+
+  "navigationCommands": [
+    {
+      "type": "Use",
+      "object": "Phone",
+      "chapterKey": "playground-lobby-phone-guide"
+    },
+    {
+      "type": "Enter",
+      "tokens": [ "door 1" ],
+      "chapterKey": "playground-lobby-door-1"
+    },
+    {
+      "type": "Enter",
+      "tokens": [ "door 2" ],
+      "chapterKey": "playground-lobby-door-1"
+    },
+    {
+      "type": "Enter",
+      "tokens": [ "door 3" ],
+      "chapterKey": "playground-lobby-door-1"
+    },
+    {
+      "type": "Enter",
+      "tokens": [ "door 3" ],
+      "chapterKey": "playground-lobby-door-1"
+    }
+  ]
+}

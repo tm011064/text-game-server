@@ -8,7 +8,7 @@ using TextGame.Data.Contracts;
 using TextGame.Data.Contracts.Chapters;
 using TextGame.Data.Contracts.TerminalCommands;
 using TextGame.Data.Queries.GameAccounts;
-using TextGame.Data.Sources.ResourceFiles;
+using TextGame.Data.Sources;
 
 namespace TextGame.Core.TerminalCommands.Events;
 
@@ -108,22 +108,21 @@ public class PerformCommandRequestHandler : IRequestHandler<PerformCommandReques
         };
     }
 
-    private static bool DoTokensMatch(IEnumerable<string> tokens, TerminalCommand terminalCommand, string commandText)
+    private static bool DoTokensMatch(IEnumerable<string> tokens, TwoWayLookup<TerminalCommandType, string> terminalCommandMap, string commandText)
     {
         return tokens.Any(
-            token => terminalCommand.Terms.Any(
+            token => terminalCommandMap.GetValues().Any(
                 term => string.Equals(string.Concat(term, " ", token), commandText, StringComparison.OrdinalIgnoreCase)));
     }
 
     private async Task<Result<PerformCommandResult>> HandleChangeChapterRequest(PerformCommandRequest request, IChapter chapter)
     {
-        var terminalCommands = await terminalCommandProvider.Get(request.GameContext.Locale);
-        var terminalCommand = terminalCommands.GetOrNotFound(request.CommandType);
+        var terminalCommands = terminalCommandProvider.Get(request.GameContext.Locale);
         var commandText = string.Join(" ", request.Tokens);
 
         var navigationCommand = chapter.NavigationCommands
             .Where(x => x.Type == request.CommandType)
-            .Where(x => !x.Tokens.Any() || DoTokensMatch(x.Tokens, terminalCommand, commandText))
+            .Where(x => !x.Tokens.Any() || DoTokensMatch(x.Tokens, terminalCommands, commandText))
             .FirstOrDefault();
 
         if (navigationCommand == null)

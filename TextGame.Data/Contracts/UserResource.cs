@@ -12,5 +12,5 @@ internal class UserResource : IUser
 
     public string Email { get; set; } = null!;
 
-    public IReadOnlySet<string> Roles => JsonSerializer.Deserialize<string[]>(RolesJson).ToHashSet();
+    public IReadOnlySet<string> Roles => JsonSerializer.Deserialize<string[]>(RolesJson)!.ToHashSet();
 }

@@ -17,4 +17,26 @@ public static class EnumerableExtensions
 
         return (lookup[true], lookup[false]);
     }
+
+    public static IReadOnlyCollection<TSource> ToReadOnlyCollection<TSource>(
+        this IEnumerable<TSource> source)
+    {
+        return source.ToArray();
+    }
+
+    public static IEnumerable<TRecord> LeftMerge<TRecord, TKey>(
+        this IEnumerable<TRecord> source,
+        IEnumerable<TRecord> overrides,
+        Func<TRecord, TKey> selectKey)
+    {
+        return source
+            .GroupJoin(
+                overrides,
+                selectKey,
+                selectKey,
+                (x, y) => new { Record = x, Overrides = y })
+            .SelectMany(
+                x => x.Overrides.DefaultIfEmpty(),
+                (x, y) => y ?? x.Record);
+    }
 }

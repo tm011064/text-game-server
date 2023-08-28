@@ -1,12 +1,32 @@
 {
+  "locationKey": "playground",
   "localizedParagraphs": [
     {
       "locale": "en-US",
       "paragraphs": [
         {
           "text": "Ok, we are in a room with many more doors"
+        },
+        {
+          "text": "There is a table in the middle, I think something is lying on that table. "
+        },
+        {
+          "text": "Should we 'look at' the table or 'explore' the room some more?"
         }
       ]
+    }
+  ],
+
+  "navigationCommands": [
+    {
+      "type": "Look",
+      "tokens": [ "table" ],
+      "chapterKey": "playground-lobby-table"
+    },
+    {
+      "type": "Look",
+      "tokens": [ "room" ],
+      "chapterKey": "playground-lobby-explore-room"
     }
   ]
 }

@@ -1,0 +1,24 @@
+{
+  "locationKey": "playground",
+  "localizedParagraphs": [
+    {
+      "locale": "en-US",
+      "paragraphs": [
+        {
+          "text": "There is a phone on the table, it is switched off."
+        },
+        {
+          "text": "I think we should 'take' the phone and have a closer look"
+        }
+      ]
+    }
+  ],
+
+  "navigationCommands": [
+    {
+      "type": "Take",
+      "tokens": [ "phone" ],
+      "chapterKey": "playground-lobby-use-phone"
+    }
+  ]
+}

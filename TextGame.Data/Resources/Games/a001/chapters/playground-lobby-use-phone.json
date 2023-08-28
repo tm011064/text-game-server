@@ -1,0 +1,15 @@
+{
+  "locationKey": "playground",
+  "localizedParagraphs": [
+    {
+      "locale": "en-US",
+      "paragraphs": [
+        {
+          "text": "Amazing, you now have a phone! If you want to use the phone, type 'use phone'"
+        }
+      ]
+    }
+  ],
+
+  "forwardChapterKey": "playground-lobby-phone-guide"
+}

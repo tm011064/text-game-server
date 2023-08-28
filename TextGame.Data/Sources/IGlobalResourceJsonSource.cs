@@ -1,7 +1,10 @@
-﻿namespace TextGame.Data.Sources;
+﻿using TextGame.Data.Sources.ResourceFiles;
 
-public interface IGlobalResourceJsonSource<TRecord>
+namespace TextGame.Data.Sources;
+
+public interface IGlobalResourceJsonSource<TKey, TValue>
+    where TValue : notnull
+    where TKey : notnull
 {
-    TRecord Get(string locale);
+    LocalizedContentProvider<TwoWayLookup<TKey, TValue>> Get();
 }
-

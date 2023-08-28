@@ -7,7 +7,7 @@ using TextGame.Data;
 using TextGame.Data.Contracts;
 using TextGame.Data.Contracts.Chapters;
 using TextGame.Data.Queries.GameAccounts;
-using TextGame.Data.Sources.ResourceFiles;
+using TextGame.Data.Sources;
 
 namespace TextGame.Core.Challenges.Events;
 

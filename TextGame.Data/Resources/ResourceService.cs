@@ -33,6 +33,9 @@ public static class ResourceService
         .Where(resourceName => resourceName.StartsWith(globalMarker.Namespace!))
         .ToHashSet();
 
+
+    public static string BuildGlobalResourcePath(string suffix) => $"{globalMarker.Namespace!}.{suffix}";
+
     public static readonly Assembly ResourceAssembly = assembly;
 
     public static readonly ISet<string> GameKeys = ResourceNames.Select(x => x.Key).ToHashSet();

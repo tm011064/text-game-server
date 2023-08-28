@@ -1,0 +1,24 @@
+{
+  "locationKey": "playground",
+  "localizedParagraphs": [
+    {
+      "locale": "en-US",
+      "paragraphs": [
+        {
+          "text": "All the doors look exactly the same, they all have a number"
+        },
+        {
+          "text": "I can also see one big red door that looks quite important"
+        }
+      ]
+    }
+  ],
+
+  "navigationCommands": [
+    {
+      "type": "Look",
+      "tokens": [ "table" ],
+      "chapterKey": "playground-lobby-table"
+    }
+  ]
+}

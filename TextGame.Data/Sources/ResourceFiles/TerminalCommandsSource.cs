@@ -2,9 +2,19 @@
 
 namespace TextGame.Data.Sources;
 
-public class TerminalCommandsSource :
-    AbstractGlobalResourceJsonSource<TerminalCommand[]>,
-    IGlobalResourceJsonSource<TerminalCommand[]>
+public interface ITerminalCommandsSource : IGlobalResourceJsonSource<TerminalCommandType, string>
 {
-    public override string FileName { get; } = "commands.json";
+}
+
+public class TerminalCommandsSource :
+    AbstractTwoWayGlobalLocalizedResourceJsonSource<TerminalCommand, TerminalCommandType, string>,
+    ITerminalCommandsSource
+{
+    protected override string FilePrefix => "commands";
+
+    public LocalizedContentProvider<TwoWayLookup<TerminalCommandType, string>> Get() => LoadTwoWayLookup();
+
+    protected override TerminalCommandType GetKey(TerminalCommand value) => value.Key;
+
+    protected override IEnumerable<string> GetValues(TerminalCommand key) => key.Terms;
 }

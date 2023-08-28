@@ -16,5 +16,5 @@ public class AuthenticatedUser : IUser
 
     public DateTimeOffset RefreshTokenExpiresAt { get; set; }
 
-    public IReadOnlySet<string> Roles => JsonSerializer.Deserialize<string[]>(RolesJson).ToHashSet();
+    public IReadOnlySet<string> Roles => JsonSerializer.Deserialize<string[]>(RolesJson)!.ToHashSet();
 }

@@ -1,30 +1,36 @@
 ﻿using LazyCache;
+using TextGame.Data;
 using TextGame.Data.Contracts.TerminalCommands;
 using TextGame.Data.Sources;
 
 namespace TextGame.Core.TerminalCommands;
 
+public interface ITerminalCommandProvider
+{
+    TwoWayLookup<TerminalCommandType, string> Get(string locale);
+}
+
 public class TerminalCommandProvider : ITerminalCommandProvider
 {
-    private static readonly string CachePrefix = Guid.NewGuid().ToString();
+    private static readonly string CacheKey = Guid.NewGuid().ToString();
 
     private readonly IAppCache cache;
 
-    private readonly IGlobalResourceJsonSource<TerminalCommand[]> source;
+    private readonly ITerminalCommandsSource source;
 
     public TerminalCommandProvider(
-        IGlobalResourceJsonSource<TerminalCommand[]> source,
+        ITerminalCommandsSource source,
         IAppCache cache)
     {
         this.cache = cache;
         this.source = source;
     }
 
-    private IReadOnlyDictionary<TerminalCommandType, TerminalCommand> GetCached(string locale) => cache.GetOrAdd(
-        $"{CachePrefix}-{locale}",
-        () => source.Get(locale).ToDictionary(x => x.Key),
+    private LocalizedContentProvider<TwoWayLookup<TerminalCommandType, string>> GetCached() => cache.GetOrAdd(
+        CacheKey,
+        source.Get,
         TimeSpan.FromDays(1));
 
-    public Task<IReadOnlyDictionary<TerminalCommandType, TerminalCommand>> Get(string locale) => Task.FromResult(GetCached(locale));
+    public TwoWayLookup<TerminalCommandType, string> Get(string locale) => GetCached().Get(locale)!;
 }
 

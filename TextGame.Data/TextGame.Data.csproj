@@ -24,4 +24,16 @@
 		<PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.9" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
 	</ItemGroup>
+	<ItemGroup>
+	  <None Remove="Resources\Games\a001\locations\" />
+	  <None Remove="Contracts\Locations\" />
+	  <None Remove="Contracts\Navigation\" />
+	  <None Remove="Contracts\GameObjects\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Resources\Games\a001\locations\" />
+	  <Folder Include="Contracts\Locations\" />
+	  <Folder Include="Contracts\Navigation\" />
+	  <Folder Include="Contracts\GameObjects\" />
+	</ItemGroup>
 </Project>

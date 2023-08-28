@@ -40,5 +40,19 @@
     "terms": [
       "[blank]"
     ]
+  },
+  {
+    "key": "Look",
+    "terms": [
+      "look",
+      "look at",
+      "explore"
+    ]
+  },
+  {
+    "key": "Take",
+    "terms": [
+      "take"
+    ]
   }
 ]

@@ -1,4 +1,5 @@
 {
+  "locationKey": "waiting-room",
   "challenge": {
     "type": "LearnTabKey",
     "configuration": {

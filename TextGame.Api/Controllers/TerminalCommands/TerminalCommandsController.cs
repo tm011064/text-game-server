@@ -18,18 +18,16 @@ public class TerminalCommandsController : ControllerBase
     }
 
     [HttpPost("search")]
-    public async Task<IActionResult> Search([FromBody] PostTerminalCommandsSearchRequest request)
+    public IActionResult Search()
     {
-        var records = await provider.Get(this.GetLocale());
+        var records = provider.Get(this.GetLocale());
 
-        return Ok(records.Values.Select(ToWire).ToArray());
+        return Ok(records.GetAll().Select(ToWire).ToArray());
     }
 
-    private object ToWire(TerminalCommand record) => new
+    private object ToWire(IGrouping<TerminalCommandType, string> record) => new
     {
         Id = record.Key,
-        record.Terms
+        Terms = record
     };
 }
-
-public record PostTerminalCommandsSearchRequest();

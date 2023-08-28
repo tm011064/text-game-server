@@ -1,0 +1,12 @@
+﻿[
+  {
+    "key": "Phone",
+    "terms": [
+      "phone",
+      "mobile",
+      "telephone",
+      "cell phone",
+      "mobile phone"
+    ]
+  }
+]

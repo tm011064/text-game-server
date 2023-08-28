@@ -1,30 +1,34 @@
 ﻿using LazyCache;
-using TextGame.Data.Contracts.Emotions;
+using TextGame.Data;
 using TextGame.Data.Sources;
 
 namespace TextGame.Core.Emotions;
 
+public interface IEmotionProvider
+{
+    TwoWayLookup<string, string> Get(string locale);
+}
+
 public class EmotionProvider : IEmotionProvider
 {
-    private static readonly string CachePrefix = Guid.NewGuid().ToString();
+    private static readonly string CacheKey = Guid.NewGuid().ToString();
 
     private readonly IAppCache cache;
 
-    private readonly IGlobalResourceJsonSource<Emotion[]> source;
+    private readonly IEmotionsSource source;
 
     public EmotionProvider(
-        IGlobalResourceJsonSource<Emotion[]> source,
+        IEmotionsSource source,
         IAppCache cache)
     {
         this.cache = cache;
         this.source = source;
     }
 
-    private IReadOnlyCollection<Emotion> GetCached(string locale) => cache.GetOrAdd(
-        $"{CachePrefix}-{locale}",
-        () => source.Get(locale),
+    private LocalizedContentProvider<TwoWayLookup<string, string>> GetCached() => cache.GetOrAdd(
+        CacheKey,
+        source.Get,
         TimeSpan.FromDays(1));
 
-    public Task<IReadOnlyCollection<Emotion>> Get(string locale) => Task.FromResult(GetCached(locale));
+    public TwoWayLookup<string, string> Get(string locale) => GetCached().Get(locale)!;
 }
-
