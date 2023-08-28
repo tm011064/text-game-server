@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using TextGame.Data.Contracts.Chapters;
+using TextGame.Data.Contracts.Games;
 using TextGame.Data.Contracts.Navigation;
 using TextGame.Data.Resources;
 
@@ -18,9 +19,9 @@ public partial class ChaptersSource : IGameResourceJsonSource<IChapter[]>
     [GeneratedRegex("^([a-zA-Z0-9\\-\\.]*).([a-z]{2})-([a-zA-Z]{2}).json$", RegexOptions.Compiled)]
     private static partial Regex Regex();
 
-    public IChapter[] Get(string gameKey)
+    public IChapter[] Get(IGame game)
     {
-        var (keyValueMaps, files) = ResourceService.ResourceNames[gameKey]
+        var (keyValueMaps, files) = ResourceService.ResourceNames[game.Key]
             .Where(x => x.Contains(FOLDER_NAME))
             .Select(x =>
             {
@@ -53,7 +54,7 @@ public partial class ChaptersSource : IGameResourceJsonSource<IChapter[]>
 
                 return Load(
                     file.ResourceName,
-                    gameKey,
+                    game,
                     map.ToDictionary(x => x.Locale, x => LoadKeyValueMap(x.ResourceName)));
             })
             .ToArray();
@@ -76,7 +77,7 @@ public partial class ChaptersSource : IGameResourceJsonSource<IChapter[]>
 
     private static ChapterBuilder Load(
         string resourceName,
-        string gameKey,
+        IGame game,
         IReadOnlyDictionary<string, IReadOnlyDictionary<string, object>> keyValueMapByLocale)
     {
         using var stream = ResourceService.ResourceAssembly.GetManifestResourceStream(resourceName)!;
@@ -94,7 +95,7 @@ public partial class ChaptersSource : IGameResourceJsonSource<IChapter[]>
         return builder with
         {
             Key = chapterKey,
-            GameKey = gameKey,
+            Game = game,
             LocalizedParagraphs = new LocalizedContentProvider<IReadOnlyCollection<Paragraph>>(paragraphsByLocale),
             LocalizedChallenges = new LocalizedContentProvider<Challenge>(
                 builder.Challenge?.Let(x => challengeFormatter.Format(x, keyValueMapByLocale).ToDictionary(x => x.Locale, x => x.Challenge)))
@@ -104,7 +105,7 @@ public partial class ChaptersSource : IGameResourceJsonSource<IChapter[]>
     private record ChapterBuilder(
         string Key,
         string LocationKey,
-        string GameKey,
+        IGame Game,
         string ForwardChapterKey,
         [property: JsonPropertyName("localizedParagraphs")] LocalizedParagraph[] Paragraphs,
         Challenge? Challenge) : IChapter

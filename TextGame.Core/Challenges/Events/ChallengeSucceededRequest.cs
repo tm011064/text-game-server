@@ -105,6 +105,6 @@ public class ChallengeSucceededRequestHandler : IRequestHandler<ChallengeSucceed
                 gameStateBuilder.Build()),
             request.Ticket);
 
-        return await gameAccountConverter.Convert(record, request.GameContext.Locale);
+        return await gameAccountConverter.Convert(record);
     }
 }

@@ -127,12 +127,12 @@ public class GameAccountConverter
         this.gameProvider = gameProvider;
     }
 
-    public async Task<GameAccount> Convert(IGameAccount record, string locale)
+    public async Task<GameAccount> Convert(IGameAccount record)
     {
         return new GameAccount(
             record.Id,
             record.Key,
-            serializer.Deserialize(record.GameStateJson, locale).ToArray(),
+            await serializer.Deserialize(record.GameStateJson),
             record.UserAccountId,
             record.UserAccountKey,
             record.UserId,

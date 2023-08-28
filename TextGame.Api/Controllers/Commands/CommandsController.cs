@@ -60,7 +60,6 @@ public class CommandsController : ControllerBase
         {
             var gameAccount = await mediator.Send(new GetGameAccountRequest(
                 request.GameAccountId!,
-                locale,
                 ticket,
                 request.GameAccountVersion!));
 

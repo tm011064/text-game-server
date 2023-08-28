@@ -26,7 +26,7 @@ public class GameAccountsController : ControllerBase
         var ticket = this.GetTicket();
         var locale = this.GetLocale();
 
-        var records = await mediator.Send(new SearchGameAccountsRequest(request.UserId, request.GameId, locale, ticket));
+        var records = await mediator.Send(new SearchGameAccountsRequest(request.UserId, request.GameId, ticket));
 
         return Ok(records.Select(x => Wiring.ToWire(x, locale)).ToArray());
     }

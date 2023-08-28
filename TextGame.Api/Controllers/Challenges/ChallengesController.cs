@@ -51,10 +51,8 @@ public class ChallengesController : ControllerBase
         {
             var gameAccount = await mediator.Send(new GetGameAccountRequest(
                 request.GameAccountId!,
-                locale,
                 ticket,
                 request.GameAccountVersion!));
-
 
             var gameContext = new GameContext(gameAccount, locale);
 

@@ -13,13 +13,11 @@ public class GameStateSerializer
         this.chapterProvider = chapterProvider;
     }
 
-    public IEnumerable<GameState> Deserialize(string gameStateJson, string locale)
+    public async Task<IReadOnlyCollection<GameState>> Deserialize(string gameStateJson)
     {
         var deserialized = JsonSerializer.Deserialize<GameStateJson[]>(gameStateJson, JsonOptions.Default)!;
 
-        // TODO (Roman): the locale should be set when returning the API response, not here
-
-        var chaptersMap = chapterProvider.GetChaptersMap(
+        var chaptersMap = await chapterProvider.GetChaptersMap(
             deserialized
                 .SelectMany(x => new[] { x.CurrentChapterKey }
                     .Concat(x.VisitedChapterKeys)
@@ -33,7 +31,8 @@ public class GameStateSerializer
                 UpdatedAt: json.UpdatedAt,
                 SlotName: json.SlotName,
                 CompletedChallenges: json.CompletedChallengeKeys.Select(x => chaptersMap[x]).ToHashSet(),
-                VisitedChapters: json.VisitedChapterKeys.Select(x => chaptersMap[x]).ToHashSet()));
+                VisitedChapters: json.VisitedChapterKeys.Select(x => chaptersMap[x]).ToHashSet()))
+            .ToReadOnlyCollection();
     }
 
     public string Serialize(params GameState[] gameStates)

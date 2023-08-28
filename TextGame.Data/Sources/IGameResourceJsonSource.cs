@@ -1,7 +1,9 @@
-﻿namespace TextGame.Data.Sources;
+﻿using TextGame.Data.Contracts.Games;
+
+namespace TextGame.Data.Sources;
 
 public interface IGameResourceJsonSource<TRecord>
 {
-    TRecord Get(string gameKey);
+    TRecord Get(IGame game);
 }
 

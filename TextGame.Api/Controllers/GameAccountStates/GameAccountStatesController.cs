@@ -32,7 +32,7 @@ public class GameAccountStatesController : ControllerBase
         var locale = this.GetLocale();
 
         var gameAccount = await mediator.Send(
-            new GetGameAccountRequest(request.GameAccountId!, locale, ticket, request.Version!));
+            new GetGameAccountRequest(request.GameAccountId!, ticket, request.Version!));
 
         var record = await mediator.Send(new UpdateGameAccountStateRequest(
             gameAccount,
@@ -40,7 +40,6 @@ public class GameAccountStatesController : ControllerBase
             request.CurrentChapterId,
             request.VisitedChapterIds?.Let(x => x.ToHashSet()),
             request.CompletedChallengeIds?.Let(x => x.ToHashSet()),
-            locale,
             ticket));
 
         return Ok(record.ToWire(locale));
@@ -51,9 +50,8 @@ public class GameAccountStatesController : ControllerBase
     public async Task<IActionResult> Search([FromBody] PostGameAccountStatesSearchRequest request)
     {
         var ticket = this.GetTicket();
-        var locale = this.GetLocale();
 
-        var records = await mediator.Send(new SearchGameAccountsRequest(request.UserId, GameKey: null, locale, ticket));
+        var records = await mediator.Send(new SearchGameAccountsRequest(request.UserId, GameKey: null, ticket));
 
         var wired = records.SelectMany(gameAccount =>
             gameAccount.GameStates.Select(gameState => ToWire(gameState, gameAccount)));

@@ -178,6 +178,6 @@ public class PerformCommandRequestHandler : IRequestHandler<PerformCommandReques
                 gameStateBuilder.Build()),
             request.Ticket);
 
-        return await gameAccountConverter.Convert(record, request.GameContext.Locale);
+        return await gameAccountConverter.Convert(record);
     }
 }

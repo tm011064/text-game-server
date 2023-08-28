@@ -7,7 +7,6 @@ namespace TextGame.Core.GameAccounts.Events;
 
 public record GetGameAccountRequest(
     string Key,
-    string Locale,
     AuthTicket Ticket,
     long? Version = null) : IRequest<GameAccount>;
 
@@ -33,6 +32,6 @@ public class GetGameAccountRequestHandler : IRequestHandler<GetGameAccountReques
             throw new ConcurrencyException();
         }
 
-        return await converter.Convert(record, request.Locale);
+        return await converter.Convert(record);
     }
 }

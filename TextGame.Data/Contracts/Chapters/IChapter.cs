@@ -1,4 +1,5 @@
-﻿using TextGame.Data.Contracts.Navigation;
+﻿using TextGame.Data.Contracts.Games;
+using TextGame.Data.Contracts.Navigation;
 using TextGame.Data.Sources;
 
 namespace TextGame.Data.Contracts.Chapters;
@@ -9,7 +10,7 @@ public interface IChapter
 
     string LocationKey { get; }
 
-    string GameKey { get; }
+    IGame Game { get; }
 
     LocalizedContentProvider<IReadOnlyCollection<Paragraph>> LocalizedParagraphs { get; }
 

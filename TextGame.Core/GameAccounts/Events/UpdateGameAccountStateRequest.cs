@@ -13,7 +13,6 @@ public record UpdateGameAccountStateRequest(
     string? CurrentChapterKey,
     HashSet<string>? VisitedChapterKeys,
     HashSet<string>? CompletedChallengeKeys,
-    string Locale, // TODO (Roman): move locale inside of chapter, it is not needed here
     AuthTicket Ticket) : IRequest<GameAccount>;
 
 public class UpdateGameAccountStateRequestValidator : AbstractValidator<UpdateGameAccountStateRequest>
@@ -74,7 +73,7 @@ public class UpdateGameAccountStateRequestHandler : IRequestHandler<UpdateGameAc
             .Where(x => !x.IsNullOrWhitespace())
             .Select(x => x!);
 
-        var chapters = chapterProvider.GetChaptersMap(chapterKeys.ToHashSet());
+        var chapters = await chapterProvider.GetChaptersMap(chapterKeys.ToHashSet());
 
         await validator.ValidateAndThrowAsync(request);
 
@@ -101,6 +100,6 @@ public class UpdateGameAccountStateRequestHandler : IRequestHandler<UpdateGameAc
             new UpdateGameAccountGameState(request.GameAccount.Id, request.GameAccount.Version, json),
             request.Ticket);
 
-        return await converter.Convert(gameAccount, request.Locale);
+        return await converter.Convert(gameAccount);
     }
 }

@@ -8,7 +8,6 @@ namespace TextGame.Core.GameAccounts.Events;
 public record SearchGameAccountsRequest(
     string? UserKey,
     string? GameKey,
-    string Locale,
     AuthTicket Ticket) : IRequest<IReadOnlyCollection<GameAccount>>;
 
 public class SearchGameAccountsRequestHandler : IRequestHandler<SearchGameAccountsRequest, IReadOnlyCollection<GameAccount>>
@@ -31,6 +30,6 @@ public class SearchGameAccountsRequestHandler : IRequestHandler<SearchGameAccoun
                 gameKey: request.GameKey),
             request.Ticket);
 
-        return await Task.WhenAll(records.Select(x => converter.Convert(x, request.Locale)));
+        return await Task.WhenAll(records.Select(converter.Convert));
     }
 }

@@ -6,7 +6,7 @@ public static class ChapterExtensions
 {
     public static string GetCompositeKey(this IChapter self)
     {
-        return $"{self.GameKey}-{self.Key}";
+        return $"{self.Game.Key}-{self.Key}";
     }
 }
 
