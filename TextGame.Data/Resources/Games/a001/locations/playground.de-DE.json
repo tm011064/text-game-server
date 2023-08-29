@@ -1,0 +1,14 @@
+[
+  {
+    "key": "enter-playground-lobby-door-1",
+    "value": [ "Tür 1" ]
+  },
+  {
+    "key": "enter-playground-lobby-door-2",
+    "value": [ "Tür 2" ]
+  },
+  {
+    "key": "enter-playground-lobby-door-3",
+    "value": [ "Tür 3" ]
+  }
+]

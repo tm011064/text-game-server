@@ -35,7 +35,7 @@
   "navigationCommands": [
     {
       "type": "Use",
-      "object": "Phone",
+      "objectKey": "Phone",
       "chapterKey": "playground-lobby-phone-guide"
     },
     {
@@ -46,17 +46,12 @@
     {
       "type": "Enter",
       "tokens": [ "door 2" ],
-      "chapterKey": "playground-lobby-door-1"
+      "chapterKey": "playground-lobby-door-2"
     },
     {
       "type": "Enter",
       "tokens": [ "door 3" ],
-      "chapterKey": "playground-lobby-door-1"
-    },
-    {
-      "type": "Enter",
-      "tokens": [ "door 3" ],
-      "chapterKey": "playground-lobby-door-1"
+      "chapterKey": "playground-lobby-door-3"
     }
   ]
 }

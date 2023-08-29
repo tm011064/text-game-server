@@ -11,23 +11,28 @@ public class LocalizedContentProvider<TValue>
         this.map = map;
     }
 
+    public bool IsEmpty()
+    {
+        return map == null;
+    }
+
     public TValue? First()
     {
-        return map == null
+        return IsEmpty()
             ? default
             : map!.First().Value;
     }
 
     public TValue? Get(string locale)
     {
-        return map == null
+        return IsEmpty()
             ? default
             : map!.GetOrNotFound(locale);
     }
 
     public TValue Get(string locale, TValue defaultValue)
     {
-        return map == null
+        return IsEmpty()
             ? defaultValue
             : map!.GetOrNotFound(locale);
     }

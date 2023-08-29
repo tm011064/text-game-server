@@ -14,7 +14,7 @@ public interface IChapter
 
     LocalizedContentProvider<IReadOnlyCollection<Paragraph>> LocalizedParagraphs { get; }
 
-    IReadOnlyCollection<NavigationCommand> NavigationCommands { get; }
+    LocalizedContentProvider<IReadOnlyCollection<NavigationCommand>> LocalizedNavigationCommands { get; }
 
     LocalizedContentProvider<Challenge> LocalizedChallenges { get; }
 

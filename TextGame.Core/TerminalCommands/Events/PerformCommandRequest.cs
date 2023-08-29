@@ -120,7 +120,7 @@ public class PerformCommandRequestHandler : IRequestHandler<PerformCommandReques
         var terminalCommands = terminalCommandProvider.Get(request.GameContext.Locale);
         var commandText = string.Join(" ", request.Tokens);
 
-        var navigationCommand = chapter.NavigationCommands
+        var navigationCommand = chapter.LocalizedNavigationCommands.Get(request.GameContext.Locale)!
             .Where(x => x.Type == request.CommandType)
             .Where(x => !x.Tokens.Any() || DoTokensMatch(x.Tokens, terminalCommands, commandText))
             .FirstOrDefault();

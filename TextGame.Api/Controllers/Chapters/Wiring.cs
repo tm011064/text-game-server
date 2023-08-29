@@ -18,8 +18,10 @@ public static class ChapterWiring
             .Concat(record.LocalizedParagraphs.Get(locale, Array.Empty<Paragraph>()))
             .Select(ParagraphWiring.ToWire)
             .ToArray(),
-        Challenge = record.LocalizedChallenges?.Let(x => x.Get(locale)),
-        AllowedCommands = record.NavigationCommands.Select(x => x.Type).ToArray()
+        Challenge = record.LocalizedChallenges?.Let(x => x.Get(locale)?.ToWire()),
+        AllowedCommands = record.LocalizedNavigationCommands.Get(locale)?
+            .Select(x => x.Type)
+            .ToArray()
     };
 
     private static object? ToWire(this Challenge record) => new

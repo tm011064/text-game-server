@@ -17,7 +17,7 @@
   "navigationCommands": [
     {
       "type": "Take",
-      "tokens": [ "phone" ],
+      "objectKey": "Phone",
       "chapterKey": "playground-lobby-use-phone"
     }
   ]

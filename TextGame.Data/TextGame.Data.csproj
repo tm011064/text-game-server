@@ -15,6 +15,10 @@
 		<EmbeddedResource Include="Resources\Global\*.json" WithCulture="false">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</EmbeddedResource>
+		<EmbeddedResource Include="Resources\Games\a001\locations\playground.de-DE.json">
+		  <WithCulture>false</WithCulture>
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</EmbeddedResource>
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Dapper" Version="2.0.143" />
@@ -29,11 +33,16 @@
 	  <None Remove="Contracts\Locations\" />
 	  <None Remove="Contracts\Navigation\" />
 	  <None Remove="Contracts\GameObjects\" />
+	  <None Remove="Sources\ResourceFiles\Challenges\" />
+	  <None Remove="Resources\Games\a001\locations\waiting-room-challenge-learn-key-shift-tab.de-DE.json" />
+	  <None Remove="Sources\ResourceFiles\NavigationCommands\" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Resources\Games\a001\locations\" />
 	  <Folder Include="Contracts\Locations\" />
 	  <Folder Include="Contracts\Navigation\" />
 	  <Folder Include="Contracts\GameObjects\" />
+	  <Folder Include="Sources\ResourceFiles\Challenges\" />
+	  <Folder Include="Sources\ResourceFiles\NavigationCommands\" />
 	</ItemGroup>
 </Project>
