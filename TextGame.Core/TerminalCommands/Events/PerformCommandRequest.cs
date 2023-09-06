@@ -2,10 +2,10 @@
 using MediatR;
 using TextGame.Core.Chapters;
 using TextGame.Core.GameAccounts;
-using TextGame.Core.Games;
 using TextGame.Data;
 using TextGame.Data.Contracts;
 using TextGame.Data.Contracts.Chapters;
+using TextGame.Data.Contracts.Games;
 using TextGame.Data.Contracts.TerminalCommands;
 using TextGame.Data.Queries.GameAccounts;
 using TextGame.Data.Sources;
@@ -131,7 +131,7 @@ public class PerformCommandRequestHandler : IRequestHandler<PerformCommandReques
         }
 
         var nextChapter = await chapterProvider.GetChapter(
-            request.GameContext.Game.GetCompositeChapterKey(navigationCommand.ChapterKey));
+            request.GameContext.Game.GetCompositeKey(navigationCommand.ChapterKey));
 
         var gameStateBuilder = gameStateCollectionBuilderFactory.Create(request.GameContext.GameAccount)
             .Replace(
@@ -151,7 +151,7 @@ public class PerformCommandRequestHandler : IRequestHandler<PerformCommandReques
         }
 
         var forwardChapter = await chapterProvider.GetChapter(
-            request.GameContext.Game.GetCompositeChapterKey(nextChapter.ForwardChapterKey));
+            request.GameContext.Game.GetCompositeKey(nextChapter.ForwardChapterKey));
 
         gameStateBuilder = gameStateBuilder.Replace(
             x => x.IsAutoSave(),

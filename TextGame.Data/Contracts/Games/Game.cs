@@ -13,3 +13,11 @@ internal class GameResource : IGame
 
     public string Key { get; set; } = null!;
 }
+
+public static class GameExtensions
+{
+    public static string GetCompositeKey(this IGame self, string key)
+    {
+        return $"{self.Key}-{key}";
+    }
+}

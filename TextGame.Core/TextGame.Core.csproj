@@ -16,4 +16,10 @@
 	<ItemGroup>
 		<ProjectReference Include="..\TextGame.Data\TextGame.Data.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	  <None Remove="Locations\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Locations\" />
+	</ItemGroup>
 </Project>

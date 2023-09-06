@@ -9,5 +9,6 @@ public enum TerminalCommandType
     Next,
 
     Look,
-    Take
+    Take,
+    Use
 }

@@ -33,4 +33,3 @@ public class TerminalCommandProvider : ITerminalCommandProvider
 
     public TwoWayLookup<TerminalCommandType, string> Get(string locale) => GetCached().Get(locale)!;
 }
-

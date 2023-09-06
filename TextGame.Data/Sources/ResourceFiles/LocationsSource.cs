@@ -6,23 +6,18 @@ using TextGame.Data.Contracts.Games;
 using TextGame.Data.Contracts.Locations;
 using TextGame.Data.Contracts.Navigation;
 using TextGame.Data.Resources;
-using TextGame.Data.Sources.ResourceFiles.Challenges;
 using TextGame.Data.Sources.ResourceFiles.NavigationCommands;
 
 namespace TextGame.Data.Sources.ResourceFiles;
 
-public interface IChaptersSource
+public interface ILocationsSource
 {
-    IChapter[] Get(
-        IGame game,
-        IReadOnlyDictionary<string, ILocation> locationsByKey);
+    ILocation[] Get(IGame game);
 }
 
-public partial class ChaptersSource : IChaptersSource
+public partial class LocationsSource : ILocationsSource
 {
-    private const string FOLDER_NAME = ".chapters.";
-
-    private static readonly ChallengeFormatter challengeFormatter = new();
+    private const string FOLDER_NAME = ".locations.";
 
     private static readonly NavigationCommandFormatter navigationCommandFormatter = new();
 
@@ -31,9 +26,7 @@ public partial class ChaptersSource : IChaptersSource
     [GeneratedRegex("^([a-zA-Z0-9\\-\\.]*).([a-z]{2})-([a-zA-Z]{2}).json$", RegexOptions.Compiled)]
     private static partial Regex Regex();
 
-    public IChapter[] Get(
-        IGame game,
-        IReadOnlyDictionary<string, ILocation> locationsByKey)
+    public ILocation[] Get(IGame game)
     {
         var (localeMaps, files) = ResourceService.ResourceNames[game.Key]
             .Where(x => x.Contains(FOLDER_NAME))
@@ -69,8 +62,7 @@ public partial class ChaptersSource : IChaptersSource
                 return Load(
                     file.ResourceName,
                     game,
-                    map.ToDictionary(x => x.Locale, x => LoadLocaleMap(x.ResourceName)),
-                    locationsByKey);
+                    map.ToDictionary(x => x.Locale, x => LoadLocaleMap(x.ResourceName)));
             })
             .ToArray();
     }
@@ -88,33 +80,27 @@ public partial class ChaptersSource : IChaptersSource
         return items.ToDictionary(x => x.Key, x => x.Value);
     }
 
-    private static ChapterBuilder Load(
+    private static LocationBuilder Load(
         string resourceName,
         IGame game,
-        IReadOnlyDictionary<string, IReadOnlyDictionary<string, object>> localeMap,
-        IReadOnlyDictionary<string, ILocation> locationsByKey)
+        IReadOnlyDictionary<string, IReadOnlyDictionary<string, object>> localeMap)
     {
         using var stream = ResourceService.ResourceAssembly.GetManifestResourceStream(resourceName)!;
         using var reader = new StreamReader(stream);
 
         var json = reader.ReadToEnd();
 
-        var builder = JsonSerializer.Deserialize<ChapterBuilder>(json, JsonOptions.Default)
+        var builder = JsonSerializer.Deserialize<LocationBuilder>(json, JsonOptions.Default)
             ?? throw new Exception();
 
         var fileName = resourceName[(resourceName.IndexOf(FOLDER_NAME) + FOLDER_NAME.Length)..];
-        var chapterKey = fileName[..fileName.LastIndexOf('.')];
-        var paragraphsByLocale = builder.Paragraphs?.ToDictionary(x => x.Locale, x => x.Paragraphs);
+        var locationKey = fileName[..fileName.LastIndexOf('.')];
 
         return builder with
         {
-            Key = chapterKey,
+            Key = locationKey,
             Game = game,
-            Location = locationsByKey.GetOrNotFound(game.GetCompositeKey(builder.LocationKey)),
 
-            LocalizedParagraphs = new LocalizedContentProvider<IReadOnlyCollection<Paragraph>>(paragraphsByLocale),
-            LocalizedChallenges = new LocalizedContentProvider<Challenge>(
-                builder.Challenge?.Let(x => challengeFormatter.Format(x, localeMap).ToDictionary(x => x.Locale, x => x.Challenge))),
             LocalizedNavigationCommands = builder.NavigationCommands
                 ?.Let(navigationCommands => new LocalizedContentProvider<IReadOnlyCollection<NavigationCommand>>(
                     navigationCommands
@@ -127,24 +113,15 @@ public partial class ChaptersSource : IChaptersSource
 
     private record LocaleMapItem(string Key, object Value);
 
-    private record ChapterBuilder(
+    private record LocationBuilder(
         string Key,
         string LocationKey,
         IGame Game,
-        string ForwardChapterKey,
+        string ForwardLocationKey,
         IReadOnlyCollection<NavigationCommand>? NavigationCommands,
-        [property: JsonPropertyName("localizedParagraphs")] LocalizedParagraph[] Paragraphs,
-        Challenge? Challenge) : IChapter
+        IReadOnlyCollection<LocationGameObject>? Objects,
+        Challenge? Challenge) : ILocation
     {
-        [JsonIgnore]
-        public ILocation Location { get; init; } = null!;
-
-        [JsonIgnore]
-        public LocalizedContentProvider<IReadOnlyCollection<Paragraph>> LocalizedParagraphs { get; init; } = null!;
-
-        [JsonIgnore]
-        public LocalizedContentProvider<Challenge> LocalizedChallenges { get; init; } = null!;
-
         [JsonIgnore]
         public LocalizedContentProvider<IReadOnlyCollection<NavigationCommand>> LocalizedNavigationCommands { get; init; } = null!;
     }

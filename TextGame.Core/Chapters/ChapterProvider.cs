@@ -1,10 +1,19 @@
 ﻿using LazyCache;
 using TextGame.Core.Games;
+using TextGame.Core.Locations;
 using TextGame.Data;
 using TextGame.Data.Contracts.Chapters;
-using TextGame.Data.Sources;
+using TextGame.Data.Sources.ResourceFiles;
 
 namespace TextGame.Core.Chapters;
+
+public static class ChapterExtensions
+{
+    public static string GetCompositeKey(this IChapter self)
+    {
+        return $"{self.Game.Key}-{self.Key}";
+    }
+}
 
 public interface IChapterProvider
 {
@@ -21,26 +30,35 @@ public class ChapterProvider : IChapterProvider
 
     private readonly IAppCache cache;
 
-    private readonly IGameResourceJsonSource<IChapter[]> source;
+    private readonly IChaptersSource source;
 
     private readonly IGameProvider gameProvider;
 
+    private readonly ILocationProvider locationProvider;
+
     public ChapterProvider(
-        IGameResourceJsonSource<IChapter[]> source,
+        IChaptersSource source,
         IGameProvider gameProvider,
+        ILocationProvider locationProvider,
         IAppCache cache)
     {
         this.cache = cache;
         this.source = source;
         this.gameProvider = gameProvider;
+        this.locationProvider = locationProvider;
     }
 
-    private async Task<IReadOnlyDictionary<string, IChapter>> GetChaptersByKey() => await cache.GetOrAddAsync(
-        CacheKey,
-        async () => (await gameProvider.GetMap()).Values
-            .SelectMany(source.Get)
-            .ToDictionary(x => x.GetCompositeKey()),
-        TimeSpan.FromDays(1));
+    private async Task<IReadOnlyDictionary<string, IChapter>> GetChaptersByKey()
+    {
+        var locationMap = await locationProvider.GetMap();
+
+        return await cache.GetOrAddAsync(
+            CacheKey,
+            async () => (await gameProvider.GetMap()).Values
+                .SelectMany(game => source.Get(game, locationMap))
+                .ToDictionary(x => x.GetCompositeKey()),
+            TimeSpan.FromDays(1));
+    }
 
     public async Task<IChapter> GetChapter(string chapterKey) => (await GetChaptersByKey()).GetOrNotFound(chapterKey);
 

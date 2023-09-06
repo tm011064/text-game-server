@@ -17,8 +17,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "dotnetRunParagraphs": true,
-      "dotnetRunMessages": true
+      "dotnetRunMessages": true,
+      "dotnetRunParagraphs": true
     },
     "https": {
       "commandName": "Project",
@@ -28,8 +28,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "dotnetRunParagraphs": true,
-      "dotnetRunMessages": true
+      "dotnetRunMessages": true,
+      "dotnetRunParagraphs": true
     },
     "IIS Express": {
       "commandName": "IISExpress",
@@ -44,8 +44,8 @@
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
       "environmentVariables": {},
       "publishAllPorts": true,
-      "sslPort": 32001,
       "useSSL": true,
+      "sslPort": 32001,
       "httpPort": 32000
     }
   }

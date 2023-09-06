@@ -1,5 +1,4 @@
 ﻿using TextGame.Data.Contracts.GameObjects;
-using TextGame.Data.Sources.ResourceFiles;
 
 namespace TextGame.Data.Sources;
 

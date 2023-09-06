@@ -54,5 +54,12 @@
     "terms": [
       "take"
     ]
+  },
+  {
+    "key": "Use",
+    "terms": [
+      "use",
+      "operate"
+    ]
   }
 ]

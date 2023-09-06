@@ -2,12 +2,12 @@
 using MediatR;
 using TextGame.Core.Chapters;
 using TextGame.Core.GameAccounts;
-using TextGame.Core.Games;
 using TextGame.Data;
 using TextGame.Data.Contracts;
 using TextGame.Data.Contracts.Chapters;
 using TextGame.Data.Queries.GameAccounts;
 using TextGame.Data.Sources;
+using TextGame.Data.Contracts.Games;
 
 namespace TextGame.Core.Challenges.Events;
 
@@ -51,7 +51,7 @@ public class ChallengeSucceededRequestHandler : IRequestHandler<ChallengeSucceed
         var chapter = await chapterProvider.GetChapter(request.ChapterKey);
 
         var nextChapter = await chapterProvider.GetChapter(
-            request.GameContext.Game.GetCompositeChapterKey(chapter.LocalizedChallenges.First()!.ChapterKey));
+            request.GameContext.Game.GetCompositeKey(chapter.LocalizedChallenges.First()!.ChapterKey));
 
         var gameStateBuilder = gameStateCollectionBuilderFactory.Create(request.GameContext.GameAccount)
             .Replace(
@@ -73,7 +73,7 @@ public class ChallengeSucceededRequestHandler : IRequestHandler<ChallengeSucceed
         }
 
         var forwardChapter = await chapterProvider.GetChapter(
-            request.GameContext.Game.GetCompositeChapterKey(nextChapter.ForwardChapterKey));
+            request.GameContext.Game.GetCompositeKey(nextChapter.ForwardChapterKey));
 
         gameStateBuilder = gameStateBuilder.Replace(
             x => x.IsAutoSave(),
